@@ -41,6 +41,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('penduduk-meninggal', \App\Http\Controllers\PendudukMeninggalController::class)->except('create');
     Route::resource('rumah', \App\Http\Controllers\RumahController::class);
 
+    Route::post('/import-penduduk', [\App\Http\Controllers\PendudukController::class, 'import'])->name('import_penduduk');
+
     Route::prefix('exports')->name('exports.')->group(function () {
         Route::get('/penduduk', [\App\Http\Controllers\PendudukController::class, 'export'])->name('penduduk');
         Route::get('/penduduk-domisili', [\App\Http\Controllers\PendudukDomisiliController::class, 'export'])->name('penduduk_domisili');

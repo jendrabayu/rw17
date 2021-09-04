@@ -69,7 +69,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-hover" id="tabelKeluarga">
+              <table class="table table-bordered table-striped table-hover table-sm" id="tabelKeluarga">
                 <thead>
                   <tr>
                     <th class="text-center">#</th>

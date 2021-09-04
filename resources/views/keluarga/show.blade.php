@@ -43,7 +43,7 @@
                           })
                           ->first();
                     @endphp
-                    {{ $kepala_keluarga ? $kepala_keluarga->nama : '-' }}
+                    {{ $kepala_keluarga ? $kepala_keluarga->nama : '' }}
                   </td>
                 </tr>
                 <tr>
@@ -82,65 +82,66 @@
                         <img class="img-fluid" src="{{ Storage::url($keluarga->foto_kk) }}"
                           alt="{{ $keluarga->nomor }}">
                       </div>
-                    @else
-                      -
                     @endif
                   </td>
                 </tr>
               </table>
             </div>
 
-            <div class="table-responsive mt-3">
-              <table class="table table-sm table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>NIK</th>
-                    <th>Nama</th>
-                    <th>Tempat Lahir</th>
-                    <th>Tanggal Lahir</th>
-                    <th>Jenis Kelamin</th>
-                    <th>Gol. Darah</th>
-                    <th>Agama</th>
-                    <th>Status Perkawinan</th>
-                    <th>Pekerjaan</th>
-                    <th>Pendidikan</th>
-                    <th>Kewarganegaraan</th>
-                    <th>Status Hubungan Dalam Keluarga</th>
-                    <th>No. Paspor</th>
-                    <th>No. KITAS/KITAP</th>
-                    <th>Nama Ayah</th>
-                    <th>Nama Ibu</th>
-                    <th>Email</th>
-                    <th>No. Hp/WhatsApp</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($keluarga->penduduk as $penduduk)
+            @if ($keluarga->penduduk->count())
+              <div class="table-responsive mt-3">
+                <table class="table table-sm table-striped table-bordered">
+                  <thead>
                     <tr>
-                      <td><a href="{{ route('penduduk.show', $penduduk->id) }}">{{ $penduduk->nik }}</a></td>
-                      <td>{{ $penduduk->nama }}</td>
-                      <td>{{ $penduduk->tempat_lahir }}</td>
-                      <td>{{ $penduduk->tanggal_lahir }}</td>
-                      <td>{{ $penduduk->gender }}</td>
-                      <td>{{ $penduduk->darah->nama }}</td>
-                      <td>{{ $penduduk->agama->nama }}</td>
-                      <td>{{ $penduduk->statusPerkawinan->nama }}</td>
-                      <td>{{ $penduduk->pekerjaan->nama }}</td>
-                      <td>{{ $penduduk->pendidikan->nama }}</td>
-                      <td>WNI</td>
-                      <td>{{ $penduduk->statusHubunganDalamKeluarga->nama }}</td>
-                      <td>{{ $penduduk->no_paspor }}</td>
-                      <td>{{ $penduduk->no_kitas_kitap }}</td>
-                      <td>{{ $penduduk->nama_ayah }}</td>
-                      <td>{{ $penduduk->nama_ibu }}</td>
-                      <td>{{ $penduduk->email }}</td>
-                      <td>{{ $penduduk->no_hp }}</td>
+                      <th>NIK</th>
+                      <th>Nama</th>
+                      <th>Tempat Lahir</th>
+                      <th>Tanggal Lahir</th>
+                      <th>Jenis Kelamin</th>
+                      <th>Gol. Darah</th>
+                      <th>Agama</th>
+                      <th>Status Perkawinan</th>
+                      <th>Pekerjaan</th>
+                      <th>Pendidikan</th>
+                      <th>Kewarganegaraan</th>
+                      <th>Status Hubungan Dalam Keluarga</th>
+                      <th>No. Paspor</th>
+                      <th>No. KITAS/KITAP</th>
+                      <th>Nama Ayah</th>
+                      <th>Nama Ibu</th>
+                      <th>Email</th>
+                      <th>No. Hp/WhatsApp</th>
                     </tr>
-                  @endforeach
-                </tbody>
-              </table>
-            </div>
-
+                  </thead>
+                  <tbody>
+                    @foreach ($keluarga->penduduk as $penduduk)
+                      <tr>
+                        <td><a href="{{ route('penduduk.show', $penduduk->id) }}">{{ $penduduk->nik }}</a></td>
+                        <td>{{ $penduduk->nama }}</td>
+                        <td>{{ $penduduk->tempat_lahir }}</td>
+                        <td>{{ $penduduk->tanggal_lahir }}</td>
+                        <td>{{ $penduduk->gender }}</td>
+                        <td>{{ $penduduk->darah->nama }}</td>
+                        <td>{{ $penduduk->agama->nama }}</td>
+                        <td>{{ $penduduk->statusPerkawinan->nama }}</td>
+                        <td>{{ $penduduk->pekerjaan->nama }}</td>
+                        <td>{{ $penduduk->pendidikan->nama }}</td>
+                        <td>{{ $penduduk->kewarganegaraan_text }}</td>
+                        <td>{{ $penduduk->statusHubunganDalamKeluarga->nama }}</td>
+                        <td>{{ $penduduk->no_paspor }}</td>
+                        <td>{{ $penduduk->no_kitas_kitap }}</td>
+                        <td>{{ $penduduk->nama_ayah }}</td>
+                        <td>{{ $penduduk->nama_ibu }}</td>
+                        <td>{{ $penduduk->email }}</td>
+                        <td>{{ $penduduk->no_hp }}</td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            @else
+              <p class="text-center text-title">~Data penduduk belum tersedia~</p>
+            @endif
             <p class="text-muted text-right mt-3">Last updated on
               {{ $keluarga->updated_at->isoFormat('dddd, MMMM D, YYYY h:mm A') }}
             </p>

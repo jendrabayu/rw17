@@ -21,7 +21,12 @@ class Keluarga extends Model
      *
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'rt_id',
+        'nomor',
+        'alamat',
+        'foto_kk'
+    ];
 
     /**
      * Get the penduduk for the penduduk.

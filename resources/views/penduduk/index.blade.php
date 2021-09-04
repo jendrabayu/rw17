@@ -52,7 +52,7 @@
             <div class="card-header-action">
               <button class="btn btn-light btn-icon icon-left" data-toggle="modal" data-target="#filterModal"><i
                   class="fas fa-filter"></i> Filter</button>
-              <div class="d-inline mx-1">
+              <div class="d-inline">
                 <button class="btn btn-success btn-icon icon-left" type="button" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false"><i class="fas fa-file-export"></i>
                   Exports</button>
@@ -66,6 +66,10 @@
                   @endforeach
                 </div>
               </div>
+              <button type="button" class="btn btn-success btn-icon icon-left" data-toggle="modal"
+                data-target="#modalImport">
+                <i class="fas fa-file-import"></i> Import
+              </button>
               <a href="{{ route('penduduk.create') }}" class="btn btn-primary btn-icon icon-left"><i
                   class="fas fa-plus-circle"></i> Tambah</a>
             </div>
@@ -134,6 +138,37 @@
 
 @section('modals')
   @include('penduduk.modal-filter')
+  <div class="modal fade" id="modalImport" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Impor Penduduk</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ route('import_penduduk') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+              <label for="file_penduduk">File Penduduk</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="file_penduduk" name="file_penduduk"
+                  accept=".xlsx, .scv, .xls">
+                <label class="custom-file-label" for="file_penduduk">Choose file</label>
+              </div>
+              <small class="form-text text-muted">Format: XLSX, CSV dan XLS</small>
+            </div>
+
+            <div class="form-group text-right mb-0">
+              <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @push('scripts')
