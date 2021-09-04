@@ -1,0 +1,1 @@
+window.nikParser = require('nik-parser').nikParser;
