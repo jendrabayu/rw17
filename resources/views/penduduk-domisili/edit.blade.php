@@ -70,7 +70,6 @@
                   <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
                     value="{{ $pendudukDomisili->tempat_lahir }}">
                 </div>
-
               </div>
 
               <div class="form-row">
@@ -170,16 +169,17 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="alamat">Alamat <code>(*)</code></label>
-                <input type="text" name="alamat" id="alamat" class="form-control"
-                  value="{{ $pendudukDomisili->alamat }}">
-              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="alamat">Alamat <code>(*)</code></label>
+                  <textarea name="alamat" id="alamat" class="form-control">{{ $pendudukDomisili->alamat }}</textarea>
+                </div>
 
-              <div class="form-group">
-                <label for="alamat_asal">Alamat Asal</label>
-                <input type="text" name="alamat_asal" id="alamat_asal" class="form-control"
-                  value="{{ $pendudukDomisili->alamat_asal }}">
+                <div class="form-group col-md-6">
+                  <label for="alamat_asal">Alamat Asal</label>
+                  <textarea name="alamat_asal" id="alamat_asal"
+                    class="form-control">{{ $pendudukDomisili->alamat_asal }}</textarea>
+                </div>
               </div>
 
               <div class="form-row">
@@ -200,37 +200,38 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="foto_ktp">Foto KTP</label>
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png">
-                  <label class="custom-file-label" for="foto_ktp">Choose file</label>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="foto_ktp">Foto KTP</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png">
+                    <label class="custom-file-label" for="foto_ktp">Choose file</label>
+                  </div>
+                  <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG atau PNG</small>
                 </div>
               </div>
-              <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG dan PNG</small>
-          </div>
 
-          <div class="form-group">
-            @if ($pendudukDomisili->foto_ktp)
-              <div class="ktp-preview p-1 border">
-                <img src="{{ Storage::url($pendudukDomisili->foto_ktp) }}" alt="{{ $pendudukDomisili->nik }}"
-                  class="img-fluid">
+              <div class="form-group">
+                @if ($pendudukDomisili->foto_ktp)
+                  <div class="ktp-preview p-1 border">
+                    <img src="{{ Storage::url($pendudukDomisili->foto_ktp) }}" alt="{{ $pendudukDomisili->nik }}"
+                      class="img-fluid">
+                  </div>
+                @else
+                  <div class="ktp-preview p-1 border d-none">
+                    <img src="" alt="{{ $pendudukDomisili->nik }}" class="img-fluid">
+                  </div>
+                @endif
               </div>
-            @else
-              <div class="ktp-preview p-1 border d-none">
-                <img src="" alt="{{ $pendudukDomisili->nik }}" class="img-fluid">
-              </div>
-            @endif
-          </div>
 
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Simpan Perubahan</button>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">Simpan Perubahan</button>
+              </div>
+            </form>
           </div>
-          </form>
         </div>
       </div>
     </div>
-  </div>
   </div>
 @endsection
 

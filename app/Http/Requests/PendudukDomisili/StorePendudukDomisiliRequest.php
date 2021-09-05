@@ -34,7 +34,7 @@ class StorePendudukDomisiliRequest extends FormRequest
             'nik' => ['numeric', 'required', 'digits:16', 'unique:penduduk_domisili,nik'],
             'nama' => ['string', 'required', 'max:100'],
             'tempat_lahir' => ['string', 'required', 'max:100'],
-            'tanggal_lahir' => ['date', 'required'],
+            'tanggal_lahir' => ['date', 'required', 'before:' . date('Y-m-d')],
             'jenis_kelamin' => ['in:l,p', 'required'],
             'alamat' => ['string', 'required', 'max:200'],
             'alamat_asal' => ['string', 'nullable', 'max:200'],

@@ -59,18 +59,20 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="alamat">Alamat <code>(*)</code></label>
-                <input type="text" class="form-control" id="alamat" name="alamat" value="{{ $keluarga->alamat }}">
-              </div>
-
-              <div class="form-group">
-                <label for="foto_kk">Foto Kartu Keluarga</label>
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="foto_kk" name="foto_kk" accept=".jpg,.png,.jpeg">
-                  <label class="custom-file-label" for="foto_kk">Choose file</label>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="alamat">Alamat <code>(*)</code></label>
+                  <textarea class="form-control" id="alamat" name="alamat">{{ $keluarga->alamat }}</textarea>
                 </div>
-                <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG dan PNG</small>
+
+                <div class="form-group col-md-6">
+                  <label for="foto_kk">Foto Kartu Keluarga</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="foto_kk" name="foto_kk" accept=".jpg,.png,.jpeg">
+                    <label class="custom-file-label" for="foto_kk">Choose file</label>
+                  </div>
+                  <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG dan PNG</small>
+                </div>
               </div>
 
               <div class="form-group">
@@ -87,7 +89,7 @@
               </div>
 
               <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit">Simpan</button>
+                <button class="btn btn-primary btn-block" type="submit">Simpan Perubahan</button>
               </div>
             </form>
           </div>

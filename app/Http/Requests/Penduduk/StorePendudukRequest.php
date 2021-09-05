@@ -35,7 +35,7 @@ class StorePendudukRequest extends FormRequest
             'nik' => ['numeric', 'required', 'digits:16', 'starts_with:3509', 'unique:penduduk,nik'],
             'nama' => ['string', 'required', 'max:100'],
             'tempat_lahir' => ['string', 'required', 'max:100'],
-            'tanggal_lahir' => ['date', 'required'],
+            'tanggal_lahir' => ['date', 'required', 'before:' . date('Y-m-d')],
             'jenis_kelamin' => ['required'],
             'no_paspor' => ['string', 'nullable', 'max:100'],
             'no_kitas_kitap'  => ['string', 'nullable', 'max:100'],

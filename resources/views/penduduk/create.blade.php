@@ -229,7 +229,7 @@
                   <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png" name="foto_ktp">
                   <label class="custom-file-label" for="foto_ktp">Choose file</label>
                 </div>
-                <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG dan PNG</small>
+                <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG atau PNG</small>
               </div>
 
               <div class="form-group">

@@ -134,12 +134,18 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="alamat">Alamat <code>(*)</code></label>
-                <input class="form-control" type="text" name="alamat" id="alamat"
-                  value="{{ $pendudukMeninggal->alamat }}">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="alamat">Alamat <code>(*)</code></label>
+                  <textarea class="form-control" name="alamat"
+                    id="alamat">{{ $pendudukMeninggal->alamat }}</textarea>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="tanggal_kematian">Tanggal Kematian <code>(*)</code></label>
+                  <input type="date" class="form-control" id="tanggal_kematian" name="tanggal_kematian"
+                    value="{{ $pendudukMeninggal->tanggal_kematian }}">
+                </div>
               </div>
-
 
               <div class="form-row">
                 <div class="form-group col-md-6">
@@ -155,66 +161,59 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="tanggal_kematian">Tanggal Kematian <code>(*)</code></label>
-                  <input type="date" class="form-control" id="tanggal_kematian" name="tanggal_kematian"
-                    value="{{ $pendudukMeninggal->tanggal_kematian }}">
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group col-md-6">
                   <label for="jam_kematian">Jam Kematian</label>
                   <input type="time" class="form-control" id="jam_kematian" name="jam_kematian"
                     value="{{ $pendudukMeninggal->jam_kematian }}">
                 </div>
+              </div>
+
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="tempat_kematian">Tempat Kematian</label>
                   <input type="text" class="form-control" id="tempat_kematian" name="tempat_kematian"
                     value="{{ $pendudukMeninggal->tempat_kematian }}">
                 </div>
-
-              </div>
-
-              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="sebab_kematian">Sebab Kematian</label>
                   <input type="text" class="form-control" id="sebab_kematian" name="sebab_kematian"
                     value="{{ $pendudukMeninggal->sebab_kematian }}">
                 </div>
+              </div>
+
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="tempat_pemakaman">Tempat Pemakaman</label>
                   <input type="text" class="form-control" id="tempat_pemakaman" name="tempat_pemakaman"
                     value="{{ $pendudukMeninggal->tempat_pemakaman }}">
                 </div>
-              </div>
-
-              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="nama_ayah">Nama Ayah</label>
                   <input type="text" class="form-control" name="nama_ayah" id="nama_ayah"
                     value="{{ $pendudukMeninggal->nama_ayah }}">
                 </div>
+              </div>
+
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="nama_ibu">Nama Ibu</label>
                   <input type="text" class="form-control" name="nama_ibu" id="nama_ibu"
                     value="{{ $pendudukMeninggal->nama_ibu }}">
                 </div>
-              </div>
-
-
-              <div class="form-group">
-                <label for="foto_ktp">Foto KTP</label>
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="foto_ktp" name="foto_ktp" accept=".jpg, .jpeg, .png">
-                  <label class="custom-file-label" for="foto_ktp">Choose file</label>
+                <div class="form-group col-md-6">
+                  <label for="foto_ktp">Foto KTP</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="foto_ktp" name="foto_ktp" accept=".jpg, .jpeg, .png">
+                    <label class="custom-file-label" for="foto_ktp">Choose file</label>
+                  </div>
+                  <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG atau PNG</small>
                 </div>
-                <small class="form-text text-muted">Ukuran maksimal 1MB, format jpg,jpeg,png</small>
               </div>
 
               <div class="form-group">
                 @if ($pendudukMeninggal->foto_ktp)
                   <div class="ktp-preview p-1 border">
-                    <img src="{{ Storage::url($pendudukMeninggal->foto_ktp) }}" alt="" class="img-fluid">
+                    <img src="{{ Storage::url($pendudukMeninggal->foto_ktp) }}" alt="{{ $pendudukMeninggal->nik }}"
+                      class="img-fluid">
                   </div>
                 @else
                   <div class="ktp-preview p-1 border d-none">

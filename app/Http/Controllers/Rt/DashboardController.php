@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Rt;
 use App\Http\Controllers\Controller;
 use App\Models\Keluarga;
 use App\Models\Penduduk;
+use App\Models\PendudukDomisili;
+use App\Models\PendudukMeninggal;
 use App\Models\Rumah;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,7 +29,9 @@ class DashboardController extends Controller
                 $q->where('rt_id', $rt_id);
             })->count(),
             'total_rumah' => Rumah::where('rt_id', $rt_id)->count(),
-            'total_keluarga' => Keluarga::where('rt_id', $rt_id)->count()
+            'total_keluarga' => Keluarga::where('rt_id', $rt_id)->count(),
+            'total_penduduk_domisili' => PendudukDomisili::where('rt_id', $rt_id)->count(),
+            'total_penduduk_meninggal' => PendudukMeninggal::where('rt_id', $rt_id)->count()
         ]);
     }
 }

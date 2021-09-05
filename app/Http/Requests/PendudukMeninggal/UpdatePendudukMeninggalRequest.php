@@ -39,7 +39,7 @@ class UpdatePendudukMeninggalRequest extends FormRequest
             'nama_ibu' =>  ['string', 'nullable', 'max:100'],
             'foto_ktp' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000'],
             'alamat' => ['string', 'required', 'max:255'],
-            'tanggal_kematian' => ['date_format:Y-m-d', 'required'],
+            'tanggal_kematian' => ['date_format:Y-m-d', 'required', 'before_or_equal:' . date('Y-m-d')],
             'jam_kematian' => ['date_format:H:i', 'nullable'],
             'tempat_kematian' => ['string', 'max:100', 'nullable'],
             'sebab_kematian' => ['string', 'max:100', 'nullable'],

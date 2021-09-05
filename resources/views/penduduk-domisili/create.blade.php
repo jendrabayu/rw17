@@ -157,15 +157,17 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="alamat">Alamat <code>(*)</code></label>
-                <input type="text" name="alamat" id="alamat" class="form-control" value="{{ old('alamat') }}">
-              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="alamat">Alamat <code>(*)</code></label>
+                  <textarea name="alamat" id="alamat" class="form-control">{{ old('alamat') }}</textarea>
+                </div>
 
-              <div class="form-group">
-                <label for="alamat_asal">Alamat Asal</label>
-                <input type="text" name="alamat_asal" id="alamat_asal" class="form-control"
-                  value="{{ old('alamat_asal') }}">
+                <div class="form-group col-md-6">
+                  <label for="alamat_asal">Alamat Asal</label>
+                  <textarea name="alamat_asal" id="alamat_asal"
+                    class="form-control">{{ old('alamat_asal') }}</textarea>
+                </div>
               </div>
 
               <div class="form-row">
@@ -185,13 +187,15 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="foto_ktp">Foto KTP</label>
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png">
-                  <label class="custom-file-label" for="foto_ktp">Choose file</label>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="foto_ktp">Foto KTP</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png">
+                    <label class="custom-file-label" for="foto_ktp">Choose file</label>
+                  </div>
+                  <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG atau PNG</small>
                 </div>
-                <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG dan PNG</small>
               </div>
 
               <div class="form-group">

@@ -46,7 +46,8 @@
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label" for="role">Role</label>
                     <div class="col-sm-9">
-                      <input type="text" class="form-control" id="role" value="{{ strtoupper($user->role) }}" disabled>
+                      <input type="text" class="form-control" id="role" value="{{ strtoupper($user->role) }}"
+                        disabled>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -69,15 +70,16 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="no_hp">No. Hp/Whatsapp</label>
+                    <label class="col-sm-3 col-form-label" for="no_hp">No. Hp/WhatsApp</label>
                     <div class="col-sm-9">
-                      <input type="text" class="form-control" id="no_hp" name="no_hp" value="{{ $user->no_hp }}">
+                      <input type="tel" class="form-control" id="no_hp" name="no_hp" value="{{ $user->no_hp }}"
+                        maxlength="13">
                     </div>
                   </div>
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label" for="alamat">Alamat</label>
                     <div class="col-sm-9">
-                      <input type="text" class="form-control" id="alamat" name="alamat" value="{{ $user->alamat }}">
+                      <textarea class="form-control" id="alamat" name="alamat">{{ $user->alamat }}</textarea>
                     </div>
                   </div>
                   <div class="form-group">

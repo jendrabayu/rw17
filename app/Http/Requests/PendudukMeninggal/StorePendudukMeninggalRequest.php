@@ -27,7 +27,7 @@ class StorePendudukMeninggalRequest extends FormRequest
             'rt_id' => ['numeric', 'required', 'exists:rt,id'],
             'penduduk_id' => ['numeric', 'required', 'exists:penduduk,id'],
             'tanggal_kematian' => ['date_format:Y-m-d', 'required'],
-            'jam_kematian' => ['date_format:H:i', 'nullable'],
+            'jam_kematian' => ['date_format:H:i', 'nullable', 'before_or_equal:'. date('Y-m-d')],
             'tempat_kematian' => ['string', 'max:100', 'nullable'],
             'sebab_kematian' => ['string', 'max:100', 'nullable'],
             'tempat_pemakaman' => ['string', 'max:100', 'nullable']

@@ -66,7 +66,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="alamat">Alamat <code>(*)</code></label>
-                  <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat') }}">
+                  <textarea class="form-control" id="alamat" name="alamat"> {{ old('alamat') }}</textarea>
                 </div>
 
                 <div class="form-group col-md-6">

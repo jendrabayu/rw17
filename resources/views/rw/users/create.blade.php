@@ -49,11 +49,11 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label for="role">Role <code>(*)</code></label>
-                  <select class="form-control" name="role" id="role">
+                  <select class="form-control select2" name="role" id="role">
                     <option selected disabled hidden>--Pilih Role--</option>
                     @foreach ($roles as $id => $role)
                       <option {{ old('role') == $id ? 'selected' : '' }} value="{{ $id }}">
-                        {{ $role }}</option>
+                        {{ Str::upper($role) }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -62,7 +62,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="rt">RT <code>(*)</code></label>
-                  <select class="form-control" name="rt_id" id="rt">
+                  <select class="form-control select2" name="rt_id" id="rt">
                     <option selected disabled hidden>--Pilih RT--</option>
                     @foreach ($rt as $id => $rt)
                       <option {{ old('rt_id') == $id ? 'selected' : '' }} value="{{ $id }}">RT
@@ -74,23 +74,11 @@
                   <label for="password">Password <code>(*)</code></label>
                   <input type="text" class="form-control" id="password" name="password">
                 </div>
-
               </div>
 
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="no_hp">No. Hp/Whatsapp</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">+62</div>
-                    </div>
-                    <input type="text" class="form-control" id="no_hp" name="no_hp" value="{{ old('no_hp') }}">
-                  </div>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="alamat">Alamat</label>
-                  <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat') }}">
-                </div>
+              <div class="form-group">
+                <label for="alamat">Alamat</label>
+                <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat') }}">
               </div>
 
               <div class="form-row">
@@ -101,6 +89,16 @@
                         class="fas fa-camera"></i></button>
                     <img class="img-fluid" src="{{ asset('assets/img/avatar/avatar-1.png') }}">
                     <input type="file" name="avatar" id="avatar" accept=".jpg, .jpeg, .png" hidden>
+                  </div>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="no_hp">No. Hp/WhatsApp</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">+62</div>
+                    </div>
+                    <input type="tel" class="form-control" id="no_hp" name="no_hp" value="{{ old('no_hp') }}"
+                      maxlength="13">
                   </div>
                 </div>
               </div>
