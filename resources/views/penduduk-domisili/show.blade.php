@@ -74,28 +74,8 @@
                   <td>{{ $pendudukDomisili->pendidikan->nama }}</td>
                 </tr>
                 <tr>
-                  <th>Status Hubungan Dalam Keluarga</th>
-                  <td>{{ $pendudukDomisili->statusHubunganDalamKeluarga->nama }}</td>
-                </tr>
-                <tr>
                   <th>Golongan Darah</th>
                   <td>{{ $pendudukDomisili->darah->nama }}</td>
-                </tr>
-                <tr>
-                  <th>Nomor Paspor</th>
-                  <td>{{ $pendudukDomisili->no_paspor }}</td>
-                </tr>
-                <tr>
-                  <th>Nomor KITAS/KITAP</th>
-                  <td>{{ $pendudukDomisili->no_kitas_kitap }}</td>
-                </tr>
-                <tr>
-                  <th>Nama Ayah</th>
-                  <td>{{ $pendudukDomisili->nama_ayah }}</td>
-                </tr>
-                <tr>
-                  <th>Nama Ibu</th>
-                  <td>{{ $pendudukDomisili->nama_ibu }}</td>
                 </tr>
                 <tr>
                   <th>No. Hp/WhatsApp</th>

@@ -120,7 +120,7 @@
                         <td>{{ $penduduk->nama }}</td>
                         <td>{{ $penduduk->tempat_lahir }}</td>
                         <td>{{ $penduduk->tanggal_lahir }}</td>
-                        <td>{{ $penduduk->gender }}</td>
+                        <td>{{ $penduduk->jenis_kelamin_text }}</td>
                         <td>{{ $penduduk->darah->nama }}</td>
                         <td>{{ $penduduk->agama->nama }}</td>
                         <td>{{ $penduduk->statusPerkawinan->nama }}</td>
