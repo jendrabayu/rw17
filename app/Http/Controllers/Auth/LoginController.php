@@ -26,7 +26,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -36,25 +36,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-    }
-
-    /**
-     * Get the path the user should be redirected to.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return string
-     */
-    protected function redirectTo()
-    {
-        if (auth()->user()->role === 'rw') {
-            return route('rw.dashboard');
-        }
-
-        if (auth()->user()->role === 'rt') {
-            return route('rt.dashboard');
-        }
-
-        return route('/');
     }
 
 

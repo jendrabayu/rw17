@@ -17,16 +17,16 @@
             <ul class="nav nav-pills">
               <li class="nav-item">
                 <a class="nav-link {{ !request()->get('role') ? 'active' : '' }}"
-                  href="{{ route('rw.users.index') }}">Semua
+                  href="{{ route('users.index') }}">Semua
                   Pengguna</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link {{ request()->get('role') == 'rw' ? 'active' : '' }}"
-                  href="{{ route('rw.users.index', ['role' => 'rw']) }}">Pengguna RW</a>
+                  href="{{ route('users.index', ['role' => 'rw']) }}">Pengguna RW</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link {{ request()->get('role') == 'rt' ? 'active' : '' }}"
-                  href="{{ route('rw.users.index', ['role' => 'rt']) }}">Pengguna RT</a>
+                  href="{{ route('users.index', ['role' => 'rt']) }}">Pengguna RT</a>
               </li>
             </ul>
           </div>
@@ -46,7 +46,7 @@
           <div class="card-header">
             <h4>Pengguna</h4>
             <div class=" card-header-action">
-              <a href="{{ route('rw.users.create') }}" class="btn btn-primary btn-icon icon-left">
+              <a href="{{ route('users.create') }}" class="btn btn-primary btn-icon icon-left">
                 <i class="fas fa-plus-circle"></i> Tambah
               </a>
             </div>
@@ -70,10 +70,10 @@
                     <tr>
                       <td class="text-center">
                         <div class="btn-group btn-group-sm ">
-                          <a href="{{ route('rw.users.edit', $item->id) }}" class="btn btn-warning btn-icon">
+                          <a href="{{ route('users.edit', $item->id) }}" class="btn btn-warning btn-icon">
                             <i class="fas fa-pencil-alt"></i>
                           </a>
-                          <button data-url="{{ route('rw.users.destroy', $item->id) }}" type="button"
+                          <button data-url="{{ route('users.destroy', $item->id) }}" type="button"
                             class="btn btn-danger btn-icon btn-delete">
                             <i class="fas fa-trash-alt"></i>
                           </button>

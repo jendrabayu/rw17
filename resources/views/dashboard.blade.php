@@ -18,7 +18,7 @@
           </div>
           <div class="card-wrap">
             <div class="card-header">
-              <h4>Total Pengguna</h4>
+              <h4>Pengguna</h4>
             </div>
             <div class="card-body">
               {{ $total_pengguna }}
@@ -33,7 +33,7 @@
           </div>
           <div class="card-wrap">
             <div class="card-header">
-              <h4>Total Penduduk</h4>
+              <h4>Penduduk</h4>
             </div>
             <div class="card-body">
               {{ $total_penduduk }}
@@ -48,7 +48,7 @@
           </div>
           <div class="card-wrap">
             <div class="card-header">
-              <h4>Total Keluarga</h4>
+              <h4>Keluarga</h4>
             </div>
             <div class="card-body">
               {{ $total_keluarga }}
@@ -63,7 +63,7 @@
           </div>
           <div class="card-wrap">
             <div class="card-header">
-              <h4>Total Rumah</h4>
+              <h4>Rumah</h4>
             </div>
             <div class="card-body">
               {{ $total_rumah }}
@@ -102,6 +102,29 @@
         </div>
       </div>
     </div>
+
+    @role('rw')
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <ul class="nav nav-pills">
+              <li class="nav-item">
+                <a class="nav-link {{ !request()->has('rt') ? 'active' : '' }}" href="{{ route('home') }}">Semua
+                  RT</a>
+              </li>
+              @foreach ($rt as $id => $nomor)
+                <li class="nav-item">
+                  <a class="nav-link {{ request()->get('rt') == $id ? 'active' : '' }}"
+                    href="{{ route('home', ['rt' => $id]) }}">RT {{ $nomor }}</a>
+                </li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    @endrole
 
     <div class="row">
       @include('statistik-penduduk.card')

@@ -32,7 +32,7 @@ class AccountController extends Controller
         ]);
 
         if ($request->hasFile('avatar')) {
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $request->file('avatar')->store('public/avatars');
             Storage::disk('public')->delete($user->avatar);
         }
 

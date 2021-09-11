@@ -25,6 +25,9 @@ Auth::routes([
 ]);
 
 Route::middleware(['auth'])->group(function () {
+    Route::resource('users', \App\Http\Controllers\UserController::class)->except('show')->middleware('role:rw');
+    Route::get('/home', \App\Http\Controllers\DashboardController::class)->name('home');
+
     Route::get('/profil', [\App\Http\Controllers\AccountController::class, 'profile'])->name('profile');
     Route::put('/profil', [\App\Http\Controllers\AccountController::class, 'updateProfile'])->name('update_profile');
     Route::get('/ubah-password', [\App\Http\Controllers\AccountController::class, 'password'])->name('password');
@@ -49,15 +52,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/penduduk-meninggal', [\App\Http\Controllers\PendudukMeninggalController::class, 'export'])->name('penduduk_meninggal');
         Route::get('/keluarga', [\App\Http\Controllers\KeluargaController::class, 'export'])->name('keluarga');
         Route::get('/rumah', [\App\Http\Controllers\RumahController::class, 'export'])->name('rumah');
-    });
-
-    Route::middleware(['role:rw'])->name('rw.')->prefix('rw')->group(function () {
-        Route::get('/', \App\Http\Controllers\Rw\DashboardController::class)->name('dashboard');
-        Route::resource('users', \App\Http\Controllers\Rw\UserController::class)->except('show');
-    });
-
-    Route::middleware(['role:rt'])->name('rt.')->prefix('rt')->group(function () {
-        Route::get('/', \App\Http\Controllers\Rt\DashboardController::class)->name('dashboard');
     });
 });
 

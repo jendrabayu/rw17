@@ -7,11 +7,11 @@
 @section('content')
   <div class="section-header">
     <div class="section-header-back">
-      <a href="{{ route('rw.users.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+      <a href="{{ route('users.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
     <h1>Tambah Pengguna</h1>
     <div class="section-header-breadcrumb">
-      <div class="breadcrumb-item"><a href="{{ route('rw.users.index') }}">Pengguna</a></div>
+      <div class="breadcrumb-item"><a href="{{ route('users.index') }}">Pengguna</a></div>
       <div class="breadcrumb-item">Tambah Pengguna</div>
     </div>
   </div>
@@ -29,7 +29,7 @@
             <h4>Tambah Pengguna</h4>
           </div>
           <div class="card-body">
-            <form action="{{ route('rw.users.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
               @csrf
               <div class="form-row">
                 <div class="form-group col-md-6">

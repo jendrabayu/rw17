@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Rw;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Rt;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +26,7 @@ class UserController extends Controller
         });
         $users = $users->latest()->get()->load('rt');
 
-        return view('rw.users.index', compact('users'));
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -41,10 +40,10 @@ class UserController extends Controller
         $roles = Role::all()->pluck('name', 'id');
         $rt = $rw->rt->pluck('nomor', 'id');
 
-        return view('rw.users.create', compact('rw', 'roles', 'rt'));
+        return view('users.create', compact('rw', 'roles', 'rt'));
     }
 
-    /**
+    /** Route::resource('users', \App\Http\Controllers\Rw\UserController::class)->except('show');
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -65,7 +64,7 @@ class UserController extends Controller
         ]);
 
         if ($request->hasFile('avatar')) {
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $request->file('avatar')->store('public/avatars');
         }
 
         $validated['password'] =  Hash::make($request->password);
@@ -75,7 +74,7 @@ class UserController extends Controller
         $role = Role::findById($request->role);
         $user->assignRole($role);
 
-        return redirect()->route('rw.users.index')->with('success', 'Berhasil menambahkan pengguna baru');
+        return redirect()->route('users.index')->with('success', 'Berhasil menambahkan pengguna baru');
     }
 
     /**
@@ -91,7 +90,7 @@ class UserController extends Controller
         $roles = Role::all()->pluck('name', 'id');
         $rt = $rw->rt->pluck('nomor', 'id');
 
-        return view('rw.users.edit', compact('user', 'rw', 'roles', 'rt'));
+        return view('users.edit', compact('user', 'rw', 'roles', 'rt'));
     }
 
     /**
@@ -121,7 +120,7 @@ class UserController extends Controller
         unset($validated['role']);
 
         if ($request->hasFile('avatar')) {
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $request->file('avatar')->store('public/avatars');
             Storage::disk('public')->delete($user->avatar);
         }
 

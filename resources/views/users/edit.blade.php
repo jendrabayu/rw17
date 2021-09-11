@@ -7,11 +7,11 @@
 @section('content')
   <div class="section-header">
     <div class="section-header-back">
-      <a href="{{ route('rw.users.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+      <a href="{{ route('users.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
     <h1>Edit Pengguna</h1>
     <div class="section-header-breadcrumb">
-      <div class="breadcrumb-item"><a href="{{ route('rw.users.index') }}">Pengguna</a></div>
+      <div class="breadcrumb-item"><a href="{{ route('users.index') }}">Pengguna</a></div>
       <div class="breadcrumb-item">Edit Pengguna</div>
     </div>
   </div>
@@ -29,7 +29,7 @@
             <h4>Edit Pengguna</h4>
           </div>
           <div class="card-body">
-            <form action="{{ route('rw.users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
               @csrf
               @method('PUT')
               <div class="form-row">
