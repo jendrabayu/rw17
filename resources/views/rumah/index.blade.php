@@ -24,7 +24,7 @@
                 <li class="nav-item">
                   <a class="nav-link {{ request()->get('rt') == $nomor ? 'active' : '' }}"
                     href="{{ route('rumah.index', ['rt' => $id]) }}">RT
-                    {{ $nomor }}</a>
+                    {{ ltrim($nomor, '0') }}</a>
                 </li>
               @endforeach
             </ul>
@@ -71,8 +71,8 @@
                   <tr>
                     <th class="text-center">#</th>
                     <th>Alamat</th>
-                    <th>Nomor Rumah</th>
-                    <th>Nomor KK</th>
+                    <th>No. Rumah</th>
+                    <th>No. Kartu Keluarga</th>
                     <th>Tipe Bangunan</th>
                     <th>Penggunaan Bangunan</th>
                     <th>Kontruksi Bangunan</th>

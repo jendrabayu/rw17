@@ -18,7 +18,17 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $guarded = [];
+
+    protected $fillable = [
+        'rt_id',
+        'name',
+        'username',
+        'email',
+        'no_hp',
+        'alamat',
+        'avatar',
+        'password',
+    ];
 
     /**
      * The accessors to append to the model's array form.

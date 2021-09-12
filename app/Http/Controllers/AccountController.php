@@ -23,12 +23,14 @@ class AccountController extends Controller
         $user = auth()->user();
 
         $validated = $this->validate($request, [
-            'name' => ['string', 'required', 'max:50'],
-            'username' =>  ['alpha_dash', 'required', 'max:25', 'unique:users,username,' . $user->id],
-            'email' => ['string', 'required', 'max:25', 'unique:users,email,' . $user->id],
+            'name' => ['string', 'required', 'max:32'],
+            'username' =>  ['alpha_dash', 'required', 'max:15', 'unique:users,username,' . $user->id],
+            'email' => ['email', 'required', 'max:50', 'unique:users,email,' . $user->id],
             'no_hp' =>  ['string', 'nullable', 'max:15', 'starts_with:+62,62,08'],
-            'alamat' => ['string', 'nullable', 'max:150'],
+            'alamat' => ['string', 'nullable', 'max:255'],
             'avatar' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000'],
+        ], [], [
+            'name' => 'nama'
         ]);
 
         if ($request->hasFile('avatar')) {
@@ -37,20 +39,21 @@ class AccountController extends Controller
         }
 
         $user->update($validated);
-        return back()->with('success', 'Profil Anda berhasil diupdate');
+        return back()->withSuccess('Profil Anda berhasil diupdate');
     }
 
     public function updatePassword(Request $request)
     {
-        $user = auth()->user();
-
-        $request->validate([
+        $this->validate($request, [
             'current_password' => ['required', 'current_password'],
             'password' => ['string', 'required', 'min:3', 'max:12', 'confirmed'],
+        ], [], [
+            'current_password' => 'password sekarang',
+            'password' => 'password baru'
         ]);
 
-        $user->update(['password' => Hash::make($request->get('password'))]);
+        auth()->user()->update(['password' => Hash::make($request->get('password'))]);
 
-        return back()->with('success', 'Password Anda berhasil diubah');
+        return back()->withSuccess('Password Anda berhasil diubah');
     }
 }

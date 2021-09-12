@@ -27,7 +27,7 @@
                 <li class="nav-item">
                   <a class="nav-link {{ request()->get('rt') == $id ? 'active' : '' }}"
                     href="{{ route('penduduk-meninggal.index', array_merge(['rt' => $id], $all_requests)) }}">RT
-                    {{ $nomor }}</a>
+                    {{ ltrim($nomor, '0') }}</a>
                 </li>
               @endforeach
             </ul>
@@ -136,23 +136,23 @@
             <div class="form-row">
               <div class="form-group col-md-6">
                 @role('rt')
-                <label for="rt">RT <code>(*)</code></label>
+                <label for="rt">RT <code>*</code></label>
                 <input type="text" class="form-control" id="rt" name="rt" value="RT {{ $rt->nomor }}" disabled>
                 <input type="text" hidden name="rt_id" value="{{ $rt->id }}">
                 @endrole
 
                 @role('rw')
-                <label for="rt">RT <code>(*)</code></label>
-                <select name="rt_id" id="rt" class="form-control select2">
+                <label for="rt">RT <code>*</code></label>
+                <select name="rt_id" id="rt" class="custom-select">
                   <option selected disabled hidden value="">--Pilih RT--</option>
                   @foreach ($rt as $id => $nomor)
-                    <option value="{{ $id }}">RT {{ $nomor }}</option>
+                    <option value="{{ $id }}">RT {{ ltrim($nomor, '0') }}</option>
                   @endforeach
                 </select>
                 @endrole
               </div>
               <div class="form-group col-md-6">
-                <label for="penduduk">Penduduk <code>(*)</code></label>
+                <label for="penduduk">Penduduk <code>*</code></label>
                 @role('rt')
                 <select name="penduduk_id" id="penduduk" class="form-control select2">
                   <option selected disabled hidden value="">--Pilih Penduduk--</option>
@@ -171,7 +171,7 @@
 
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="tanggal_kematian">Tanggal Kematian <code>(*)</code></label>
+                <label for="tanggal_kematian">Tanggal Kematian <code>*</code></label>
                 <input type="date" class="form-control" id="tanggal_kematian" name="tanggal_kematian">
               </div>
               <div class="form-group col-md-6">

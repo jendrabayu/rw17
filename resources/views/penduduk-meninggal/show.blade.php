@@ -18,7 +18,7 @@
   <div class="section-body">
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Detail Penduduk Meninggal</h4>
           </div>
@@ -66,7 +66,7 @@
                   <td>{{ $pendudukMeninggal->alamat }}</td>
                 </tr>
                 <tr>
-                  <th>RT/RW</th>
+                  <th>RT / RW</th>
                   <td>{{ $pendudukMeninggal->rt->nomor . '/' . $pendudukMeninggal->rt->rw->nomor }}
                   </td>
                 </tr>
@@ -118,8 +118,8 @@
                   <th>Foto KTP</th>
                   <td>
                     @if ($pendudukMeninggal->foto_ktp)
-                      <div class="border p-1">
-                        <img class="img-fluid" src="{{ Storage::url($pendudukMeninggal->foto_ktp) }}"
+                      <div class="img-thumbnail">
+                        <img class="w-100" src="{{ Storage::url($pendudukMeninggal->foto_ktp) }}"
                           alt="{{ $pendudukMeninggal->nik }}">
                       </div>
                     @endif

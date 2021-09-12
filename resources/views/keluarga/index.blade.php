@@ -25,7 +25,7 @@
                 <li class="nav-item">
                   <a class="nav-link {{ request()->get('rt') == $nomor ? 'active' : '' }}"
                     href="{{ route('keluarga.index', ['rt' => $id]) }}">RT
-                    {{ $nomor }}</a>
+                    {{ ltrim($nomor, '0') }}</a>
                 </li>
               @endforeach
             </ul>

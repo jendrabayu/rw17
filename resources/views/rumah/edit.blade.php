@@ -25,7 +25,7 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Edit Rumah</h4>
           </div>
@@ -36,7 +36,7 @@
               @method('PUT')
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="rt">RT <code>(*)</code></label>
+                  <label for="rt">RT <code>*</code></label>
                   @role('rt')
                   <input type="text" readonly value="RT {{ $rt->nomor }}" class="form-control">
                   <input type="text" hidden value="{{ $rt->id }}" name="rt_id">
@@ -46,13 +46,13 @@
                     <option selected hidden value="" disabled>--Pilih RT--</option>
                     @foreach ($rt as $id => $rt)
                       <option {{ $rumah->rt->id == $id ? 'selected' : '' }} value="{{ $id }}"
-                        class="form-control">RT {{ $rt }}</option>
+                        class="form-control">RT {{ ltrim($rt, '0') }}</option>
                     @endforeach
                   </select>
                   @endrole
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="keluarga">Nomor Kartu Keluarga <code>(*)</code></label>
+                  <label for="keluarga">Nomor Kartu Keluarga <code>*</code></label>
                   <select name="keluarga_id[]" id="keluarga" class="form-control select2" multiple>
                     @php
                       $keluarga_ids = $rumah->keluarga
@@ -73,12 +73,12 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="alamat">Alamat <code>(*)</code></label>
+                  <label for="alamat">Alamat <code>*</code></label>
                   <textarea class="form-control" id="alamat" name="alamat">{{ $rumah->alamat }}</textarea>
                 </div>
 
                 <div class="form-group col-md-6">
-                  <label for="nomor">Nomor Rumah <code>(*)</code></label>
+                  <label for="nomor">Nomor Rumah <code>*</code></label>
                   <input type="text" class="form-control" id="nomor" name="nomor" value="{{ $rumah->nomor }}">
                 </div>
               </div>
@@ -111,8 +111,8 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit">Simpan Perubahan</button>
+              <div class="form-group mb-0">
+                <button class="btn btn-primary btn-block btn-lg" type="submit">Simpan Perubahan</button>
               </div>
             </form>
           </div>

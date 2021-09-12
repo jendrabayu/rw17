@@ -112,11 +112,9 @@
       form.prop('action', $(this).data('url'));
       Swal.fire({
         title: 'Hapus Pengguna?',
-        text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+        text: 'Pengguna yang sudah dihapus tidak dapat dikembalikan!',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#47597E',
-        cancelButtonColor: '#cdd3d8',
         confirmButtonText: 'Hapus',
         cancelButtonText: 'Batal',
         reverseButtons: true,

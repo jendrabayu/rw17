@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UserStoreRequest;
+use App\Http\Requests\Users\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -49,32 +51,19 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $validated = $this->validate($request, [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'name' => ['string', 'required', 'max:50'],
-            'username' =>  ['alpha_dash', 'required', 'max:25', 'unique:users,username'],
-            'email' => ['string', 'required', 'max:25', 'unique:users,email'],
-            'no_hp' =>  ['string', 'nullable', 'max:15', 'starts_with:+62,62,08'],
-            'alamat' => ['string', 'nullable', 'max:150'],
-            'avatar' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000'],
-            'password' => ['string', 'required', 'min:3', 'max:12'],
-            'role' => ['numeric', 'required']
-        ]);
+        $validated = $request->validated();
+        $validated['password'] =  Hash::make($request->password);
 
         if ($request->hasFile('avatar')) {
             $validated['avatar'] = $request->file('avatar')->store('public/avatars');
         }
 
-        $validated['password'] =  Hash::make($request->password);
-
-        unset($validated['role']);
         $user = User::create($validated);
-        $role = Role::findById($request->role);
-        $user->assignRole($role);
+        $user->assignRole($request->role);
 
-        return redirect()->route('users.index')->with('success', 'Berhasil menambahkan pengguna baru');
+        return redirect()->route('users.index')->withSuccess('Berhasil menambahkan pengguna');
     }
 
     /**
@@ -100,24 +89,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        $user = User::findOrFail($id);
-
-        $validated = $this->validate($request, [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'name' => ['string', 'required', 'max:50'],
-            'username' =>  ['alpha_dash', 'required', 'max:25', 'unique:users,username,' . $user->id],
-            'email' => ['string', 'required', 'max:25', 'unique:users,email,' . $user->id],
-            'no_hp' =>  ['string', 'nullable', 'max:15', 'starts_with:+62,62,08'],
-            'alamat' => ['string', 'nullable', 'max:150'],
-            'avatar' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000'],
-            'password' => ['string', 'nullable', 'min:3', 'max:12'],
-            'role' => ['numeric', 'required']
-        ]);
-
-        $validated['password'] = $request->password ? Hash::make($request->password) : $user->password;
-        unset($validated['role']);
+        $validated = $request->validated();
+        $validated['password'] = !is_null($request->password) ? Hash::make($request->password) : $user->password;
 
         if ($request->hasFile('avatar')) {
             $validated['avatar'] = $request->file('avatar')->store('public/avatars');
@@ -127,7 +102,7 @@ class UserController extends Controller
         $user->update($validated);
         $user->syncRoles($request->role);
 
-        return back()->with('success', 'Data pengguna berhasil diupdate');
+        return back()->withSuccess('Pengguna berhasil diupdate');
     }
 
     /**
@@ -136,11 +111,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
         $user->delete();
-
-        return back()->with('success', 'Pengguna berhasil dihapus');
+        return back()->withSuccess('Pengguna berhasil dihapus');
     }
 }

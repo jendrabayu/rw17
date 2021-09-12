@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Penduduk;
 use App\Models\Rt;
-use Illuminate\Http\Request;
 
 class AjaxController extends Controller
 {
@@ -28,7 +27,7 @@ class AjaxController extends Controller
             return $q->where('rt_id', $rt->id);
         });
 
-        $penduduk = $penduduk->orderBy('keluarga_id', 'asc')->get();
+        $penduduk = $penduduk->orderBy('keluarga_id')->get();
         $penduduk = $penduduk->map(function ($penduduk) {
             return [
                 'id' => $penduduk->id,

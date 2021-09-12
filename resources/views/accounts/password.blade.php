@@ -18,7 +18,7 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Ubah Password</h4>
           </div>
@@ -27,29 +27,29 @@
               @csrf
               @method('PUT')
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="current_password">Password Sekarang <code>(*)</code></label>
+                <label class="col-sm-3 col-form-label" for="current_password">Password Sekarang <code>*</code></label>
                 <div class="col-sm-9">
                   <input type="password" class="form-control" id="current_password" name="current_password">
                 </div>
               </div>
 
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="password">Password <code>(*)</code></label>
+                <label class="col-sm-3 col-form-label" for="password">Password Baru <code>*</code></label>
                 <div class="col-sm-9">
                   <input type="password" class="form-control" id="password" name="password">
                 </div>
               </div>
 
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="password_confirmation">Kondirmasi Password
-                  <code>(*)</code></label>
+                <label class="col-sm-3 col-form-label" for="password_confirmation">Kondirmasi Password Baru
+                  <code>*</code></label>
                 <div class="col-sm-9">
                   <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
                 </div>
               </div>
 
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Ubah Password</button>
+              <div class="form-group mb-0">
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Ubah Password</button>
               </div>
             </form>
           </div>

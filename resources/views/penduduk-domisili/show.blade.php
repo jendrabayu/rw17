@@ -18,7 +18,7 @@
   <div class="section-body">
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Detail Penduduk Domisili</h4>
           </div>
@@ -35,7 +35,7 @@
                 </tr>
                 <tr>
                   <th>Jenis Kelamin</th>
-                  <td>{{ $pendudukDomisili->gender }}</td>
+                  <td>{{ $pendudukDomisili->jenis_kelamin_text }}</td>
                 </tr>
                 <tr>
                   <th>Tempat Lahir</th>
@@ -66,7 +66,7 @@
                   <td>{{ $pendudukDomisili->alamat_asal }}</td>
                 </tr>
                 <tr>
-                  <th>RT/RW</th>
+                  <th>RT / RW</th>
                   <td>{{ $pendudukDomisili->rt->nomor . '/' . $pendudukDomisili->rt->rw->nomor }}</td>
                 </tr>
                 <tr>
@@ -78,7 +78,7 @@
                   <td>{{ $pendudukDomisili->darah->nama }}</td>
                 </tr>
                 <tr>
-                  <th>No. Hp/WhatsApp</th>
+                  <th>No. Hp / WhatsApp</th>
                   <td>{{ $pendudukDomisili->no_hp }}</td>
                 </tr>
                 <tr>
@@ -89,8 +89,8 @@
                   <th>Foto KTP</th>
                   <td>
                     @if ($pendudukDomisili->foto_ktp)
-                      <div class="border p-1">
-                        <img class="img-fluid" src="{{ Storage::url($pendudukDomisili->foto_ktp) }}"
+                      <div class="img-thumbnail">
+                        <img class="w-100" src="{{ Storage::url($pendudukDomisili->foto_ktp) }}"
                           alt="{{ $pendudukDomisili->nik }}">
                       </div>
                     @endif

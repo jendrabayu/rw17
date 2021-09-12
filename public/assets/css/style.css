@@ -3666,3 +3666,24 @@ body.layout-3 .main-wrapper {
     opacity: 0;
   }
 }
+@media (min-width: 992px) {
+  .img__preview img {
+    width: 50% !important;
+  }
+}
+.img__preview img {
+  width: 100%;
+}
+
+.img__profile {
+  position: relative;
+}
+.img__profile img {
+  width: 100%;
+}
+.img__profile .btn {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  line-height: 1.5;
+}

@@ -24,7 +24,7 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Edit Penduduk Domisili</h4>
           </div>
@@ -35,17 +35,17 @@
               @method('PUT')
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="rt">RT <code>(*)</code></label>
+                  <label for="rt">RT <code>*</code></label>
                   @role('rt')
                   <input type="text" class="form-control" value="RT {{ $rt->nomor }}" id="rt" disabled>
                   <input type="text" name="rt_id" value="{{ $rt->id }}" hidden>
                   @endrole
                   @role('rw')
-                  <select name="rt_id" id="rt" class="form-control select2">
+                  <select name="rt_id" id="rt" class="custom-select">
                     <option selected disabled hidden>--Pilih RT--</option>
                     @foreach ($rt as $id => $nomor)
                       <option {{ $pendudukDomisili->rt_id === $id ? 'selected' : '' }} value="{{ $id }}">RT
-                        {{ $nomor }}
+                        {{ ltrim($nomor, '0') }}
                       </option>
                     @endforeach
                   </select>
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="form-group col-md-6">
-                  <label for="nik">NIK <code>(*)</code></label>
+                  <label for="nik">NIK <code>*</code></label>
                   <input type="text" class="form-control" id="nik" name="nik" maxlength="16"
                     value="{{ $pendudukDomisili->nik }}">
                 </div>
@@ -61,12 +61,12 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="nama">Nama Lengkap <code>(*)</code></label>
+                  <label for="nama">Nama Lengkap <code>*</code></label>
                   <input type="text" class="form-control" id="nama" name="nama" maxlength="100"
                     value="{{ $pendudukDomisili->nama }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="tempat_lahir">Tempat Lahir <code>(*)</code></label>
+                  <label for="tempat_lahir">Tempat Lahir <code>*</code></label>
                   <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
                     value="{{ $pendudukDomisili->tempat_lahir }}">
                 </div>
@@ -74,13 +74,13 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="tanggal_lahir">Tanggal Lahir <code>(*)</code></label>
+                  <label for="tanggal_lahir">Tanggal Lahir <code>*</code></label>
                   <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
                     value="{{ $pendudukDomisili->tanggal_lahir }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="jenis_kelamin">Jenis Kelamin <code>(*)</code></label>
-                  <select name="jenis_kelamin" id="jenis_kelamin" class="form-control select2">
+                  <label for="jenis_kelamin">Jenis Kelamin <code>*</code></label>
+                  <select name="jenis_kelamin" id="jenis_kelamin" class="custom-select">
                     <option selected disabled hidden>--Pilih Jenis Kelamin--</option>
                     <option {{ $pendudukDomisili->jenis_kelamin === 'l' ? 'selected' : '' }} value="l">Laki-Laki
                     </option>
@@ -92,7 +92,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="agama">Agama <code>(*)</code></label>
+                  <label for="agama">Agama <code>*</code></label>
                   <select name="agama_id" id="agama" class="form-control select2">
                     <option selected disabled hidden>--Pilih Agama--</option>
                     @foreach ($agama as $id => $nama)
@@ -104,7 +104,7 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="status_perkawinan">Status Perkawinan <code>(*)</code></label>
+                  <label for="status_perkawinan">Status Perkawinan <code>*</code></label>
                   <select name="status_perkawinan_id" id="status_perkawinan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Status Perkawinan--</option>
                     @foreach ($statusPerkawinan as $id => $nama)
@@ -119,7 +119,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="pekerjaan">Pekerjaan <code>(*)</code></label>
+                  <label for="pekerjaan">Pekerjaan <code>*</code></label>
                   <select name="pekerjaan_id" id="pekerjaan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Pekerjaan--</option>
                     @foreach ($pekerjaan as $id => $nama)
@@ -171,7 +171,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="alamat">Alamat <code>(*)</code></label>
+                  <label for="alamat">Alamat <code>*</code></label>
                   <textarea name="alamat" id="alamat" class="form-control">{{ $pendudukDomisili->alamat }}</textarea>
                 </div>
 
@@ -184,7 +184,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="no_hp">No. Hp/WhatsApp</label>
+                  <label for="no_hp">No. Hp / WhatsApp</label>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <div class="input-group-text">+62</div>
@@ -200,32 +200,28 @@
                 </div>
               </div>
 
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="foto_ktp">Foto KTP</label>
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png">
-                    <label class="custom-file-label" for="foto_ktp">Choose file</label>
-                  </div>
-                  <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG atau PNG</small>
+              <div class="form-group">
+                <label for="foto_ktp">Foto KTP</label>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png">
+                  <label class="custom-file-label" for="foto_ktp">Choose file</label>
                 </div>
+                <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG atau PNG</small>
               </div>
 
-              <div class="form-group">
-                @if ($pendudukDomisili->foto_ktp)
-                  <div class="ktp-preview p-1 border">
-                    <img src="{{ Storage::url($pendudukDomisili->foto_ktp) }}" alt="{{ $pendudukDomisili->nik }}"
-                      class="img-fluid">
-                  </div>
-                @else
-                  <div class="ktp-preview p-1 border d-none">
-                    <img src="" alt="{{ $pendudukDomisili->nik }}" class="img-fluid">
-                  </div>
-                @endif
-              </div>
+              @if ($pendudukDomisili->foto_ktp)
+                <div class="form-group img-thumbnail img__ktp__preview">
+                  <img src="{{ Storage::url($pendudukDomisili->foto_ktp) }}" alt="{{ $pendudukDomisili->nik }}"
+                    class="w-100">
+                </div>
+              @else
+                <div class="form-group img-thumbnail img__ktp__preview d-none">
+                  <img class="w-100">
+                </div>
+              @endif
 
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Simpan Perubahan</button>
+              <div class="form-group mb-0">
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Simpan Perubahan</button>
               </div>
             </form>
           </div>
@@ -242,10 +238,10 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = function() {
-          $('.ktp-preview img').attr('src', reader.result);
+          $('.img__ktp__preview img').attr('src', reader.result);
         }
         reader.readAsDataURL(file);
-        $('.ktp-preview').removeClass('d-none');
+        $('.img__ktp__preview').removeClass('d-none');
       }
     });
 
@@ -256,7 +252,7 @@
         type: 'get',
         success: function(data) {
           $('#keluarga').empty();
-          $('#keluarga').append('<option selected disabled hidden>--Pilih Nomor KK--</option>');
+          $('#keluarga').append('<option selected disabled hidden>--Pilih No. Kartu Keluarga--</option>');
           $.each(data, function(i, v) {
             $('#keluarga').append(`<option value="${v.id}">${v.nomor}</option>`);
           });

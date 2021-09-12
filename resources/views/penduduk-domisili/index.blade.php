@@ -27,7 +27,7 @@
                 <li class="nav-item">
                   <a class="nav-link {{ request()->get('rt') == $id ? 'active' : '' }}"
                     href="{{ route('penduduk-domisili.index', array_merge(['rt' => $id], $all_requests)) }}">RT
-                    {{ $nomor }}</a>
+                    {{ ltrim($nomor, '0') }}</a>
                 </li>
               @endforeach
             </ul>

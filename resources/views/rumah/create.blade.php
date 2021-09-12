@@ -25,32 +25,31 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Tambah Rumah</h4>
           </div>
-
           <div class="card-body">
             <form action="{{ route('rumah.store') }}" method="POST">
               @csrf
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="rt">RT <code>(*)</code></label>
+                  <label for="rt">RT <code>*</code></label>
                   @role('rt')
                   <input type="text" readonly value="RT {{ $rt->nomor }}" class="form-control">
-                  <input type="text" hidden value="{{ $rt->id }}" name="rt_id">
+                  <input type="text" hidden value="{{ ltrim($rt->id, '0') }}" name="rt_id">
                   @endrole
                   @role('rw')
-                  <select name="rt_id" id="rt" class="form-control select2">
+                  <select name="rt_id" id="rt" class="custom-select">
                     <option selected hidden value="" disabled>--Pilih RT--</option>
                     @foreach ($rt as $id => $rt)
-                      <option value="{{ $id }}" class="form-control">RT {{ $rt }}</option>
+                      <option value="{{ $id }}" class="form-control">RT {{ ltrim($rt, '0') }}</option>
                     @endforeach
                   </select>
                   @endrole
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="keluarga">Nomor Kartu Keluarga <code>(*)</code></label>
+                  <label for="keluarga">Nomor Kartu Keluarga <code>*</code></label>
                   <select name="keluarga_id[]" id="keluarga" class="form-control select2" @role('rw') disabled @endrole
                     multiple>
                     @role('rt')
@@ -65,12 +64,12 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="alamat">Alamat <code>(*)</code></label>
+                  <label for="alamat">Alamat <code>*</code></label>
                   <textarea class="form-control" id="alamat" name="alamat"> {{ old('alamat') }}</textarea>
                 </div>
 
                 <div class="form-group col-md-6">
-                  <label for="nomor">Nomor Rumah <code>(*)</code></label>
+                  <label for="nomor">Nomor Rumah <code>*</code></label>
                   <input type="text" class="form-control" id="nomor" name="nomor" value="{{ old('nomor') }}">
                 </div>
               </div>
@@ -103,8 +102,8 @@
                 </div>
               </div>
 
-              <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit">Simpan</button>
+              <div class="form-group mb-0">
+                <button class="btn btn-primary btn-block btn-lg" type="submit">Simpan</button>
               </div>
             </form>
           </div>

@@ -48,7 +48,7 @@
           <div class="custom-control custom-checkbox">
             <input type="checkbox" {{ old('remember') ? 'checked' : '' }} name="remember" class="custom-control-input"
               tabindex="3" id="remember-me">
-            <label class="custom-control-label" for="remember-me">Remember Me</label>
+            <label class="custom-control-label" for="remember-me">Ingat Saya</label>
           </div>
         </div>
 

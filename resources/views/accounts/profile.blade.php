@@ -15,10 +15,9 @@
         @include('partials.alerts')
       </div>
     </div>
-
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Profil</h4>
           </div>
@@ -28,10 +27,10 @@
               @method('PUT')
               <div class="row">
                 <div class="col-lg-3">
-                  <div class="img-preview p-1 border mb-4 mb-lg-0">
-                    <button type="button" class="btn btn-icon btn-dark btn-upload-avatar"><i
+                  <div class="img-thumbnail img__profile">
+                    <button type="button" id="btnUploadAvatar" class="btn btn-dark"><i
                         class="fas fa-camera"></i></button>
-                    <img class="img-fluid" src="{{ $user->avatar_url }}">
+                    <img src="{{ $user->avatar_url }}">
                     <input type="file" name="avatar" id="avatar" accept=".jpg, .jpeg, .png" hidden>
                   </div>
                 </div>
@@ -51,20 +50,20 @@
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="name">Nama Lengkap <code>(*)</code></label>
+                    <label class="col-sm-3 col-form-label" for="name">Nama <code>*</code></label>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="username">Username <code>(*)</code></label>
+                    <label class="col-sm-3 col-form-label" for="username">Username <code>*</code></label>
                     <div class="col-sm-9">
                       <input type="text" class="form-control" id="username" name="username"
                         value="{{ $user->username }}">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="email">Email <code>(*)</code></label>
+                    <label class="col-sm-3 col-form-label" for="email">Email <code>*</code></label>
                     <div class="col-sm-9">
                       <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
                     </div>
@@ -72,8 +71,13 @@
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label" for="no_hp">No. Hp/WhatsApp</label>
                     <div class="col-sm-9">
-                      <input type="tel" class="form-control" id="no_hp" name="no_hp" value="{{ $user->no_hp }}"
-                        maxlength="13">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">+62</div>
+                        </div>
+                        <input type="tel" class="form-control" id="no_hp" name="no_hp" value="{{ $user->no_hp }}"
+                          maxlength="13">
+                      </div>
                     </div>
                   </div>
                   <div class="form-group row">
@@ -83,7 +87,7 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">Simpan Perubahan</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">Simpan Perubahan</button>
                   </div>
                 </div>
               </div>
@@ -96,24 +100,6 @@
 @endsection
 
 
-@push('styles')
-  <style>
-    .img-preview {
-      width: 100%;
-      height: auto;
-      position: relative
-    }
-
-    .img-preview .btn-upload-avatar {
-      position: absolute;
-      top: 0.25rem;
-      right: 0.25rem;
-      border-radius: 0;
-    }
-
-  </style>
-@endpush
-
 @push('scripts')
   <script>
     $('#avatar').on('change', function() {
@@ -121,14 +107,13 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = function() {
-          $('.img-preview img').attr('src', reader.result);
+          $('.img__profile img').attr('src', reader.result);
         }
-
         reader.readAsDataURL(file);
       }
     });
 
-    $('.btn-upload-avatar').on('click', function() {
+    $('#btnUploadAvatar').on('click', function() {
       $('#avatar').trigger('click');
     });
   </script>

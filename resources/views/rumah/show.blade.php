@@ -33,7 +33,7 @@
             <div class="table-responsive mb-4">
               <table class="table table-bordered table-sm table-striped">
                 <tr>
-                  <th>RT/RW</th>
+                  <th>RT / RW</th>
                   <td>{{ $rumah->rt->nomor . '/' . $rumah->rt->rw->nomor }}</td>
                 </tr>
                 <tr>
@@ -62,7 +62,7 @@
               <table class="table table-bordered table-striped table-sm table-hover">
                 <thead>
                   <tr>
-                    <th>Nomor KK</th>
+                    <th>No. Kartu Keluarga</th>
                     <th>NIK</th>
                     <th>Nama</th>
                     <th>Status Hubungan Dalam Keluarga</th>
