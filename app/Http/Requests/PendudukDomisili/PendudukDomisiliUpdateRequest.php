@@ -47,7 +47,7 @@ class PendudukDomisiliUpdateRequest extends FormRequest
     public function attributes()
     {
         return [
-            'rt' => 'RT',
+            'rt_id' => 'RT',
             'agama_id' => 'agama',
             'darah_id' => 'golongan darah',
             'pekerjaan_id' => 'pekerjaan',
