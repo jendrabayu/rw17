@@ -59,7 +59,7 @@
           <div class="form-row">
             <div class="form-group col-lg-6">
               <label for="status_perkawinan">Status Perkawinan</label>
-              <select name="status_perkawinan" id="status_perkawinan" class="form-control select2">
+              <select name="status_perkawinan" id="status_perkawinan" class="custom-select">
                 <option selected hidden disabled value="">--Pilih Status Perkawinan--</option>
                 @foreach ($statusPerkawinan as $id => $nama)
                   <option {{ request()->get('status_perkawinan') == $id ? 'selected' : '' }}
@@ -84,7 +84,7 @@
           <div class="form-row">
             <div class="form-group col-lg-6">
               <label for="jenis_kelamin">Jenis Kelamin</label>
-              <select name="jenis_kelamin" id="jenis_kelamin" class="form-control select2">
+              <select name="jenis_kelamin" id="jenis_kelamin" class="custom-select">
                 <option selected disabled hidden value="">--Pilih Jenis Kelamin--</option>
                 <option {{ request()->get('jenis_kelamin') == 'l' ? 'selected' : '' }} value="l">Laki-Laki</option>
                 <option {{ request()->get('jenis_kelamin') == 'p' ? 'selected' : '' }} value="p">Perempuan</option>

@@ -21,7 +21,6 @@
         @include('partials.alerts')
       </div>
     </div>
-
     <div class="row">
       <div class="col-12">
         <div class="card card-primary">
@@ -44,8 +43,8 @@
                   <select name="rt_id" id="rt" class="custom-select">
                     <option selected disabled hidden>--Pilih RT--</option>
                     @foreach ($rt as $id => $nomor)
-                      <option {{ $pendudukDomisili->rt_id === $id ? 'selected' : '' }} value="{{ $id }}">RT
-                        {{ ltrim($nomor, '0') }}
+                      <option {{ $pendudukDomisili->rt_id === $id ? 'selected' : '' }} value="{{ $id }}">
+                        RT {{ ltrim($nomor, '0') }}
                       </option>
                     @endforeach
                   </select>
@@ -76,7 +75,7 @@
                 <div class="form-group col-md-6">
                   <label for="tanggal_lahir">Tanggal Lahir <code>*</code></label>
                   <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
-                    value="{{ $pendudukDomisili->tanggal_lahir }}">
+                    value="{{ $pendudukDomisili->tanggal_lahir->format('Y-m-d') }}">
                 </div>
                 <div class="form-group col-md-6">
                   <label for="jenis_kelamin">Jenis Kelamin <code>*</code></label>

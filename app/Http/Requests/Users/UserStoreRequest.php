@@ -24,13 +24,13 @@ class UserStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'name' => ['string', 'required', 'max:64'],
-            'username' =>  ['alpha_dash', 'required', 'max:32', 'unique:users,username'],
-            'email' => ['email', 'required', 'max:64', 'unique:users,email'],
-            'no_hp' =>  ['string', 'nullable', 'max:15', 'starts_with:+62,62,08'],
-            'alamat' => ['string', 'nullable', 'max:255'],
-            'avatar' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000'],
+            'rt_id' => ['required', 'numeric',  'exists:rt,id'],
+            'name' => ['required', 'string', 'max:64'],
+            'username' =>  ['required', 'alpha_dash',  'max:32', 'unique:users,username'],
+            'email' => ['required', 'email',  'max:64', 'unique:users,email'],
+            'no_hp' =>  ['nullable', 'string',  'max:15',  'starts_with:+62,62,08'],
+            'alamat' => ['nullable', 'string',  'max:255'],
+            'avatar' => ['mimes:jpg,jpeg,png',  'max:1024'],
             'password' => ['string', 'required', 'min:3', 'max:12'],
             'role' => ['numeric', 'required']
         ];

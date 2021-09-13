@@ -24,13 +24,13 @@ class PendudukMeninggalStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'penduduk_id' => ['numeric', 'required', 'exists:penduduk,id'],
-            'tanggal_kematian' => ['date_format:Y-m-d', 'required'],
-            'jam_kematian' => ['date_format:H:i', 'nullable', 'before_or_equal:' . date('Y-m-d')],
-            'tempat_kematian' => ['string', 'max:100', 'nullable'],
-            'sebab_kematian' => ['string', 'max:100', 'nullable'],
-            'tempat_pemakaman' => ['string', 'max:100', 'nullable']
+            'rt_id' => ['required', 'numeric', 'exists:rt,id'],
+            'penduduk_id' => ['required', 'numeric',  'exists:penduduk,id'],
+            'tanggal_kematian' => ['required', 'date_format:Y-m-d', 'before_or_equal:' . date('Y-m-d')],
+            'jam_kematian' => ['nullable', 'date_format:H:i'],
+            'tempat_kematian' => ['nullable', 'string', 'max:255'],
+            'sebab_kematian' => ['nullable', 'string', 'max:255'],
+            'tempat_pemakaman' => ['nullable', 'string', 'max:255']
         ];
     }
 

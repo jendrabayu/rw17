@@ -103,7 +103,7 @@
                       <td>{{ $penduduk->nama }}</td>
                       <td>{{ $penduduk->jenis_kelamin_text }}</td>
                       <td>{{ $penduduk->tempat_lahir }}</td>
-                      <td>{{ $penduduk->tanggal_lahir }}</td>
+                      <td>{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
                       <td>{{ $penduduk->usia }}</td>
                       <td>{{ $penduduk->agama->nama }}</td>
                       <td>{{ $penduduk->pekerjaan->nama }}</td>

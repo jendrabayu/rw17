@@ -24,10 +24,10 @@ class KeluargaStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'nomor' => ['numeric', 'required', 'digits:16', 'starts_with:3509', 'unique:keluarga,nomor'],
-            'alamat' => ['string', 'required', 'max:200'],
-            'foto_kk' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000']
+            'rt_id' => ['required', 'numeric', 'exists:rt,id'],
+            'nomor' => ['required', 'numeric',  'digits:16', 'starts_with:3509', 'unique:keluarga,nomor'],
+            'alamat' => ['required', 'string',  'max:255'],
+            'foto_kk' => ['nullable', 'mimes:jpg,jpeg,png',  'max:1024']
         ];
     }
 

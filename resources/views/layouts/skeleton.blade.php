@@ -75,9 +75,6 @@
       bsCustomFileInput.init()
     })
   </script>
-
-  <!-- Page Specific JS File -->
-  <script src="{{ asset('js/app.js') }}"></script>
   @stack('scripts')
 </body>
 

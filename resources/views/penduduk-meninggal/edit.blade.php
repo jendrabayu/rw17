@@ -21,7 +21,6 @@
         @include('partials.alerts')
       </div>
     </div>
-
     <div class="row">
       <div class="col-12">
         <div class="card card-primary">
@@ -33,7 +32,6 @@
               enctype="multipart/form-data">
               @csrf
               @method('PUT')
-
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="nik">NIK <code>*</code></label>
@@ -41,7 +39,7 @@
                     value="{{ $pendudukMeninggal->nik }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="nama">Nama Lengkap <code>*</code></label>
+                  <label for="nama">Nama <code>*</code></label>
                   <input type="text" class="form-control" id="nama" name="nama" maxlength="100"
                     value="{{ $pendudukMeninggal->nama }}">
                 </div>
@@ -56,14 +54,14 @@
                 <div class="form-group col-md-6">
                   <label for="tanggal_lahir">Tanggal Lahir <code>*</code></label>
                   <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
-                    value="{{ $pendudukMeninggal->tanggal_lahir }}">
+                    value="{{ $pendudukMeninggal->tanggal_lahir->format('Y-m-d') }}">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="status_perkawinan">Status Perkawinan <code>*</code></label>
-                  <select name="status_perkawinan_id" id="status_perkawinan" class="form-control select2">
+                  <select name="status_perkawinan_id" id="status_perkawinan" class="custom-select">
                     <option selected disabled hidden>--Pilih Status Perkawinan--</option>
                     @foreach ($statusPerkawinan as $id => $nama)
                       <option {{ $pendudukMeninggal->statusPerkawinan->id == $id ? 'selected' : '' }}
@@ -88,7 +86,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="jenis_kelamin">Jenis Kelamin <code>*</code></label>
-                  <select name="jenis_kelamin" id="jenis_kelamin" class="form-control select2">
+                  <select name="jenis_kelamin" id="jenis_kelamin" class="custom-select">
                     <option selected disabled hidden>--Pilih Jenis Kelamin--</option>
                     <option {{ $pendudukMeninggal->jenis_kelamin == 'l' ? 'selected' : '' }} value="l">Laki-Laki
                     </option>
@@ -112,7 +110,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="kewarganegaraan">Kewarganegaraan <code>*</code></label>
-                  <select name="kewarganegaraan" id="kewarganegaraan" class="form-control select2">
+                  <select name="kewarganegaraan" id="kewarganegaraan" class="custom-select">
                     <option {{ $pendudukMeninggal->kewarganegaraan === '1' ? 'selected' : '' }} value="1">Warga Negara
                       Indonesia</option>
                     <option {{ $pendudukMeninggal->kewarganegaraan === '2' ? 'selected' : '' }} value="2">Warga Negara
@@ -143,7 +141,7 @@
                 <div class="form-group col-md-6">
                   <label for="tanggal_kematian">Tanggal Kematian <code>*</code></label>
                   <input type="date" class="form-control" id="tanggal_kematian" name="tanggal_kematian"
-                    value="{{ $pendudukMeninggal->tanggal_kematian }}">
+                    value="{{ $pendudukMeninggal->tanggal_kematian->format('Y-m-d') }}">
                 </div>
               </div>
 
@@ -163,7 +161,7 @@
                 <div class="form-group col-md-6">
                   <label for="jam_kematian">Jam Kematian</label>
                   <input type="time" class="form-control" id="jam_kematian" name="jam_kematian"
-                    value="{{ $pendudukMeninggal->jam_kematian }}">
+                    value="{{ $pendudukMeninggal->jam_kematian->format('H:i') }}">
                 </div>
               </div>
 
@@ -243,26 +241,6 @@
         reader.readAsDataURL(file);
         $('.img__ktp__preview').removeClass('d-none');
       }
-    });
-
-    $('#rt').on('change', function(e) {
-      const rtId = e.target.value;
-      $.ajax({
-        url: '/ajax/keluarga/' + rtId,
-        type: 'get',
-        success: function(data) {
-          $('#keluarga').empty();
-          $('#keluarga').append('<option selected disabled hidden>--Pilih Nomor Kartu Keluarga--</option>');
-          $.each(data, function(i, v) {
-            $('#keluarga').append(`<option value="${v.id}">${v.nomor}</option>`);
-          });
-          $('#keluarga').removeAttr('disabled');
-        },
-        error: function(error) {
-          console.log(error)
-        }
-      })
-
     });
   </script>
 @endpush

@@ -30,16 +30,16 @@
                   <td>{{ $pendudukMeninggal->nik }}</td>
                 </tr>
                 <tr>
-                  <th>Nama Lengkap</th>
+                  <th>Nama</th>
                   <td>{{ $pendudukMeninggal->nama }}</td>
                 </tr>
                 <tr>
                   <th>Tanggal Kematian</th>
-                  <td>{{ $pendudukMeninggal->tanggal_kematian }}</td>
+                  <td>{{ $pendudukMeninggal->tanggal_kematian->format('d-m-Y') }}</td>
                 </tr>
                 <tr>
                   <th>Jam Kematian</th>
-                  <td>{{ $pendudukMeninggal->jam_kematian }}</td>
+                  <td>{{ $pendudukMeninggal->jam_kematian->format('H:i') }}</td>
                 </tr>
                 <tr>
                   <th>Tempat Kematian</th>
@@ -84,7 +84,7 @@
                 </tr>
                 <tr>
                   <th>Tanggal Lahir</th>
-                  <td>{{ $pendudukMeninggal->tanggal_lahir }}</td>
+                  <td>{{ $pendudukMeninggal->tanggal_lahir->format('d-m-Y') }}</td>
                 </tr>
                 <tr>
                   <th>Agama</th>

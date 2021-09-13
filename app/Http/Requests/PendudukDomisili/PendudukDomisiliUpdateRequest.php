@@ -24,23 +24,23 @@ class PendudukDomisiliUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'agama_id' => ['numeric', 'required', 'exists:agama,id'],
-            'darah_id' => ['numeric', 'nullable', 'exists:darah,id'],
-            'pekerjaan_id' => ['numeric', 'required', 'exists:pekerjaan,id'],
-            'status_perkawinan_id' => ['numeric', 'required', 'exists:status_perkawinan,id'],
-            'pendidikan_id' =>  ['numeric', 'nullable', 'exists:pendidikan,id'],
-            'kewarganegaraan' => ['in:1,2,3', 'required'],
-            'nik' => ['numeric', 'required', 'digits:16', 'unique:penduduk_domisili,nik,' . $this->penduduk_domisili->id],
-            'nama' => ['string', 'required', 'max:100'],
-            'tempat_lahir' => ['string', 'required', 'max:100'],
-            'tanggal_lahir' => ['date', 'required', 'before:' . date('Y-m-d')],
-            'jenis_kelamin' => ['in:l,p', 'required'],
-            'alamat' => ['string', 'required', 'max:200'],
-            'alamat_asal' => ['string', 'nullable', 'max:200'],
-            'foto_ktp' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000'],
-            'no_hp'  => ['string', 'nullable', 'max:15', 'starts_with:+62,62,08'],
-            'email' =>  ['email', 'nullable', 'max:50']
+            'rt_id' => ['required', 'numeric', 'exists:rt,id'],
+            'agama_id' => ['required', 'numeric', 'exists:agama,id'],
+            'darah_id' => ['nullable', 'numeric',  'exists:darah,id'],
+            'pekerjaan_id' => ['required', 'numeric', 'exists:pekerjaan,id'],
+            'status_perkawinan_id' => ['required', 'numeric', 'exists:status_perkawinan,id'],
+            'pendidikan_id' =>  ['nullable', 'numeric', 'exists:pendidikan,id'],
+            'kewarganegaraan' => ['required', 'in:1,2,3'],
+            'nik' => ['required', 'numeric', 'digits:16', 'unique:penduduk_domisili,nik,' . $this->penduduk_domisili->id],
+            'nama' => ['required', 'string',  'max:150'],
+            'tempat_lahir' => ['required', 'string', 'max:255'],
+            'tanggal_lahir' => ['required', 'date_format:Y-m-d', 'before_or_equal:' . date('Y-m-d')],
+            'jenis_kelamin' => ['required', 'in:l,p'],
+            'alamat' => ['required', 'string',  'max:255'],
+            'alamat_asal' => ['nullable', 'string', 'max:255'],
+            'foto_ktp' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
+            'no_hp'  => ['nullable', 'string',  'max:15', 'starts_with:+62,62,08'],
+            'email' =>  ['nullable', 'email', 'max:100']
         ];
     }
 
@@ -53,10 +53,8 @@ class PendudukDomisiliUpdateRequest extends FormRequest
             'pekerjaan_id' => 'pekerjaan',
             'status_perkawinan_id' => 'status perkawinan',
             'pendidikan_id' => 'pendidikan',
-            'status_hubungan_dalam_keluarga_id' => 'status hubungan dalam keluarga',
             'nik' => 'NIK',
-            'nama' => 'nama lengkap',
-            'no_hp'  => 'No. Hp/WhatsApp',
+            'no_hp'  => 'No. Hp / WhatsApp',
         ];
     }
 }

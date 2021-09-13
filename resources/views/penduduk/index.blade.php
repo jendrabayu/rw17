@@ -9,7 +9,6 @@
     <h1>Penduduk</h1>
   </div>
   <div class="section-body">
-
     @role('rw')
     <div class="row">
       <div class="col-12">
@@ -37,13 +36,11 @@
       </div>
     </div>
     @endrole
-
     <div class="row">
       <div class="col-12">
         @include('partials.alerts')
       </div>
     </div>
-
     <div class="row">
       <div class="col-12">
         <div class="card">
@@ -114,7 +111,7 @@
                       <td>{{ $penduduk->nama }}</td>
                       <td>{{ $penduduk->jenis_kelamin_text }}</td>
                       <td>{{ $penduduk->tempat_lahir }}</td>
-                      <td>{{ $penduduk->tanggal_lahir }}</td>
+                      <td>{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
                       <td>{{ $penduduk->usia }}</td>
                       <td>{{ $penduduk->agama->nama }}</td>
                       <td>{{ $penduduk->pekerjaan->nama }}</td>
@@ -185,11 +182,9 @@
       form.prop('action', $(this).data('url'));
       Swal.fire({
         title: 'Hapus Penduduk?',
-        text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
+        text: 'Penduduk yang sudah dihapus tidak dapat dikembalikan!',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#47597E',
-        cancelButtonColor: '#cdd3d8',
         confirmButtonText: 'Hapus',
         cancelButtonText: 'Batal',
         reverseButtons: true

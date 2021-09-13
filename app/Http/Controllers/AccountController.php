@@ -23,12 +23,12 @@ class AccountController extends Controller
         $user = auth()->user();
 
         $validated = $this->validate($request, [
-            'name' => ['string', 'required', 'max:32'],
-            'username' =>  ['alpha_dash', 'required', 'max:15', 'unique:users,username,' . $user->id],
-            'email' => ['email', 'required', 'max:50', 'unique:users,email,' . $user->id],
-            'no_hp' =>  ['string', 'nullable', 'max:15', 'starts_with:+62,62,08'],
-            'alamat' => ['string', 'nullable', 'max:255'],
-            'avatar' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000'],
+            'name' => ['required', 'string',  'max:32'],
+            'username' =>  ['required', 'alpha_dash',  'max:64', 'unique:users,username,' . $user->id],
+            'email' => ['required', 'email',  'max:64', 'unique:users,email,' . $user->id],
+            'no_hp' =>  ['nullable', 'string',  'max:15', 'starts_with:+62,62,08'],
+            'alamat' => ['nullable', 'string',  'max:255'],
+            'avatar' => ['nullable', 'mimes:jpg,jpeg,png',  'max:1024'],
         ], [], [
             'name' => 'nama'
         ]);

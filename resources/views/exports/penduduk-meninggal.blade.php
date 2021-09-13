@@ -32,13 +32,13 @@
         <td>{{ ++$i }}</td>
         <td>{{ $penduduk->nik }}</td>
         <td>{{ $penduduk->nama }}</td>
-        <td>{{ $penduduk->tanggal_kematian }}</td>
-        <td>{{ $penduduk->jam_kematian }}</td>
+        <td>{{ $penduduk->tanggal_kematian->format('d-m-Y') }}</td>
+        <td>{{ $penduduk->jam_kematian->format('H:i') }}</td>
         <td>{{ $penduduk->tempat_kematian }}</td>
         <td>{{ $penduduk->sebab_kematian }}</td>
         <td>{{ $penduduk->tempat_pemakaman }}</td>
         <td>{{ $penduduk->tempat_lahir }}</td>
-        <td>{{ $penduduk->tanggal_lahir }}</td>
+        <td>{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
         <td>{{ $penduduk->jenis_kelamin_text }}</td>
         <td>{{ $penduduk->darah->nama }}</td>
         <td>{{ $penduduk->alamat }}</td>

@@ -36,13 +36,11 @@
       </div>
     </div>
     @endrole
-
     <div class="row">
       <div class="col-12">
         @include('partials.alerts')
       </div>
     </div>
-
     <div class="row">
       <div class="col-12">
         <div class="card">
@@ -98,8 +96,8 @@
                       </td>
                       <td>{{ $item->nik }}</td>
                       <td>{{ $item->nama }}</td>
-                      <td>{{ $item->tanggal_kematian }}</td>
-                      <td>{{ $item->jam_kematian }}</td>
+                      <td>{{ $item->tanggal_kematian->format('d-m-Y') }}</td>
+                      <td>{{ $item->jam_kematian->format('H:i') }}</td>
                       <td>{{ $item->tempat_kematian }}</td>
                       <td>{{ $item->sebab_kematian }}</td>
                       <td>{{ $item->tempat_pemakaman }}</td>

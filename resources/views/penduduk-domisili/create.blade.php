@@ -21,7 +21,6 @@
         @include('partials.alerts')
       </div>
     </div>
-
     <div class="row">
       <div class="col-12">
         <div class="card card-primary">
@@ -42,7 +41,7 @@
                   <select name="rt_id" id="rt" class="custom-select">
                     <option selected disabled hidden>--Pilih RT--</option>
                     @foreach ($rt as $id => $nomor)
-                      <option {{ old('rt_id') ? 'selected' : '' }} value="{{ $id }}">RT
+                      <option {{ (int) old('rt_id') === $id ? 'selected' : '' }} value="{{ $id }}">RT
                         {{ ltrim($nomor, '0') }}
                       </option>
                     @endforeach
@@ -59,8 +58,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="nama">Nama Lengkap <code>*</code></label>
-                  <input type="text" class="form-control" id="nama" name="nama" maxlength="100"
-                    value="{{ old('nama') }}">
+                  <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama') }}">
                 </div>
                 <div class="form-group col-md-6">
                   <label for="tempat_lahir">Tempat Lahir <code>*</code></label>
@@ -92,8 +90,9 @@
                   <select name="agama_id" id="agama" class="form-control select2">
                     <option selected disabled hidden>--Pilih Agama--</option>
                     @foreach ($agama as $id => $nama)
-                      <option {{ old('agama_id') == $id ? 'selected' : '' }} value="{{ $id }}">
-                        {{ $nama }}</option>
+                      <option {{ (int) old('agama_id') === $id ? 'selected' : '' }} value="{{ $id }}">
+                        {{ $nama }}
+                      </option>
                     @endforeach
                   </select>
                 </div>
@@ -102,8 +101,10 @@
                   <select name="status_perkawinan_id" id="status_perkawinan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Status Perkawinan--</option>
                     @foreach ($statusPerkawinan as $id => $nama)
-                      <option {{ old('status_perkawinan_id') == $id ? 'selected' : '' }} value="{{ $id }}">
-                        {{ $nama }}</option>
+                      <option {{ (int) old('status_perkawinan_id') === $id ? 'selected' : '' }}
+                        value="{{ $id }}">
+                        {{ $nama }}
+                      </option>
                     @endforeach
                   </select>
                 </div>
@@ -122,7 +123,7 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label for="kewarganegaraan">Kewarganegaraan</label>
-                  <select name="kewarganegaraan" id="kewarganegaraan" class="form-control">
+                  <select name="kewarganegaraan" id="kewarganegaraan" class="custom-select">
                     <option {{ old('kewarganegaraan') === '1' ? 'selected' : '' }} value="1">Warga Negara Indonesia
                     </option>
                     <option {{ old('kewarganegaraan') === '2' ? 'selected' : '' }} value="2">Warga Negara Asing
@@ -140,8 +141,9 @@
                   <select name="pendidikan_id" id="pendidikan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Pendidikan--</option>
                     @foreach ($pendidikan as $id => $nama)
-                      <option {{ old('pendidikan_id') == $id ? 'selected' : '' }} value="{{ $id }}">
-                        {{ $nama }}</option>
+                      <option {{ (int) old('pendidikan_id') === $id ? 'selected' : '' }} value="{{ $id }}">
+                        {{ $nama }}
+                      </option>
                     @endforeach
                   </select>
                 </div>
@@ -151,8 +153,9 @@
                     <option selected disabled hidden>--Pilih Golongan Darah--</option>
                     <option value="">Kosongkan</option>
                     @foreach ($darah as $id => $nama)
-                      <option {{ old('darah_id') == $id ? 'selected' : '' }} value="{{ $id }}">
-                        {{ $nama }}</option>
+                      <option {{ (int) old('darah_id') === $id ? 'selected' : '' }} value="{{ $id }}">
+                        {{ $nama }}
+                      </option>
                     @endforeach
                   </select>
                 </div>
@@ -179,7 +182,7 @@
                       <div class="input-group-text">+62</div>
                     </div>
                     <input type="tel" class="form-control" id="no_hp" name="no_hp" value="{{ old('no_hp') }}"
-                      maxlength="13">
+                      maxlength="15">
                   </div>
                 </div>
                 <div class="form-group col-md-6">
@@ -224,26 +227,6 @@
         reader.readAsDataURL(file);
         $('.img__ktp__preview').removeClass('d-none');
       }
-    });
-
-    $('#rt').on('change', function(e) {
-      const rtId = e.target.value;
-      $.ajax({
-        url: '/ajax/keluarga/' + rtId,
-        type: 'get',
-        success: function(data) {
-          $('#keluarga').empty();
-          $('#keluarga').append('<option selected disabled hidden>--Pilih Nomor KK--</option>');
-          $.each(data, function(i, v) {
-            $('#keluarga').append(`<option value="${v.id}">${v.nomor}</option>`);
-          });
-          $('#keluarga').removeAttr('disabled');
-        },
-        error: function(error) {
-          console.log(error)
-        }
-      })
-
     });
   </script>
 @endpush

@@ -42,56 +42,37 @@ class PendudukDomisili extends Model
         'email',
     ];
 
-    protected $casts  = [
-        // 'tanggal_lahir' => 'date'
-    ];
+    protected $casts  = ['tanggal_lahir' => 'date'];
 
 
     public const FILE_TYPES = ['xlsx', 'xls', 'csv'];
 
-    /**
-     * Get the penduduk for the penduduk.
-     */
+
     public function rt()
     {
         return $this->belongsTo(Rt::class);
     }
 
-    /**
-     * Get the penduduk for the penduduk.
-     */
     public function agama()
     {
         return $this->belongsTo(Agama::class);
     }
 
-    /**
-     * Get the penduduk for the penduduk.
-     */
     public function darah()
     {
         return $this->belongsTo(Darah::class)->withDefault();
     }
 
-    /**
-     * Get the penduduk for the penduduk.
-     */
     public function pekerjaan()
     {
         return $this->belongsTo(Pekerjaan::class)->withDefault();
     }
 
-    /**
-     * Get the penduduk for the penduduk.
-     */
     public function statusPerkawinan()
     {
         return $this->belongsTo(StatusPerkawinan::class);
     }
 
-    /**
-     * Get the penduduk for the penduduk.
-     */
     public function pendidikan()
     {
         return $this->belongsTo(Pendidikan::class)->withDefault();

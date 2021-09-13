@@ -24,13 +24,13 @@ class RumahStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'alamat' => ['string', 'required', 'max:200'],
-            'nomor' => ['string', 'required', 'max:20'],
-            'tipe_bangunan' => ['string', 'nullable', 'max:20'],
-            'penggunaan_bangunan' => ['string', 'nullable', 'max:100'],
-            'kontruksi_bangunan' => ['string', 'nullable', 'max:100'],
-            'keterangan' => ['string', 'nullable', 'max:255'],
+            'rt_id' => ['required', 'numeric',  'exists:rt,id'],
+            'alamat' => ['required', 'string',  'max:255'],
+            'nomor' => ['required', 'string',  'max:20'],
+            'tipe_bangunan' => ['nullable', 'string', 'max:20'],
+            'penggunaan_bangunan' => ['nullable', 'string', 'max:255'],
+            'kontruksi_bangunan' => ['nullable', 'string', 'max:255'],
+            'keterangan' => ['nullable', 'string', 'max:255'],
             'keluarga_id' => ['required', 'array'],
             'keluarga_id.*' => ['numeric', 'exists:keluarga,id', 'unique:rumah_keluarga,keluarga_id'],
         ];

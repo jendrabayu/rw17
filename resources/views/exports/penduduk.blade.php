@@ -35,7 +35,7 @@
         <td>{{ $penduduk->nik }}</td>
         <td>{{ $penduduk->nama }}</td>
         <td>{{ $penduduk->tempat_lahir }}</td>
-        <td>{{ $penduduk->tanggal_lahir }}</td>
+        <td>{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
         <td>{{ $penduduk->jenis_kelamin_text }}</td>
         <td>{{ $penduduk->darah->nama }}</td>
         <td>{{ $penduduk->keluarga->alamat }}</td>
