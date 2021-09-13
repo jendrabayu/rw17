@@ -53,12 +53,9 @@
                   <i class="fas fa-file-export"></i> Exports
                 </button>
                 <div class="dropdown-menu">
-                  @php
-                    $exportFormats = ['PDF', 'XLSX', 'CSV', 'XLS'];
-                  @endphp
-                  @foreach ($exportFormats as $format)
+                  @foreach ($fileTypes as $type)
                     <a class="dropdown-item"
-                      href="{{ route('exports.keluarga', array_merge(['format' => $format], request()->all())) }}">{{ $format }}</a>
+                      href="{{ route('exports.keluarga', array_merge(['file_type' => $type], request()->all())) }}">{{ Str::upper($type) }}</a>
                   @endforeach
                 </div>
               </div>
@@ -73,7 +70,7 @@
                 <thead>
                   <tr>
                     <th class="text-center">#</th>
-                    <th>Nomor KK</th>
+                    <th>No. Kartu Keluarga</th>
                     <th>Kepala Keluarga</th>
                     <th>Jumlah Orang</th>
                     <th>Alamat</th>
@@ -98,17 +95,9 @@
                       </td>
                       <td>{{ $keluarga->nomor }}</td>
                       <td>
-                        @php
-                          $kepala_keluarga = $keluarga
-                              ->penduduk()
-                              ->whereHas('statusHubunganDalamKeluarga', function ($q) {
-                                  $q->where('nama', 'KEPALA KELUARGA');
-                              })
-                              ->first();
-                        @endphp
-                        @if ($kepala_keluarga)
+                        @if ($keluarga->kepala_keluarga)
                           <a
-                            href="{{ route('penduduk.show', $kepala_keluarga->id) }}">{{ $kepala_keluarga->nama }}</a>
+                            href="{{ route('penduduk.show', $keluarga->kepala_keluarga->id) }}">{{ $keluarga->kepala_keluarga->nama }}</a>
                         @endif
                       </td>
                       <td>{{ $keluarga->penduduk->count() }}</td>

@@ -28,6 +28,8 @@ class Keluarga extends Model
         'foto_kk'
     ];
 
+    public const FILE_TYPES = ['xlsx', 'xls', 'csv'];
+
     /**
      * Get the penduduk for the penduduk.
      */

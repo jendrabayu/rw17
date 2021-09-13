@@ -49,6 +49,8 @@ class Penduduk extends Model
         // 'tanggal_lahir' => 'date'
     ];
 
+    public const FILE_TYPES = ['xlsx', 'xls', 'csv'];
+
     /**
      * Get the penduduk for the penduduk.
      */

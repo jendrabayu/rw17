@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PendudukMeninggalExport;
-use App\Http\Requests\PendudukMeninggal\StorePendudukMeninggalRequest;
-use App\Http\Requests\PendudukMeninggal\UpdatePendudukMeninggalRequest;
+use App\Http\Requests\PendudukMeninggal\PendudukMeninggalStoreRequest;
+use App\Http\Requests\PendudukMeninggal\PendudukMeninggalUpdateRequest;
 use App\Models\Agama;
 use App\Models\Darah;
 use App\Models\Pekerjaan;
@@ -37,19 +37,20 @@ class PendudukMeninggalController extends Controller
             })->get();
             $rt = $user->rt;
             $pendudukMeninggal->where('rt_id', $user->rt->id);
-        } else if ($user->hasRole('rw')) {
+        }
+
+        if ($user->hasRole('rw')) {
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
             $penduduk = null;
             $pendudukMeninggal->when($request->has('rt'), function ($q) use ($request) {
                 return $q->where('rt_id', $request->get('rt'));
             });
-        } else {
-            abort(403);
         }
 
         $pendudukMeninggal = $pendudukMeninggal->latest()->get();
+        $fileTypes = PendudukMeninggal::FILE_TYPES;
 
-        return view('penduduk-meninggal.index', compact('rt', 'penduduk', 'pendudukMeninggal'));
+        return view('penduduk-meninggal.index', compact('rt', 'penduduk', 'pendudukMeninggal', 'fileTypes'));
     }
 
 
@@ -59,24 +60,23 @@ class PendudukMeninggalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePendudukMeninggalRequest $request)
+    public function store(PendudukMeninggalStoreRequest $request)
     {
         $request->validated();
 
-        DB::beginTransaction();
         try {
-            $penduduk = Penduduk::findOrFail($request->get('penduduk_id'));
+            DB::beginTransaction();
+            $penduduk = Penduduk::findOrFail($request->penduduk_id);
             $data = array_merge($request->all(), $penduduk->toArray(), ['alamat' => $penduduk->keluarga->alamat]);
             PendudukMeninggal::create($data);
             $penduduk->delete();
-
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
-            return back()->with('error', $exception->getMessage());
+            return back()->withErrors($exception->getMessage())->withInput();
         }
 
-        return back()->with('success', 'Berhasil menambahkan penduduk meninggal');
+        return back()->withSuccess('Berhasil menambahkan penduduk meninggal');
     }
 
     /**
@@ -89,7 +89,7 @@ class PendudukMeninggalController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('rt') && $user->rt->id !== $pendudukMeninggal->rt->id) {
+        if ($user->hasRole('rt') && $user->rt_id !== $pendudukMeninggal->rt_id) {
             abort(404);
         }
 
@@ -106,16 +106,16 @@ class PendudukMeninggalController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('rt') && $user->rt->id !== $pendudukMeninggal->rt->id) {
+        if ($user->hasRole('rt') && $user->rt_id !== $pendudukMeninggal->rt_id) {
             abort(404);
         }
 
         if ($user->hasRole('rt')) {
             $rt = $user->rt;
-        } else if ($user->hasRole('rw')) {
+        }
+
+        if ($user->hasRole('rw')) {
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        } else {
-            abort(403);
         }
 
         $agama = Agama::all()->pluck('nama', 'id');
@@ -144,17 +144,17 @@ class PendudukMeninggalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePendudukMeninggalRequest $request, PendudukMeninggal $penduduk_meninggal)
+    public function update(PendudukMeninggalUpdateRequest $request, PendudukMeninggal $pendudukMeninggal)
     {
         $validated = $request->validated();
-
         if ($request->hasFile('foto_ktp')) {
-            $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
-            Storage::disk('public')->delete($penduduk_meninggal->foto_ktp);
+            $validated['foto_ktp'] = $request->file('foto_ktp')->store('public/ktp');
+            Storage::disk('public')->delete($pendudukMeninggal->foto_ktp);
         }
 
-        $penduduk_meninggal->update($validated);
-        return back()->with('success', 'Penduduk meninggal berhasil diupdate');
+        $pendudukMeninggal->update($validated);
+
+        return back()->withSuccess('Penduduk meninggal berhasil diupdate');
     }
 
     /**
@@ -168,31 +168,51 @@ class PendudukMeninggalController extends Controller
         Storage::disk('public')->delete($pendudukMeninggal->foto_ktp);
         $pendudukMeninggal->delete();
 
-        return back()->with('success', 'Berhasil menghapus penduduk meninggal');
+        return back()->withSuccess('Berhasil menghapus penduduk meninggal');
     }
 
     public function export(Request $request)
     {
+        if (is_null($request->file_type) || !in_array($request->file_type, PendudukMeninggal::FILE_TYPES)) {
+            return back()->withError('Tipe file harus ' . join(',', PendudukMeninggal::FILE_TYPES));
+        }
+
         $user = auth()->user();
-        $pendudukMeninggal = PendudukMeninggal::query();
+        $pendudukMeninggal = PendudukMeninggal::with([
+            'rt.rw',
+            'darah',
+            'agama',
+            'statusPerkawinan',
+            'pekerjaan',
+            'pendidikan'
+        ]);
 
         if ($user->hasRole('rt')) {
-            $pendudukMeninggal->where('rt_id', $user->rt->id);
-            $fileName = 'Penduduk_Meninggal_RT_' . $user->rt->nomor;
-        } else if ($user->hasRole('rw')) {
-            $pendudukMeninggal->whereHas('rt', function ($q) use ($user) {
-                return $q->where('rw_id', $user->rt->rw->id);
-            })
+            $pendudukMeninggal->whereRtId($user->rt_id);
+            $filename = 'Penduduk_Meninggal_RT_' . $user->rt->nomor;
+        }
+
+        if ($user->hasRole('rw')) {
+            $pendudukMeninggal
+                ->whereHas('rt', function ($q) use ($user) {
+                    return $q->whereRwId($user->rt->rw_id);
+                })
                 ->when($request->has('rt'), function ($q) use ($request) {
-                    return $q->where('rt_id', $request->get('rt'));
+                    return $q->whereRtId($request->rt);
                 });
-            $fileName = $request->has('rt') ? 'Penduduk_Meninggal_RT_' . Rt::where('id', $request->get('rt'))->first()->nomor : 'Penduduk_Meninggal';
-        } else {
-            abort(403);
+
+            if ($request->has('rt')) {
+                $noRt = Rt::where('id', $request->rt)->firstOrFail()->nomor;
+                $filename = 'Penduduk_Meninggal_RT_' . $noRt;
+            } else {
+                $filename = 'Penduduk_Meninggal';
+            }
         }
 
         $pendudukMeninggal = $pendudukMeninggal->latest()->get();
+        $filename = "{$filename}.{$request->file_type}";
 
-        return Excel::download(new PendudukMeninggalExport($pendudukMeninggal), $fileName . '.' . strtolower($request->get('format')));
+
+        return Excel::download(new PendudukMeninggalExport($pendudukMeninggal), $filename);
     }
 }

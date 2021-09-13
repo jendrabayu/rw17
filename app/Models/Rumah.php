@@ -23,6 +23,9 @@ class Rumah extends Model
      */
     protected $fillable = ['rt_id', 'alamat',  'nomor', 'tipe_bangunan', 'penggunaan_bangunan', 'kontruksi_bangunan', 'keterangan'];
 
+
+    public const FILE_TYPES = ['xlsx', 'xls', 'csv'];
+
     /**
      * The roles that belong to the user.
      */

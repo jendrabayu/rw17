@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\PendudukMeninggal;
+namespace App\Http\Requests\Keluarga;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePendudukMeninggalRequest extends FormRequest
+class KeluargaUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +25,9 @@ class StorePendudukMeninggalRequest extends FormRequest
     {
         return [
             'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'penduduk_id' => ['numeric', 'required', 'exists:penduduk,id'],
-            'tanggal_kematian' => ['date_format:Y-m-d', 'required'],
-            'jam_kematian' => ['date_format:H:i', 'nullable', 'before_or_equal:'. date('Y-m-d')],
-            'tempat_kematian' => ['string', 'max:100', 'nullable'],
-            'sebab_kematian' => ['string', 'max:100', 'nullable'],
-            'tempat_pemakaman' => ['string', 'max:100', 'nullable']
+            'nomor' => ['numeric', 'required', 'digits:16', 'starts_with:3509', 'unique:keluarga,nomor,' . $this->keluarga->id],
+            'alamat' => ['string', 'required', 'max:200'],
+            'foto_kk' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000']
         ];
     }
 
@@ -38,7 +35,8 @@ class StorePendudukMeninggalRequest extends FormRequest
     {
         return [
             'rt_id' => 'RT',
-            'penduduk_id' => 'penduduk'
+            'nomor' => 'nomor kartu keluarga',
+            'foto_kk' => 'foto kartu keluarga'
         ];
     }
 }

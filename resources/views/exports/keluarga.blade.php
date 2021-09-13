@@ -18,18 +18,7 @@
         <tr>
           <td>{{ ++$i }}</td>
           <td>{{ $keluarga->nomor }}</td>
-          <td>
-            @php
-              $kepala_keluarga = $keluarga
-                  ->penduduk()
-                  ->whereHas('statusHubunganDalamKeluarga', function ($q) {
-                      $q->where('nama', 'KEPALA KELUARGA');
-                  })
-                  ->first();
-              $kepala_keluarga = $kepala_keluarga ? $kepala_keluarga->nama : '';
-            @endphp
-            {{ $kepala_keluarga }}
-          </td>
+          <td>{{ $keluarga->kepala_keluarga ? $keluarga->kepala_keluarga->nama : '' }}</td>
           <td>{{ $keluarga->penduduk->count() }}</td>
           <td>{{ $keluarga->alamat }}</td>
           <td>{{ $keluarga->rt->nomor . '/' . $keluarga->rt->rw->nomor }}</td>

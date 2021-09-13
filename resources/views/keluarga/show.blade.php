@@ -25,7 +25,7 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Detail Keluarga</h4>
           </div>
@@ -35,15 +35,7 @@
                 <tr>
                   <th>Kepala Keluarga</th>
                   <td>
-                    @php
-                      $kepala_keluarga = $keluarga
-                          ->penduduk()
-                          ->whereHas('statusHubunganDalamKeluarga', function ($q) {
-                              $q->where('nama', 'KEPALA KELUARGA');
-                          })
-                          ->first();
-                    @endphp
-                    {{ $kepala_keluarga ? $kepala_keluarga->nama : '' }}
+                    {{ $keluarga->kepala_keluarga ? $keluarga->kepala_keluarga->nama : '' }}
                   </td>
                 </tr>
                 <tr>

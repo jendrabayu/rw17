@@ -60,7 +60,6 @@
                               return $keluarga->id;
                           })
                           ->toArray();
-                      dump($keluarga_ids);
                     @endphp
                     @foreach ($rumah->rt->keluarga as $k)
                       <option {{ in_array($k->id, $keluarga_ids) ? 'selected' : '' }} value="{{ $k->id }}">

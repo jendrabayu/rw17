@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PendudukExport;
-use App\Http\Requests\Penduduk\StorePendudukRequest;
-use App\Http\Requests\Penduduk\UpdatePendudukRequest;
+use App\Http\Requests\Penduduk\PendudukStoreRequest;
+use App\Http\Requests\Penduduk\PendudukUpdateRequest;
 use App\Models\Agama;
 use App\Models\Darah;
 use App\Models\Keluarga;
@@ -24,7 +24,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PendudukController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -33,39 +32,37 @@ class PendudukController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-
-        $penduduk = $this->filter($request);
+        $penduduk = $this->filter();
 
         if ($user->hasRole('rt')) {
             $penduduk = $penduduk
                 ->whereHas('keluarga', function ($q) use ($user) {
-                    $q->where('rt_id', $user->id);
+                    $q->whereRtId($user->rt_id);
                 });
-
             $rt = $user->rt;
-        } else if ($user->hasRole('rw')) {
-            $penduduk = $penduduk
-                ->whereHas('keluarga.rt', function ($q) use ($user) {
-                    $q->where('rw_id', $user->rt->rw->id);
-                })
-                ->when($request->has('rt'), function ($q) use ($request) {
-                    $q->whereHas('keluarga.rt', function ($q) use ($request) {
-                        $q->where('id', $request->get('rt'));
-                    });
-                });
-
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        } else {
-            abort(403);
         }
 
-        $penduduk = $penduduk->orderBy('keluarga_id', 'asc')->get();
+        if ($user->hasRole('rw')) {
+            $penduduk = $penduduk
+                ->whereHas('keluarga.rt', function ($q) use ($user) {
+                    $q->whereRwId($user->rt->rw_id);
+                })
+                ->when($request->has('rt'), function ($q) {
+                    $q->whereHas('keluarga.rt', function ($q) {
+                        $q->where('id', request()->get('rt'));
+                    });
+                });
+            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
+        }
+
+        $penduduk = $penduduk->orderBy('keluarga_id')->get();
         $agama = Agama::all()->pluck('nama', 'id');
         $darah = Darah::all()->pluck('nama', 'id');
         $pekerjaan = Pekerjaan::all()->pluck('nama', 'id');
         $statusPerkawinan = StatusPerkawinan::all()->pluck('nama', 'id');
         $pendidikan = Pendidikan::all()->pluck('nama', 'id');
         $statusHubunganDalamKeluarga = StatusHubunganDalamKeluarga::all()->pluck('nama', 'id');
+        $fileTypes = Penduduk::FILE_TYPES;
 
         return view('penduduk.index', compact(
             'penduduk',
@@ -76,7 +73,8 @@ class PendudukController extends Controller
             'pekerjaan',
             'statusPerkawinan',
             'pendidikan',
-            'statusHubunganDalamKeluarga'
+            'statusHubunganDalamKeluarga',
+            'fileTypes'
         ));
     }
 
@@ -90,16 +88,15 @@ class PendudukController extends Controller
         $user = auth()->user();
 
         if ($user->hasRole('rt')) {
-            $keluarga = Keluarga::where('rt_id', $user->rt->id)->get()->pluck('nomor', 'id');
+            $keluarga = Keluarga::whereRtId($user->rt_id)->get()->pluck('nomor', 'id');
             $rt = $user->rt;
-        } else if ($user->hasRole('rw')) {
-            $keluarga = Keluarga::whereHas('rt', function ($q) use ($user) {
-                $q->where('rw_id', $user->rt->rw->id);
-            })->get()->pluck('nomor', 'id');
+        }
 
+        if ($user->hasRole('rw')) {
+            $keluarga = Keluarga::whereHas('rt', function ($q) use ($user) {
+                $q->whereRwId($user->rt->rw_id);
+            })->get()->pluck('nomor', 'id');
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        } else {
-            abort(403);
         }
 
         $agama = Agama::all()->pluck('nama', 'id');
@@ -127,17 +124,16 @@ class PendudukController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePendudukRequest $request)
+    public function store(PendudukStoreRequest $request)
     {
         $validated = $request->validated();
-
         if ($request->file('foto_ktp')) {
             $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
         }
 
         Penduduk::create($validated);
 
-        return back()->with('success', 'Berhasil menambahkan penduduk');
+        return back()->withSuccess('Berhasil menambahkan penduduk');
     }
 
     /**
@@ -149,8 +145,7 @@ class PendudukController extends Controller
     public function show(Penduduk $penduduk)
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt') && $penduduk->keluarga->rt->id !== $user->rt->id) {
+        if ($user->hasRole('rt') && $penduduk->keluarga->rt_id !== $user->rt_id) {
             abort(404);
         }
 
@@ -167,21 +162,20 @@ class PendudukController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('rt') && $penduduk->keluarga->rt->id !== $user->rt->id) {
+        if ($user->hasRole('rt') && $penduduk->keluarga->rt_id !== $user->rt_id) {
             abort(404);
         }
 
         if ($user->hasRole('rt')) {
-            $keluarga = Keluarga::where('rt_id', $user->rt->id)->get()->pluck('nomor', 'id');
+            $keluarga = Keluarga::whereRtId($user->rt_id)->get()->pluck('nomor', 'id');
             $rt = $user->rt;
-        } else if ($user->hasRole('rw')) {
-            $keluarga = Keluarga::whereHas('rt', function ($q) use ($user) {
-                $q->where('rw_id', $user->rt->rw->id);
-            })->get()->pluck('nomor', 'id');
+        }
 
+        if ($user->hasRole('rw')) {
+            $keluarga = Keluarga::whereHas('rt', function ($q) use ($user) {
+                $q->whereRwId($user->rt->rw_id);
+            })->get()->pluck('nomor', 'id');
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        } else {
-            abort(403);
         }
 
         $agama = Agama::all()->pluck('nama', 'id');
@@ -211,21 +205,17 @@ class PendudukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePendudukRequest $request, Penduduk $penduduk)
+    public function update(PendudukUpdateRequest $request, Penduduk $penduduk)
     {
-
         $validated = $request->validated();
-
         if ($request->file('foto_ktp')) {
-            $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
+            $validated['foto_ktp'] = $request->file('foto_ktp')->store('public/ktp');
             Storage::disk('public')->delete($penduduk->foto_ktp);
-        } else {
-            $validated['foto_ktp'] = $penduduk->foto_ktp;
         }
 
         $penduduk->update($validated);
 
-        return back()->with('success', 'Penduduk berhasil diupdate');
+        return back()->withSuccess('Penduduk berhasil diupdate');
     }
 
     /**
@@ -236,40 +226,51 @@ class PendudukController extends Controller
      */
     public function destroy(Penduduk $penduduk)
     {
+        Storage::disk('public')->delete($penduduk->foto_ktp);
         $penduduk->delete();
 
-        return back()->with('success', 'Penduduk berhasil dihapus');
+        return back()->withSuccess('Penduduk berhasil dihapus');
     }
 
     public function export(Request $request)
     {
-        $user = auth()->user();
-        $penduduk = $this->filter($request);
-
-        if ($user->hasRole('rt')) {
-            $penduduk
-                ->whereHas('keluarga', function ($q) use ($user) {
-                    $q->where('rt_id', $user->rt->id);
-                });
-            $fileName = 'Penduduk_RT_' . $user->rt->nomor;
-        } else if ($user->hasRole('rw')) {
-            $penduduk
-                ->whereHas('keluarga.rt', function ($q) use ($user) {
-                    $q->where('rw_id', $user->rt->rw->id);
-                })
-                ->when($request->has('rt'), function ($q) use ($request) {
-                    $q->whereHas('keluarga.rt', function ($q) use ($request) {
-                        $q->where('id', $request->get('rt'));
-                    });
-                });
-            $fileName = $request->has('rt') ? 'Penduduk_RT_' . Rt::where('id', $request->get('rt'))->first()->nomor : 'Penduduk';
-        } else {
-            abort(403);
+        if (is_null($request->file_type) || !in_array($request->file_type, Penduduk::FILE_TYPES)) {
+            return back()->withError('Tipe file harus ' . join(',', Penduduk::FILE_TYPES));
         }
 
-        $penduduk = $penduduk->orderBy('keluarga_id', 'asc')->get();
+        $user = auth()->user();
+        $penduduk = $this->filter();
 
-        return Excel::download(new PendudukExport($penduduk), $fileName . '.' . strtolower($request->get('format')));
+        if ($user->hasRole('rt')) {
+            $penduduk->whereHas('keluarga', function ($q) use ($user) {
+                $q->whereRtId($user->rt_id);
+            });
+            $filename = 'Penduduk_RT_' . $user->rt->nomor;
+        }
+
+        if ($user->hasRole('rw')) {
+            $penduduk
+                ->whereHas('keluarga.rt', function ($q) use ($user) {
+                    $q->whereRwId($user->rt->rw_id);
+                })
+                ->when($request->has('rt'), function ($q) {
+                    $q->whereHas('keluarga.rt', function ($q) {
+                        $q->where('id', request()->get('rt'));
+                    });
+                });
+
+            if ($request->has('rt')) {
+                $noRt = Rt::where('id', $request->get('rt'))->firstOrFail()->nomor;
+                $filename = 'Penduduk_RT_' . $noRt;
+            } else {
+                $filename = 'Penduduk';
+            }
+        }
+
+        $penduduk = $penduduk->orderBy('keluarga_id')->get();
+        $filename = "{$filename}.{$request->file_type}";
+
+        return Excel::download(new PendudukExport($penduduk),  $filename);
     }
 
     public function import(Request $request)
@@ -377,57 +378,66 @@ class PendudukController extends Controller
             return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
 
-        return back()->with('success', 'Data penduduk berhasil disimpan ke database');
+        return back()->withSuccess('Data penduduk berhasil disimpan ke database');
     }
 
 
-    private function filter(Request $request)
+    private function filter()
     {
-        $penduduk = Penduduk::with(['keluarga', 'agama', 'pekerjaan', 'pendidikan']);
+        $penduduk = Penduduk::with([
+            'keluarga.rt.rw',
+            'agama',
+            'pekerjaan',
+            'pendidikan',
+            'statusPerkawinan',
+            'statusHubunganDalamKeluarga',
+            'darah',
 
-        $penduduk->when($request->has('agama'), function ($q) use ($request) {
-            return $q->whereHas('agama', function ($q) use ($request) {
-                $q->where('id', $request->get('agama'));
+        ]);
+
+        $penduduk->when(request()->has('agama'), function ($q) {
+            return $q->whereHas('agama', function ($q) {
+                $q->where('id', request()->get('agama'));
             });
         });
 
-        $penduduk->when($request->has('pekerjaan'), function ($q) use ($request) {
-            return $q->whereHas('pekerjaan', function ($q) use ($request) {
-                $q->where('id', $request->get('pekerjaan'));
+        $penduduk->when(request()->has('pekerjaan'), function ($q) {
+            return $q->whereHas('pekerjaan', function ($q) {
+                $q->where('id', request()->get('pekerjaan'));
             });
         });
 
-        $penduduk->when($request->has('darah'), function ($q) use ($request) {
-            return $q->whereHas('darah', function ($q) use ($request) {
-                $q->where('id', $request->get('darah'));
+        $penduduk->when(request()->has('darah'), function ($q) {
+            return $q->whereHas('darah', function ($q) {
+                $q->where('id', request()->get('darah'));
             });
         });
 
-        $penduduk->when($request->has('pendidikan'), function ($q) use ($request) {
-            return $q->whereHas('pendidikan', function ($q) use ($request) {
-                $q->where('id', $request->get('pendidikan'));
+        $penduduk->when(request()->has('pendidikan'), function ($q) {
+            return $q->whereHas('pendidikan', function ($q) {
+                $q->where('id', request()->get('pendidikan'));
             });
         });
 
-        $penduduk->when($request->has('status_perkawinan'), function ($q) use ($request) {
-            return $q->whereHas('statusPerkawinan', function ($q) use ($request) {
-                $q->where('id', $request->get('status_perkawinan'));
+        $penduduk->when(request()->has('status_perkawinan'), function ($q) {
+            return $q->whereHas('statusPerkawinan', function ($q) {
+                $q->where('id', request()->get('status_perkawinan'));
             });
         });
 
-        $penduduk->when($request->has('status_hubungan_dalam_keluarga'), function ($q) use ($request) {
-            return $q->whereHas('statusHubunganDalamKeluarga', function ($q) use ($request) {
-                $q->where('id', $request->get('status_hubungan_dalam_keluarga'));
+        $penduduk->when(request()->has('status_hubungan_dalam_keluarga'), function ($q) {
+            return $q->whereHas('statusHubunganDalamKeluarga', function ($q) {
+                $q->where('id', request()->get('status_hubungan_dalam_keluarga'));
             });
         });
 
-        $penduduk->when($request->has('jenis_kelamin'), function ($q) use ($request) {
-            return $q->where('jenis_kelamin', $request->get('jenis_kelamin'));
+        $penduduk->when(request()->has('jenis_kelamin'), function ($q) {
+            return $q->where('jenis_kelamin', request()->get('jenis_kelamin'));
         });
 
-        $penduduk->when($request->has('age_min') && $request->has('age_max'), function ($q) use ($request) {
-            $age_min = $request->get('age_min') ?? null;
-            $age_max = $request->get('age_max') ?? null;
+        $penduduk->when(request()->has('age_min') &&  request()->has('age_max'), function ($q) {
+            $age_min =  request()->get('age_min');
+            $age_max =  request()->get('age_max');
             if ($age_min && $age_max && $age_min <= $age_max) {
                 $age_min = Carbon::now()->subYears($age_min)->format('Y-m-d');
                 $age_max = Carbon::now()->subYears($age_max)->format('Y-m-d');

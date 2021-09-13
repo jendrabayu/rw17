@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\KeluargaExport;
+use App\Http\Requests\Keluarga\KeluargaStoreRequest;
+use App\Http\Requests\Keluarga\KeluargaUpdateRequest;
 use App\Models\Keluarga;
 use App\Models\Rt;
 use Illuminate\Http\Request;
@@ -19,23 +21,31 @@ class KeluargaController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $keluarga = Keluarga::with('penduduk');
+        $keluarga = Keluarga::with('penduduk.statusHubunganDalamKeluarga');
 
         if ($user->hasRole('rt')) {
-            $keluarga->where('rt_id', $user->rt->id);
+            $keluarga->whereRtId($user->rt_id);
             $rt = $user->rt;
-        } else if ($user->hasRole('rw')) {
-            $keluarga->when($request->has('rt'), function ($q) use ($request) {
-                return $q->where('rt_id', $request->get('rt'));
-            });
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        } else {
-            abort(403);
         }
 
-        $keluarga = $keluarga->latest()->get();
+        if ($user->hasRole('rw')) {
+            $keluarga->when($request->has('rt'), function ($q) {
+                return $q->whereRtId(request()->get('rt'));
+            });
 
-        return view('keluarga.index', compact('keluarga', 'rt'));
+            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
+        }
+
+        $keluarga = $keluarga->get()->map(function ($keluarga) {
+            $keluarga->kepala_keluarga = $keluarga
+                ->penduduk->where('statusHubunganDalamKeluarga.nama', 'KEPALA KELUARGA')
+                ->first();
+            return $keluarga;
+        });
+
+        $fileTypes = Keluarga::FILE_TYPES;
+
+        return view('keluarga.index', compact('keluarga', 'rt', 'fileTypes'));
     }
 
     /**
@@ -49,10 +59,10 @@ class KeluargaController extends Controller
 
         if ($user->hasRole('rt')) {
             $rt = $user->rt;
-        } else if ($user->hasRole('rw')) {
+        }
+
+        if ($user->hasRole('rw')) {
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        } else {
-            abort(403);
         }
 
         return view('keluarga.create', compact('rt'));
@@ -64,22 +74,16 @@ class KeluargaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(KeluargaStoreRequest $request)
     {
-        $validated = $this->validate($request, [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'nomor' => ['numeric', 'required', 'digits:16', 'starts_with:3509', 'unique:keluarga,nomor'],
-            'alamat' => ['string', 'required', 'max:200'],
-            'foto_kk' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000']
-        ]);
-
+        $validated = $request->validated();
         if ($request->hasFile('foto_kk')) {
-            $validated['foto_kk'] = $request->file('foto_kk')->store('kartu_keluarga', 'public');
+            $validated['foto_kk'] = $request->file('foto_kk')->store('public/kartu_keluarga');
         }
 
         Keluarga::create($validated);
 
-        return back()->with('success', 'Berhasil menambahkan keluarga');
+        return back()->withSuccess('Berhasil menambahkan keluarga');
     }
 
     /**
@@ -92,9 +96,23 @@ class KeluargaController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('rt') && $keluarga->rt->id !== $user->rt->id) {
+        if ($user->hasRole('rt') && $keluarga->rt_id !== $user->rt_id) {
             abort(404);
         }
+
+        $keluarga->load([
+            'penduduk.statusHubunganDalamKeluarga',
+            'penduduk.agama',
+            'penduduk.darah',
+            'penduduk.pekerjaan',
+            'penduduk.pendidikan',
+            'penduduk.statusPerkawinan',
+        ]);
+
+        $keluarga->kepala_keluarga = $keluarga
+            ->penduduk
+            ->where('statusHubunganDalamKeluarga.nama', 'KEPALA KELUARGA')
+            ->first();
 
         return view('keluarga.show', compact('keluarga'));
     }
@@ -109,16 +127,16 @@ class KeluargaController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('rt') && $keluarga->rt->id !== $user->rt->id) {
+        if ($user->hasRole('rt') && $keluarga->rt_id !== $user->rt_id) {
             abort(404);
         }
 
         if ($user->hasRole('rt')) {
             $rt = $user->rt;
-        } else if ($user->hasRole('rw')) {
+        }
+
+        if ($user->hasRole('rw')) {
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        } else {
-            abort(404);
         }
 
         return view('keluarga.edit', compact('keluarga', 'rt'));
@@ -131,25 +149,17 @@ class KeluargaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(KeluargaUpdateRequest $request, Keluarga $keluarga)
     {
-        $keluarga = Keluarga::findOrFail($id);
-
-        $validated = $this->validate($request, [
-            'rt_id' => ['numeric', 'required', 'exists:rt,id'],
-            'nomor' => ['numeric', 'required', 'digits:16', 'starts_with:3509', 'unique:keluarga,nomor,' . $keluarga->id],
-            'alamat' => ['string', 'required', 'max:200'],
-            'foto_kk' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000']
-        ]);
-
+        $validated = $request->validated();
         if ($request->hasFile('foto_kk')) {
-            $validated['foto_kk'] = $request->file('foto_kk')->store('kartu_keluarga', 'public');
+            $validated['foto_kk'] = $request->file('foto_kk')->store('public/kartu_keluarga');
             Storage::disk('public')->delete($keluarga->foto_ktp);
         }
 
         $keluarga->update($validated);
 
-        return back()->with('success', 'Keluarga berhasil diupdate');
+        return back()->withSuccess('Keluarga berhasil diupdate');
     }
 
     /**
@@ -163,28 +173,46 @@ class KeluargaController extends Controller
         Storage::disk('public')->delete($keluarga->foto_kk);
         $keluarga->delete();
 
-        return back()->with('success', 'Keluarga berhasil dihapus');
+        return back()->withSuccess('Keluarga berhasil dihapus');
     }
 
     public function export(Request $request)
     {
-        $user = auth()->user();
-        $keluarga = Keluarga::with('penduduk');
-
-        if ($user->hasRole('rt')) {
-            $keluarga->where('rt_id', $user->rt->id);
-            $fileName = 'Keluarga_RT_' . $user->rt->nomor;
-        } else if ($user->hasRole('rw')) {
-            $keluarga->when($request->has('rt'), function ($q) use ($request) {
-                return $q->where('rt_id', $request->get('rt'));
-            });
-            $fileName = $request->has('rt') ? 'Keluarga_RT_' . Rt::where('id', $request->get('rt'))->first()->nomor : 'Keluarga';
-        } else {
-            abort(404);
+        if (is_null($request->file_type) || !in_array($request->file_type, Keluarga::FILE_TYPES)) {
+            return back()->withError('Tipe file harus ' . join(',', Keluarga::FILE_TYPES));
         }
 
-        $keluarga = $keluarga->latest()->get();
+        $user = auth()->user();
+        $keluarga = Keluarga::with(['penduduk.statusHubunganDalamKeluarga', 'rt.rw']);
 
-        return Excel::download(new KeluargaExport($keluarga), $fileName . '.' . strtolower($request->get('format')));
+        if ($user->hasRole('rt')) {
+            $keluarga->whereRtId($user->rt->id);
+            $filename = 'Keluarga_RT_' . $user->rt->nomor;
+        }
+
+        if ($user->hasRole('rw')) {
+            $keluarga->when($request->has('rt'), function ($q) {
+                return $q->whereRtId(request()->get('rt'));
+            });
+
+            if ($request->has('rt')) {
+                $noRt = Rt::where('id', $request->rt)->firstOrFail()->nomor;
+                $filename = 'Keluarga_RT_' . $noRt;
+            } else {
+                $filename =  'Keluarga';
+            }
+        }
+
+        $keluarga = $keluarga->latest()->get()->map(function ($keluarga) {
+            $keluarga->kepala_keluarga = $keluarga
+                ->penduduk
+                ->where('statusHubunganDalamKeluarga.nama', 'KEPALA KELUARGA')
+                ->first();
+            return $keluarga;
+        });
+
+        $filename = "{$filename}.{$request->file_type}";
+
+        return Excel::download(new KeluargaExport($keluarga), $filename);
     }
 }

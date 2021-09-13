@@ -54,12 +54,9 @@
                   aria-haspopup="true" aria-expanded="false"><i class="fas fa-file-export"></i>
                   Exports</button>
                 <div class="dropdown-menu">
-                  @php
-                    $exportFormats = ['PDF', 'XLSX', 'CSV', 'XLS'];
-                  @endphp
-                  @foreach ($exportFormats as $format)
+                  @foreach ($fileTypes as $type)
                     <a class="dropdown-item"
-                      href="{{ route('exports.penduduk_domisili', array_merge(['format' => $format], request()->all())) }}">{{ $format }}</a>
+                      href="{{ route('exports.penduduk_domisili', array_merge(['file_type' => $type], request()->all())) }}">{{ Str::upper($type) }}</a>
                   @endforeach
                 </div>
               </div>

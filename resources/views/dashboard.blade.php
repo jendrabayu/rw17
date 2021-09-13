@@ -116,7 +116,7 @@
               @foreach ($rt as $id => $nomor)
                 <li class="nav-item">
                   <a class="nav-link {{ request()->get('rt') == $id ? 'active' : '' }}"
-                    href="{{ route('home', ['rt' => $id]) }}">RT {{ $nomor }}</a>
+                    href="{{ route('home', ['rt' => $id]) }}">RT {{ ltrim($nomor, '0') }}</a>
                 </li>
               @endforeach
             </ul>

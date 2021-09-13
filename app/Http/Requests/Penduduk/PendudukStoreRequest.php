@@ -4,7 +4,7 @@ namespace App\Http\Requests\Penduduk;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePendudukRequest extends FormRequest
+class PendudukStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,7 +32,7 @@ class UpdatePendudukRequest extends FormRequest
             'pendidikan_id' =>  ['numeric', 'required', 'exists:pendidikan,id'],
             'status_hubungan_dalam_keluarga_id' => ['numeric', 'required', 'exists:status_hubungan_dalam_keluarga,id'],
             'kewarganegaraan' => ['required'],
-            'nik' => ['numeric', 'required', 'digits:16', 'starts_with:3509', 'unique:penduduk,nik,' . $this->penduduk->id],
+            'nik' => ['numeric', 'required', 'digits:16', 'starts_with:3509', 'unique:penduduk,nik'],
             'nama' => ['string', 'required', 'max:100'],
             'tempat_lahir' => ['string', 'required', 'max:100'],
             'tanggal_lahir' => ['date', 'required', 'before:' . date('Y-m-d')],
@@ -42,7 +42,7 @@ class UpdatePendudukRequest extends FormRequest
             'nama_ayah' =>  ['string', 'nullable', 'max:100'],
             'nama_ibu' =>  ['string', 'nullable', 'max:100'],
             'foto_ktp' => ['mimes:jpg,jpeg,png', 'nullable', 'max:1000'],
-            'no_hp'  => ['string', 'nullable', 'max:15', 'starts_with:+62,62,08'],
+            'no_hp'  => ['string', 'nullable', 'max:13', 'starts_with:+62,62,08'],
             'email' =>  ['email', 'nullable', 'max:50']
         ];
     }
@@ -60,8 +60,8 @@ class UpdatePendudukRequest extends FormRequest
             'nik' => 'NIK',
             'nama' => 'nama lengkap',
             'no_paspor' => 'nomor paspor',
-            'no_kitas_kitap'  => 'nomor KITAS/KITAP',
-            'no_hp'  => 'No. Hp/WhatsApp',
+            'no_kitas_kitap'  => 'nomor KITAS / KITAP',
+            'no_hp'  => 'No. Hp / WhatsApp',
         ];
     }
 }

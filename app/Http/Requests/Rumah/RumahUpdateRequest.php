@@ -5,7 +5,7 @@ namespace App\Http\Requests\Rumah;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateRumahRequest extends FormRequest
+class RumahUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
