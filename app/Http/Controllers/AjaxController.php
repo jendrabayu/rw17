@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Keluarga;
 use App\Models\Penduduk;
 use App\Models\Rt;
+use App\Models\Rumah;
 
 class AjaxController extends Controller
 {
     public function getKeluarga($rt_id)
     {
         $rt = Rt::findOrFail($rt_id);
-        $keluarga = $rt->keluarga->map(function ($keluarga) {
+        $keluarga = $rt->keluarga()->doesntHave('rumah')->get()->map(function ($keluarga) {
             return [
                 'id' => $keluarga->id,
                 'nomor' => $keluarga->nomor

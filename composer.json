@@ -15,7 +15,8 @@
         "laravel/ui": "^3.3",
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.18",
-        "spatie/laravel-permission": "^4.2"
+        "spatie/laravel-permission": "^4.2",
+        "yajra/laravel-datatables": "^1.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

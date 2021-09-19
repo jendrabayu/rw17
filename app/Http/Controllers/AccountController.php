@@ -21,7 +21,7 @@ class AccountController extends Controller
     public function updateProfile(Request $request)
     {
         $user = auth()->user();
-
+                    
         $validated = $this->validate($request, [
             'name' => ['required', 'string',  'max:32'],
             'username' =>  ['required', 'alpha_dash',  'max:64', 'unique:users,username,' . $user->id],
@@ -53,7 +53,7 @@ class AccountController extends Controller
         ]);
 
         auth()->user()->update(['password' => Hash::make($request->get('password'))]);
-
+                
         return back()->withSuccess('Password Anda berhasil diubah');
     }
 }

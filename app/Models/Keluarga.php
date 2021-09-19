@@ -43,7 +43,7 @@ class Keluarga extends Model
      */
     public function rumah()
     {
-        return $this->belongsToMany(Rumah::class);
+        return $this->belongsToMany(Rumah::class, 'rumah_keluarga', 'keluarga_id', 'rumah_id',);
     }
 
     public function rt()

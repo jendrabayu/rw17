@@ -23,12 +23,12 @@ class CreatePendudukMeninggalTable extends Migration
             $table->foreignId('pendidikan_id')->nullable()->constrained('pendidikan')->onUpdate('cascade')->onDelete('cascade');
             $table->enum('kewarganegaraan', [1, 2, 3])->comment('1 => WNI, 2 => WNA, 3 => Dua Kewarganegaraan');
             $table->string('nik', 16);
-            $table->string('nama', 100);
-            $table->string('tempat_lahir', 100)->nullable();
+            $table->string('nama');
+            $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir');
             $table->enum('jenis_kelamin', ['l', 'p'])->comment('l => laki-laki, p => perempuan');
-            $table->string('nama_ayah', 100)->nullable();
-            $table->string('nama_ibu', 100)->nullable();
+            $table->string('nama_ayah')->nullable();
+            $table->string('nama_ibu')->nullable();
             $table->string('foto_ktp')->nullable();
             $table->string('alamat');
             $table->date('tanggal_kematian');

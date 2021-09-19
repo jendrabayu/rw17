@@ -64,17 +64,17 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-hover table-sm" id="tabelPendudukMeninggal">
+              <table class="table table-bordered table-striped table-hover" id="tabelPendudukMeninggal">
                 <thead>
                   <tr>
                     <th class="text-center">#</th>
-                    <th>NIK</th>
-                    <th>Nama</th>
-                    <th>Tanggal Kematian</th>
-                    <th>Jam Kematian</th>
-                    <th>Tempat Kematian</th>
-                    <th>Sebab Kematian</th>
-                    <th>Tempat Pemakaman</th>
+                    <th class="text-nowrap">NIK</th>
+                    <th class="text-nowrap">Nama</th>
+                    <th class="text-nowrap">Tanggal Kematian</th>
+                    <th class="text-nowrap">Jam Kematian</th>
+                    <th class="text-nowrap">Tempat Kematian</th>
+                    <th class="text-nowrap">Sebab Kematian</th>
+                    <th class="text-nowrap">Tempat Pemakaman</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -94,13 +94,13 @@
                           </button>
                         </div>
                       </td>
-                      <td>{{ $item->nik }}</td>
-                      <td>{{ $item->nama }}</td>
-                      <td>{{ $item->tanggal_kematian->format('d-m-Y') }}</td>
-                      <td>{{ $item->jam_kematian->format('H:i') }}</td>
-                      <td>{{ $item->tempat_kematian }}</td>
-                      <td>{{ $item->sebab_kematian }}</td>
-                      <td>{{ $item->tempat_pemakaman }}</td>
+                      <td class="text-nowrap">{{ $item->nik }}</td>
+                      <td class="text-nowrap">{{ $item->nama }}</td>
+                      <td class="text-nowrap">{{ $item->tanggal_kematian->format('d-m-Y') }}</td>
+                      <td class="text-nowrap">{{ $item->jam_kematian->format('H:i') }}</td>
+                      <td class="text-nowrap">{{ $item->tempat_kematian }}</td>
+                      <td class="text-nowrap">{{ $item->sebab_kematian }}</td>
+                      <td class="text-nowrap">{{ $item->tempat_pemakaman }}</td>
                     </tr>
                   @endforeach
                 </tbody>

@@ -23,7 +23,9 @@ Auth::routes([
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('users', \App\Http\Controllers\UserController::class)->except('show')->middleware('role:rw');
+
     Route::get('/', \App\Http\Controllers\DashboardController::class)->name('home');
+    Route::get('/home', \App\Http\Controllers\DashboardController::class)->name('home');
 
     Route::get('/profil', [\App\Http\Controllers\AccountController::class, 'profile'])->name('profile');
     Route::put('/profil', [\App\Http\Controllers\AccountController::class, 'updateProfile'])->name('update_profile');

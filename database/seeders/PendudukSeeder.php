@@ -20,6 +20,6 @@ class PendudukSeeder extends Seeder
         Keluarga::factory()->count(50)->create();
         Penduduk::factory()->count(150)->create();
         PendudukDomisili::factory()->count(50)->create();
-        PendudukMeninggal::factory()->count(25)->create();
+        PendudukMeninggal::factory()->count(15)->create();
     }
 }

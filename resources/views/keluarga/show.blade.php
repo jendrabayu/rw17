@@ -39,7 +39,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <th>Nomor</th>
+                  <th>No. Kartu Keluarga</th>
                   <td>{{ $keluarga->nomor }}</td>
                 </tr>
                 <tr>

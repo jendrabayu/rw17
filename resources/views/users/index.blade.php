@@ -53,75 +53,55 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-hover table-sm" id="tabelPengguna">
-                <thead>
-                  <tr>
-                    <th class="text-center">#</th>
-                    <th>Nama</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>No. Hp</th>
-                    <th>Role</th>
-                    <th>RT</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($users as $item)
-                    <tr>
-                      <td class="text-center">
-                        <div class="btn-group btn-group-sm ">
-                          <a href="{{ route('users.edit', $item->id) }}" class="btn btn-warning btn-icon">
-                            <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <button data-url="{{ route('users.destroy', $item->id) }}" type="button"
-                            class="btn btn-danger btn-icon btn-delete">
-                            <i class="fas fa-trash-alt"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td>{{ $item->name }}</td>
-                      <td>{{ $item->username }}</td>
-                      <td>{{ $item->email }}</td>
-                      <td>{{ $item->no_hp }}</td>
-                      <td>{{ $item->role }}</td>
-                      <td>{{ $item->rt->nomor }}</td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+              {{ $dataTable->table(['class' => 'table table-striped table-hover table-borderless w-100']) }}
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <form action="" method="POST" hidden id="form-delete">@csrf @method('DELETE')</form>
 @endsection
 
 @push('scripts')
+  {{ $dataTable->scripts() }}
   <script>
-    $('#tabelPengguna').DataTable({
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json'
-      }
-    });
+    $(function() {
+      const tabelPengguna = window.LaravelDataTables['tabelPengguna'];
 
-    $('#tabelPengguna').on('click', '.btn-delete', function() {
-      const form = $('#form-delete');
-      form.prop('action', $(this).data('url'));
-      Swal.fire({
-        title: 'Hapus Pengguna?',
-        text: 'Pengguna yang sudah dihapus tidak dapat dikembalikan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          form.trigger('submit');
-        }
+      $('#tabelPengguna').on('click', '.btn-delete', function() {
+        const url = $(this).data('url');
+        Swal.fire({
+          title: 'Hapus Pengguna?',
+          text: 'Pengguna yang sudah dihapus tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Hapus',
+          cancelButtonText: 'Batal',
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url,
+              type: 'DELETE',
+              data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+              },
+              success: function() {
+                Toast.fire({
+                  icon: 'success',
+                  title: '<b class="text-success">Success!</b> Pengguna berhasil dihapus'
+                })
+                tabelPengguna.ajax.reload();
+              },
+              error: function(error) {
+                Toast.fire({
+                  icon: 'error',
+                  title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+                })
+              }
+            });
+          }
+        });
       });
     });
   </script>

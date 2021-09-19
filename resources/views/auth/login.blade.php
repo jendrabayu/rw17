@@ -4,7 +4,6 @@
   Login
 @endsection
 
-
 @section('content')
   <img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Lambang-kabupaten-jember.png" alt="logo" width="80"
     class="s mb-5 mt-2">
@@ -13,7 +12,7 @@
   <form method="POST" action="{{ route('login') }}">
     @csrf
     <div class="form-group">
-      <label for="username">Username atau Email</label>
+      <label for="username">Username atau alamat email</label>
       <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username"
         tabindex="1" required autofocus>
       @error('username')
@@ -58,7 +57,6 @@
         Don't have an account? <a href="{{ route('register') }}">Create One</a>
       </div>
     @endif
-
   </form>
 
   <div class="text-center mt-5 text-small">

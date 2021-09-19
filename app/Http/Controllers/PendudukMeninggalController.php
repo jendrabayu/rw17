@@ -181,7 +181,7 @@ class PendudukMeninggalController extends Controller
         $pendudukMeninggal = PendudukMeninggal::with([
             'rt.rw',
             'darah',
-            'agama',
+            'agama',    
             'statusPerkawinan',
             'pekerjaan',
             'pendidikan'

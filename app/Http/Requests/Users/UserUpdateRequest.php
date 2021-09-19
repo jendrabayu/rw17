@@ -31,7 +31,7 @@ class UserUpdateRequest extends FormRequest
             'no_hp' =>  ['nullable', 'string',  'max:15',  'starts_with:+62,62,08'],
             'alamat' => ['nullable', 'string',  'max:255'],
             'avatar' => ['mimes:jpg,jpeg,png',  'max:1024'],
-            'password' => ['string', 'required', 'min:3', 'max:12'],
+            'password' => ['nullable', 'string', 'min:3', 'max:12'],
             'role' => ['numeric', 'required']
         ];
     }

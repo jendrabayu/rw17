@@ -66,19 +66,19 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-hover table-sm" id="tabelPendudukDomisili">
+              <table class="table table-bordered table-striped table-hover" id="tabelPendudukDomisili">
                 <thead>
                   <tr>
                     <th class="text-center">#</th>
-                    <th>NIK</th>
-                    <th>Nama</th>
-                    <th>Jenis Kelamin</th>
-                    <th>Tempat Lahir</th>
-                    <th>Tanggal Lahir</th>
-                    <th>Usia</th>
-                    <th>Agama</th>
-                    <th>Pekerjaan</th>
-                    <th>Status Perkawinan</th>
+                    <th class="text-nowrap">NIK</th>
+                    <th class="text-nowrap">Nama</th>
+                    <th class="text-nowrap">Jenis Kelamin</th>
+                    <th class="text-nowrap">Tempat Lahir</th>
+                    <th class="text-nowrap">Tanggal Lahir</th>
+                    <th class="text-nowrap">Usia</th>
+                    <th class="text-nowrap">Agama</th>
+                    <th class="text-nowrap">Pekerjaan</th>
+                    <th class="text-nowrap">Status Perkawinan</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,15 +99,15 @@
                           </button>
                         </div>
                       </td>
-                      <td>{{ $penduduk->nik }}</td>
-                      <td>{{ $penduduk->nama }}</td>
-                      <td>{{ $penduduk->jenis_kelamin_text }}</td>
-                      <td>{{ $penduduk->tempat_lahir }}</td>
-                      <td>{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
-                      <td>{{ $penduduk->usia }}</td>
-                      <td>{{ $penduduk->agama->nama }}</td>
-                      <td>{{ $penduduk->pekerjaan->nama }}</td>
-                      <td>{{ $penduduk->statusPerkawinan->nama }}</td>
+                      <td class="text-nowrap">{{ $penduduk->nik }}</td>
+                      <td class="text-nowrap">{{ $penduduk->nama }}</td>
+                      <td class="text-nowrap">{{ $penduduk->jenis_kelamin_text }}</td>
+                      <td class="text-nowrap">{{ $penduduk->tempat_lahir }}</td>
+                      <td class="text-nowrap">{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
+                      <td class="text-nowrap">{{ $penduduk->usia }}</td>
+                      <td class="text-nowrap">{{ $penduduk->agama->nama }}</td>
+                      <td class="text-nowrap">{{ $penduduk->pekerjaan->nama }}</td>
+                      <td class="text-nowrap">{{ $penduduk->statusPerkawinan->nama }}</td>
                     </tr>
                   @endforeach
                 </tbody>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\UsersDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserStoreRequest;
 use App\Http\Requests\Users\UserUpdateRequest;
@@ -18,17 +19,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UsersDataTable $usersDataTable)
     {
-        $users = User::query();
-        $users->when($request->has('role'), function ($q) use ($request) {
-            return $q->whereHas('roles', function ($q) use ($request) {
-                $q->where('name', $request->get('role'));
-            });
-        });
-        $users = $users->latest()->get()->load('rt');
-
-        return view('users.index', compact('users'));
+        return $usersDataTable->render('users.index');
     }
 
     /**
@@ -92,7 +85,7 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, User $user)
     {
         $validated = $request->validated();
-        $validated['password'] = !is_null($request->password) ? Hash::make($request->password) : $user->password;
+        $validated['password'] = $request->filled('password') ? Hash::make($request->password) : $user->password;
 
         if ($request->hasFile('avatar')) {
             $validated['avatar'] = $request->file('avatar')->store('public/avatars');
@@ -114,6 +107,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return back()->withSuccess('Pengguna berhasil dihapus');
+        return response()->json(['status' => 'OK'], 204);
     }
 }

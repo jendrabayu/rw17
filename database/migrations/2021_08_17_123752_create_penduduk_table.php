@@ -24,14 +24,14 @@ class CreatePendudukTable extends Migration
             $table->foreignId('status_hubungan_dalam_keluarga_id')->nullable()->constrained('status_hubungan_dalam_keluarga')->onUpdate('cascade')->onDelete('cascade');
             $table->enum('kewarganegaraan', [1, 2, 3])->comment('1 => WNI, 2 => WNA, 3 => Dua Kewarganegaraan');
             $table->string('nik', 16);
-            $table->string('nama', 100);
-            $table->string('tempat_lahir', 100)->nullable();
+            $table->string('nama');
+            $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir');
             $table->enum('jenis_kelamin', ['l', 'p'])->comment('l => laki-laki, p => perempuan');
             $table->string('no_paspor')->nullable();
             $table->string('no_kitas_kitap')->nullable();
-            $table->string('nama_ayah', 100)->nullable();
-            $table->string('nama_ibu', 100)->nullable();
+            $table->string('nama_ayah')->nullable();
+            $table->string('nama_ibu')->nullable();
             $table->string('foto_ktp')->nullable();
             $table->string('no_hp')->nullable();
             $table->string('email')->nullable();
