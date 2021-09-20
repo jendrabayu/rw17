@@ -89,7 +89,8 @@
               success: function() {
                 Toast.fire({
                   icon: 'success',
-                  title: '<b class="text-success">Success!</b> Pengguna berhasil dihapus'
+                  title: '<b class="text-success">Success!</b>',
+                  text: 'Pengguna berhasil dihapus'
                 })
                 tabelPengguna.ajax.reload();
               },

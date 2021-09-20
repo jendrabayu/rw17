@@ -63,7 +63,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-hover table-sm" id="tabelRumah">
+              <table class="table table-striped table-hover table-borderless w-100" id="tabelRumah">
                 <thead>
                   <tr>
                     <th class="text-center">#</th>

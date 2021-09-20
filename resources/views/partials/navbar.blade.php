@@ -11,7 +11,7 @@ $user = auth()->user();
 <ul class="navbar-nav navbar-right">
   <li class="dropdown"><a href="#" data-toggle="dropdown"
       class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-      <img alt="image" src="{{ $user->avatar_url }}" class="rounded-circle mr-1">
+      <img alt="image" src="{{ $user->avatar_url }}" class="rounded-circle mr-1 user__avatar">
       <div class="d-sm-none d-lg-inline-block"> {{ Str::words($user->name, 2, '') }}</div>
     </a>
     <div class="dropdown-menu dropdown-menu-right">

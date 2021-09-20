@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profil', [\App\Http\Controllers\AccountController::class, 'updateProfile'])->name('update_profile');
     Route::get('/ubah-password', [\App\Http\Controllers\AccountController::class, 'password'])->name('password');
     Route::put('/ubah-password', [\App\Http\Controllers\AccountController::class, 'updatePassword'])->name('update_password');
+    Route::put('/change-avatar', [\App\Http\Controllers\AccountController::class, 'updateAvatar'])->name('update_avatar');
 
     Route::get('/ajax/keluarga/{id}', [\App\Http\Controllers\AjaxController::class, 'getKeluarga']);
     Route::get('/ajax/penduduk/{id}', [\App\Http\Controllers\AjaxController::class, 'getPenduduk']);

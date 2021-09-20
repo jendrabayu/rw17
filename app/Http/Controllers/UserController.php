@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserStoreRequest;
 use App\Http\Requests\Users\UserUpdateRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
@@ -38,7 +37,7 @@ class UserController extends Controller
         return view('users.create', compact('rw', 'roles', 'rt'));
     }
 
-    /** Route::resource('users', \App\Http\Controllers\Rw\UserController::class)->except('show');
+    /** 
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

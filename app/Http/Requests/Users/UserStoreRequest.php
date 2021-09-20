@@ -24,15 +24,15 @@ class UserStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'rt_id' => ['required', 'numeric',  'exists:rt,id'],
-            'name' => ['required', 'string', 'max:64'],
-            'username' =>  ['required', 'alpha_dash',  'max:32', 'unique:users,username'],
-            'email' => ['required', 'email',  'max:64', 'unique:users,email'],
-            'no_hp' =>  ['nullable', 'string',  'max:15',  'starts_with:+62,62,08'],
-            'alamat' => ['nullable', 'string',  'max:255'],
-            'avatar' => ['mimes:jpg,jpeg,png',  'max:1024'],
-            'password' => ['string', 'required', 'min:3', 'max:12'],
-            'role' => ['numeric', 'required']
+            'rt_id' => 'required|numeric|exists:rt,id',
+            'name' => 'required|string|max:64',
+            'username' =>  'required|string|alpha_dash|max:32|unique:users,username',
+            'email' => 'required|email|max:64|unique:users,email',
+            'no_hp' =>  'nullable|string|max:15|starts_with:+62,62,08',
+            'alamat' => 'nullable|string|max:255',
+            'avatar' => 'nullable|mimes:jpg,jpeg,png|max:1024',
+            'password' => 'required|string|min:3|max:12',
+            'role' => 'required|numeric'
         ];
     }
 
@@ -41,6 +41,7 @@ class UserStoreRequest extends FormRequest
         return [
             'rt_id' => 'RT',
             'name' => 'nama',
+              'no_hp' => 'No. Hp/WhatsApp'
         ];
     }
 }

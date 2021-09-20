@@ -278,6 +278,7 @@ class PendudukController extends Controller
         $request->validate([
             'file_penduduk' => ['file', 'mimes:xlsx,csv,xls', 'required', 'max:3000']
         ]);
+        
 
         $format = $request->file('file_penduduk')->getClientOriginalExtension();
 
