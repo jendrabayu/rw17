@@ -66,81 +66,55 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-hover table-sm" id="tabelKeluarga">
-                <thead>
-                  <tr>
-                    <th class="text-center">#</th>
-                    <th>No. Kartu Keluarga</th>
-                    <th>Kepala Keluarga</th>
-                    <th>Jumlah Orang</th>
-                    <th>Alamat</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($keluarga as $keluarga)
-                    <tr>
-                      <td class="text-center">
-                        <div class="btn-group btn-group-sm">
-                          <a href="{{ route('keluarga.edit', $keluarga->id) }}" class="btn btn-warning btn-icon">
-                            <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <a href="{{ route('keluarga.show', $keluarga->id) }}" class="btn btn-info btn-icon">
-                            <i class="far fa-eye"></i>
-                          </a>
-                          <button data-url="{{ route('keluarga.destroy', $keluarga->id) }}" type="button"
-                            class="btn btn-danger btn-icon btn-delete">
-                            <i class="fas fa-trash-alt"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td>{{ $keluarga->nomor }}</td>
-                      <td>
-                        @if ($keluarga->kepala_keluarga)
-                          <a
-                            href="{{ route('penduduk.show', $keluarga->kepala_keluarga->id) }}">{{ $keluarga->kepala_keluarga->nama }}</a>
-                        @endif
-                      </td>
-                      <td>{{ $keluarga->penduduk->count() }}</td>
-                      <td>{{ $keluarga->alamat }}</td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+              {{ $dataTable->table(['class' => 'table table-striped table-hover table-borderless w-100']) }}
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <form action="" method="POST" hidden id="form-delete">@csrf @method('DELETE')</form>
 @endsection
 
 @push('scripts')
+  {{ $dataTable->scripts() }}
   <script>
-    $('#tabelKeluarga').DataTable({
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json'
-      }
-    });
+    $(function() {
+      const tabelKeluarga = window.LaravelDataTables['tabelKeluarga'];
 
-    $('#tabelKeluarga').on('click', '.btn-delete', function() {
-      const form = $('#form-delete');
-      form.prop('action', $(this).data('url'));
-      Swal.fire({
-        title: 'Hapus Keluarga?',
-        text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#47597E',
-        cancelButtonColor: '#cdd3d8',
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          form.trigger('submit');
-        }
+      $('#tabelKeluarga').on('click', '.btn-delete', function() {
+        const url = $(this).data('url');
+        Swal.fire({
+          title: 'Hapus Keluarga?',
+          text: 'Keluarga yang sudah dihapus tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Hapus',
+          cancelButtonText: 'Batal',
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url,
+              type: 'DELETE',
+              data: {
+                _token: '{{ csrf_token() }}'
+              },
+              success: function() {
+                Toast.fire({
+                  icon: 'success',
+                  title: '<b class="text-success">Success!</b> Keluarga berhasil dihapus',
+                })
+                tabelKeluarga.ajax.reload();
+              },
+              error: function(error) {
+                Toast.fire({
+                  icon: 'error',
+                  title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+                })
+              }
+            });
+          }
+        });
       });
     });
   </script>

@@ -98,8 +98,8 @@
                 </tr>
               </table>
             </div>
-            <p class="text-muted text-right mt-3">Last updated on
-              {{ $pendudukDomisili->updated_at->isoFormat('dddd, MMMM D, YYYY h:mm A') }}
+            <p class="text-muted text-right mt-3">Terakhir diupdate pada
+              {{ $pendudukDomisili->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A') }}
             </p>
           </div>
         </div>

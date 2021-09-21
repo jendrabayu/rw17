@@ -64,47 +64,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-hover" id="tabelPendudukMeninggal">
-                <thead>
-                  <tr>
-                    <th class="text-center">#</th>
-                    <th class="text-nowrap">NIK</th>
-                    <th class="text-nowrap">Nama</th>
-                    <th class="text-nowrap">Tanggal Kematian</th>
-                    <th class="text-nowrap">Jam Kematian</th>
-                    <th class="text-nowrap">Tempat Kematian</th>
-                    <th class="text-nowrap">Sebab Kematian</th>
-                    <th class="text-nowrap">Tempat Pemakaman</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($pendudukMeninggal as $item)
-                    <tr>
-                      <td class="text-center">
-                        <div class="btn-group btn-group-sm">
-                          <a href="{{ route('penduduk-meninggal.edit', $item->id) }}" class="btn btn-warning btn-icon">
-                            <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <a href="{{ route('penduduk-meninggal.show', $item->id) }}" class="btn btn-info btn-icon">
-                            <i class="far fa-eye"></i>
-                          </a>
-                          <button data-url="{{ route('penduduk-meninggal.destroy', $item->id) }}" type="button"
-                            class="btn btn-danger btn-icon btn-delete">
-                            <i class="fas fa-trash-alt"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td class="text-nowrap">{{ $item->nik }}</td>
-                      <td class="text-nowrap">{{ $item->nama }}</td>
-                      <td class="text-nowrap">{{ $item->tanggal_kematian->format('d-m-Y') }}</td>
-                      <td class="text-nowrap">{{ $item->jam_kematian->format('H:i') }}</td>
-                      <td class="text-nowrap">{{ $item->tempat_kematian }}</td>
-                      <td class="text-nowrap">{{ $item->sebab_kematian }}</td>
-                      <td class="text-nowrap">{{ $item->tempat_pemakaman }}</td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+              {{ $dataTable->table(['class' => 'table table-striped table-hover table-borderless w-100']) }}
             </div>
           </div>
         </div>
@@ -206,52 +166,68 @@
 
 
 @push('scripts')
+  {{ $dataTable->scripts() }}
   <script>
-    $('#tabelPendudukMeninggal').DataTable({
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json'
-      }
-    });
+    $(function() {
 
-    $('#tabelPendudukMeninggal').on('click', '.btn-delete', function() {
-      const form = $('#form-delete');
-      form.prop('action', $(this).data('url'));
-      Swal.fire({
-        title: 'Hapus Penduduk Meninggal?',
-        text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#47597E',
-        cancelButtonColor: '#cdd3d8',
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          form.trigger('submit');
-        }
+      $('#rt').on('change', function(e) {
+        const rtId = e.target.value;
+        $.ajax({
+          url: '/ajax/penduduk/' + rtId,
+          type: 'get',
+          success: function(data) {
+            $('#penduduk').empty();
+            $('#penduduk').append('<option selected disabled hidden>--Pilih Penduduk--</option>');
+
+            $.each(data, function(i, v) {
+              $('#penduduk').append(`<option value="${v.id}">${v.nik} | ${v.nama}</option>`);
+            });
+            $('#penduduk').removeAttr('disabled');
+          },
+          error: function(error) {
+            console.log(error)
+          }
+        })
+
       });
-    });
 
-    $('#rt').on('change', function(e) {
-      const rtId = e.target.value;
-      $.ajax({
-        url: '/ajax/penduduk/' + rtId,
-        type: 'get',
-        success: function(data) {
-          $('#penduduk').empty();
-          $('#penduduk').append('<option selected disabled hidden>--Pilih Penduduk--</option>');
+      const tabelPendudukMeninggal = window.LaravelDataTables['tabelPendudukMeninggal'];
 
-          $.each(data, function(i, v) {
-            $('#penduduk').append(`<option value="${v.id}">${v.nik} | ${v.nama}</option>`);
-          });
-          $('#penduduk').removeAttr('disabled');
-        },
-        error: function(error) {
-          console.log(error)
-        }
-      })
-
+      $('#tabelPendudukMeninggal').on('click', '.btn-delete', function() {
+        const url = $(this).data('url');
+        Swal.fire({
+          title: 'Hapus Penduduk Meninggal?',
+          text: 'Penduduk Meninggal yang sudah dihapus tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Hapus',
+          cancelButtonText: 'Batal',
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url,
+              type: 'DELETE',
+              data: {
+                _token: '{{ csrf_token() }}'
+              },
+              success: function() {
+                Toast.fire({
+                  icon: 'success',
+                  title: '<b class="text-success">Success!</b> Penduduk Meninggal berhasil dihapus',
+                })
+                tabelPendudukMeninggal.ajax.reload();
+              },
+              error: function(error) {
+                Toast.fire({
+                  icon: 'error',
+                  title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+                })
+              }
+            });
+          }
+        });
+      });
     });
   </script>
 @endpush

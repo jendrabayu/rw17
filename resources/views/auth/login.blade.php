@@ -5,8 +5,8 @@
 @endsection
 
 @section('content')
-  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Lambang-kabupaten-jember.png" alt="logo" width="80"
-    class="s mb-5 mt-2">
+  <img src="{{ asset('assets/img/lambang_kab_jember.png') }}" alt="Logo Kabupaten Jember" width="80"
+    class="mb-5 mt-2">
   <h4 class="text-dark font-weight-normal">Selamat datang di <span class="font-weight-bold">RW 17</span></h4>
   <p class="text-muted">Sebelum memulai, Anda harus login atau mendaftar ke RW jika Anda belum memiliki akun.</p>
   <form method="POST" action="{{ route('login') }}">

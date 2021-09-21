@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\RumahDataTable;
 use App\Exports\RumahExport;
 use App\Http\Requests\Rumah\RumahStoreRequest;
 use App\Http\Requests\Rumah\RumahUpdateRequest;
@@ -18,27 +19,21 @@ class RumahController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, RumahDataTable $rumahDataTable)
     {
         $user = auth()->user();
-        $rumah = Rumah::with(['keluarga']);
 
         if ($user->hasRole('rt')) {
-            $rumah->whereRtId($user->rt_id);
             $rt = $user->rt;
         }
 
         if ($user->hasRole('rw')) {
-            $rumah->when($request->has('rt'), function ($q) use ($request) {
-                $q->whereRtId($request->rt);
-            });
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
         }
 
-        $rumah = $rumah->orderBy('nomor')->get();
         $fileTypes = Rumah::FILE_TYPES;
 
-        return view('rumah.index', compact('rt', 'rumah', 'fileTypes'));
+        return $rumahDataTable->render('rumah.index', compact('rt', 'fileTypes'));
     }
 
     /**
@@ -146,7 +141,7 @@ class RumahController extends Controller
     public function destroy(Rumah $rumah)
     {
         $rumah->delete();
-        return back()->withSuccess('Rumah berhasil dihapus');
+        return response()->json(['success' => true], 204);
     }
 
     public function export(Request $request)

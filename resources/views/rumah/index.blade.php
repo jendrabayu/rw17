@@ -63,97 +63,56 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-striped table-hover table-borderless w-100" id="tabelRumah">
-                <thead>
-                  <tr>
-                    <th class="text-center">#</th>
-                    <th>Alamat</th>
-                    <th>No. Rumah</th>
-                    <th>No. Kartu Keluarga</th>
-                    <th>Tipe Bangunan</th>
-                    <th>Penggunaan Bangunan</th>
-                    <th>Kontruksi Bangunan</th>
-                    <th>Keterangan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($rumah as $rumah)
-                    <tr>
-                      <td>
-                        <div class="btn-group btn-group-sm">
-                          <a href="{{ route('rumah.edit', $rumah->id) }}" class="btn btn-warning btn-icon">
-                            <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <a href="{{ route('rumah.show', $rumah->id) }}" class="btn btn-info btn-icon">
-                            <i class="far fa-eye"></i>
-                          </a>
-                          <button data-url="{{ route('rumah.destroy', $rumah->id) }}" type="button"
-                            class="btn btn-danger btn-icon btn-delete">
-                            <i class="fas fa-trash-alt"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td>{{ $rumah->alamat }}</td>
-                      <td>{{ $rumah->nomor }}</td>
-                      <td>
-                        @foreach ($rumah->keluarga as $keluarga)
-                          <a href="{{ route('keluarga.show', $keluarga->id) }}">{{ $keluarga->nomor }}</a>
-                        @endforeach
-                      </td>
-                      <td>{{ $rumah->tipe_bangunan }}</td>
-                      <td>{{ $rumah->penggunaan_bangunan }}</td>
-                      <td>{{ $rumah->kontruksi_bangunan }}</td>
-                      <td>{{ $rumah->keterangan }}</td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+              {{ $dataTable->table(['class' => 'table table-striped table-hover table-borderless w-100']) }}
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <form action="" method="POST" hidden id="form-delete">@csrf @method('DELETE')</form>
 @endsection
 
 @push('scripts')
+  {{ $dataTable->scripts() }}
   <script>
-    $('#tabelRumah').DataTable({
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json'
-      }
-    });
+    $(function() {
+      const tabelRumah = window.LaravelDataTables['tabelRumah'];
 
-    $('#tabelRumah').on('click', '.btn-delete', function() {
-      const form = $('#form-delete');
-      form.prop('action', $(this).data('url'));
-      Swal.fire({
-        title: 'Hapus Rumah?',
-        text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#47597E',
-        cancelButtonColor: '#cdd3d8',
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          form.trigger('submit');
-        }
+      $('#tabelRumah').on('click', '.btn-delete', function() {
+        const url = $(this).data('url');
+        Swal.fire({
+          title: 'Hapus Rumah?',
+          text: 'Rumah yang sudah dihapus tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Hapus',
+          cancelButtonText: 'Batal',
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url,
+              type: 'DELETE',
+              data: {
+                _token: '{{ csrf_token() }}'
+              },
+              success: function() {
+                Toast.fire({
+                  icon: 'success',
+                  title: '<b class="text-success">Success!</b> Rumah berhasil dihapus',
+                })
+                tabelRumah.ajax.reload();
+              },
+              error: function(error) {
+                Toast.fire({
+                  icon: 'error',
+                  title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+                })
+              }
+            });
+          }
+        });
       });
     });
   </script>
-@endpush
-
-@push('styles')
-  <style>
-    .table thead tr th,
-    .table tbody tr td {
-      vertical-align: middle;
-    }
-
-  </style>
 @endpush

@@ -35,7 +35,7 @@
   </li>
   <li
     class="{{ request()->routeIs('penduduk-meninggal.index') || request()->is('penduduk-meninggal/*') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('penduduk-meninggal.index') }}"><i class="fas fa-book-dead"></i>
+    <a class="nav-link" href="{{ route('penduduk-meninggal.index') }}"><i class="fas fa-users"></i>
       <span>Penduduk Meninggal</span></a>
   </li>
 </ul>

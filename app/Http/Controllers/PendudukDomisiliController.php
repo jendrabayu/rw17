@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\PendudukDomisiliDataTable;
 use App\Exports\PendudukDomisiliExport;
 use App\Http\Requests\PendudukDomisili\PendudukDomisiliStoreRequest;
 use App\Http\Requests\PendudukDomisili\PendudukDomisiliUpdateRequest;
@@ -24,34 +25,21 @@ class PendudukDomisiliController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, PendudukDomisiliDataTable $pendudukDomisiliDataTable)
     {
         $user = auth()->user();
-        $pendudukDomisili = PendudukDomisili::with([
-            'agama',
-            'darah',
-            'pekerjaan',
-            'pendidikan',
-            'statusPerkawinan',
-            'rt.rw'
-        ]);
 
         if ($user->hasRole('rt')) {
-            $pendudukDomisili->whereRtId($user->rt_id)->get();
             $rt = $user->rt;
         }
 
         if ($user->hasRole('rw')) {
-            $pendudukDomisili->when($request->has('rt'), function ($q) use ($request) {
-                return $q->whereRtId($request->get('rt'));
-            });
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
         }
 
-        $pendudukDomisili = $pendudukDomisili->latest()->get();
         $fileTypes = PendudukDomisili::FILE_TYPES;
 
-        return view('penduduk-domisili.index', compact('pendudukDomisili', 'rt', 'fileTypes'));
+        return $pendudukDomisiliDataTable->render('penduduk-domisili.index', compact('rt', 'fileTypes'));
     }
 
     /**
@@ -195,7 +183,7 @@ class PendudukDomisiliController extends Controller
         Storage::disk('public')->delete($pendudukDomisili->foto_ktp);
         $pendudukDomisili->delete();
 
-        return back()->withSuccess('Berhasil menghapus penduduk domisili');
+        return response()->json(['success' => true], 204);
     }
 
     public function export(Request $request)

@@ -66,52 +66,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-hover" id="tabelPendudukDomisili">
-                <thead>
-                  <tr>
-                    <th class="text-center">#</th>
-                    <th class="text-nowrap">NIK</th>
-                    <th class="text-nowrap">Nama</th>
-                    <th class="text-nowrap">Jenis Kelamin</th>
-                    <th class="text-nowrap">Tempat Lahir</th>
-                    <th class="text-nowrap">Tanggal Lahir</th>
-                    <th class="text-nowrap">Usia</th>
-                    <th class="text-nowrap">Agama</th>
-                    <th class="text-nowrap">Pekerjaan</th>
-                    <th class="text-nowrap">Status Perkawinan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($pendudukDomisili as $penduduk)
-                    <tr>
-                      <td class="text-center">
-                        <div class="btn-group btn-group-sm">
-                          <a href="{{ route('penduduk-domisili.edit', $penduduk->id) }}"
-                            class="btn btn-warning btn-icon">
-                            <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <a href="{{ route('penduduk-domisili.show', $penduduk->id) }}" class="btn btn-info btn-icon">
-                            <i class="far fa-eye"></i>
-                          </a>
-                          <button data-url="{{ route('penduduk-domisili.destroy', $penduduk->id) }}" type="button"
-                            class="btn btn-danger btn-icon btn-delete">
-                            <i class="fas fa-trash-alt"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td class="text-nowrap">{{ $penduduk->nik }}</td>
-                      <td class="text-nowrap">{{ $penduduk->nama }}</td>
-                      <td class="text-nowrap">{{ $penduduk->jenis_kelamin_text }}</td>
-                      <td class="text-nowrap">{{ $penduduk->tempat_lahir }}</td>
-                      <td class="text-nowrap">{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
-                      <td class="text-nowrap">{{ $penduduk->usia }}</td>
-                      <td class="text-nowrap">{{ $penduduk->agama->nama }}</td>
-                      <td class="text-nowrap">{{ $penduduk->pekerjaan->nama }}</td>
-                      <td class="text-nowrap">{{ $penduduk->statusPerkawinan->nama }}</td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+              {{ $dataTable->table(['class' => 'table table-striped table-hover table-borderless w-100']) }}
             </div>
           </div>
         </div>
@@ -124,30 +79,45 @@
 
 
 @push('scripts')
+  {{ $dataTable->scripts() }}
   <script>
-    $('#tabelPendudukDomisili').DataTable({
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json'
-      }
-    });
+    $(function() {
+      const tabelPendudukDomisili = window.LaravelDataTables['tabelPendudukDomisili'];
 
-    $('#tabelPendudukDomisili').on('click', '.btn-delete', function() {
-      const form = $('#form-delete');
-      form.prop('action', $(this).data('url'));
-      Swal.fire({
-        title: 'Hapus Penduduk Domisili?',
-        text: 'Data yang sudah dihapus tidak dapat dikembalikan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#47597E',
-        cancelButtonColor: '#cdd3d8',
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          form.trigger('submit');
-        }
+      $('#tabelPendudukDomisili').on('click', '.btn-delete', function() {
+        const url = $(this).data('url');
+        Swal.fire({
+          title: 'Hapus Penduduk Domisili?',
+          text: 'Penduduk Domisili yang sudah dihapus tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Hapus',
+          cancelButtonText: 'Batal',
+          reverseButtons: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url,
+              type: 'DELETE',
+              data: {
+                _token: '{{ csrf_token() }}'
+              },
+              success: function() {
+                Toast.fire({
+                  icon: 'success',
+                  title: '<b class="text-success">Success!</b> Pengguna berhasil dihapus',
+                })
+                tabelPendudukDomisili.ajax.reload();
+              },
+              error: function(error) {
+                Toast.fire({
+                  icon: 'error',
+                  title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+                })
+              }
+            });
+          }
+        });
       });
     });
   </script>

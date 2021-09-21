@@ -97,7 +97,6 @@
   </div>
 @endsection
 
-
 @push('scripts')
   <script>
     $('#foto_kk').on('change', function() {

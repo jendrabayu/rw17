@@ -84,13 +84,12 @@
               url,
               type: 'DELETE',
               data: {
-                _token: $('meta[name="csrf-token"]').attr('content')
+                _token: '{{ csrf_token() }}'
               },
               success: function() {
                 Toast.fire({
                   icon: 'success',
-                  title: '<b class="text-success">Success!</b>',
-                  text: 'Pengguna berhasil dihapus'
+                  title: '<b class="text-success">Success!</b> Pengguna berhasil dihapus',
                 })
                 tabelPengguna.ajax.reload();
               },

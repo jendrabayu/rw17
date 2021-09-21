@@ -125,8 +125,7 @@
                 });
                 Toast.fire({
                   icon: 'success',
-                  title: '<b class="text-success">Success!</b>',
-                  text: 'Avatar berhasil diupdate'
+                  title: '<b class="text-success">Success!</b> Avatar berhasil diupdate',
                 });
               }
             },

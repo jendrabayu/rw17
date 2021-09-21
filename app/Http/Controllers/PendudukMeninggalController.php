@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\PendudukMeninggalDataTable;
 use App\Exports\PendudukMeninggalExport;
 use App\Http\Requests\PendudukMeninggal\PendudukMeninggalStoreRequest;
 use App\Http\Requests\PendudukMeninggal\PendudukMeninggalUpdateRequest;
@@ -26,31 +27,25 @@ class PendudukMeninggalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, PendudukMeninggalDataTable $pendudukMeninggalDataTable)
     {
         $user = auth()->user();
-        $pendudukMeninggal = PendudukMeninggal::query();
 
         if ($user->hasRole('rt')) {
             $penduduk = Penduduk::whereHas('keluarga', function ($q) use ($user) {
                 return $q->where('rt_id', $user->rt->id);
             })->get();
             $rt = $user->rt;
-            $pendudukMeninggal->where('rt_id', $user->rt->id);
         }
 
         if ($user->hasRole('rw')) {
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
             $penduduk = null;
-            $pendudukMeninggal->when($request->has('rt'), function ($q) use ($request) {
-                return $q->where('rt_id', $request->get('rt'));
-            });
         }
 
-        $pendudukMeninggal = $pendudukMeninggal->latest()->get();
         $fileTypes = PendudukMeninggal::FILE_TYPES;
 
-        return view('penduduk-meninggal.index', compact('rt', 'penduduk', 'pendudukMeninggal', 'fileTypes'));
+        return $pendudukMeninggalDataTable->render('penduduk-meninggal.index', compact('rt', 'penduduk', 'fileTypes'));
     }
 
 
@@ -168,7 +163,7 @@ class PendudukMeninggalController extends Controller
         Storage::disk('public')->delete($pendudukMeninggal->foto_ktp);
         $pendudukMeninggal->delete();
 
-        return back()->withSuccess('Berhasil menghapus penduduk meninggal');
+        return response()->json(['success' => true], 204);
     }
 
     public function export(Request $request)
@@ -181,7 +176,7 @@ class PendudukMeninggalController extends Controller
         $pendudukMeninggal = PendudukMeninggal::with([
             'rt.rw',
             'darah',
-            'agama',    
+            'agama',
             'statusPerkawinan',
             'pekerjaan',
             'pendidikan'

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\KeluargaDataTable;
 use App\Exports\KeluargaExport;
 use App\Http\Requests\Keluarga\KeluargaStoreRequest;
 use App\Http\Requests\Keluarga\KeluargaUpdateRequest;
@@ -18,34 +19,21 @@ class KeluargaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, KeluargaDataTable $keluargaDataTable)
     {
         $user = auth()->user();
-        $keluarga = Keluarga::with('penduduk.statusHubunganDalamKeluarga');
 
         if ($user->hasRole('rt')) {
-            $keluarga->whereRtId($user->rt_id);
             $rt = $user->rt;
         }
 
         if ($user->hasRole('rw')) {
-            $keluarga->when($request->has('rt'), function ($q) {
-                return $q->whereRtId(request()->get('rt'));
-            });
-
             $rt = $user->rt->rw->rt->pluck('nomor', 'id');
         }
 
-        $keluarga = $keluarga->get()->map(function ($keluarga) {
-            $keluarga->kepala_keluarga = $keluarga
-                ->penduduk->where('statusHubunganDalamKeluarga.nama', 'KEPALA KELUARGA')
-                ->first();
-            return $keluarga;
-        });
-
         $fileTypes = Keluarga::FILE_TYPES;
 
-        return view('keluarga.index', compact('keluarga', 'rt', 'fileTypes'));
+        return $keluargaDataTable->render('keluarga.index', compact('rt', 'fileTypes'));
     }
 
     /**
@@ -173,7 +161,7 @@ class KeluargaController extends Controller
         Storage::disk('public')->delete($keluarga->foto_kk);
         $keluarga->delete();
 
-        return back()->withSuccess('Keluarga berhasil dihapus');
+        return response()->json(['success' => true], 204);
     }
 
     public function export(Request $request)

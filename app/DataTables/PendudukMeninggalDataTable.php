@@ -2,14 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\User;
+use App\Models\PendudukMeninggal;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class UsersDataTable extends DataTable
+class PendudukMeninggalDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -21,30 +21,33 @@ class UsersDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('role', function ($user) {
-                return strtoupper($user->role);
-            })
-            ->addColumn('rt', function ($user) {
-                return ltrim($user->rt->nomor, '0');
-            })
-            ->addColumn('action', 'users.action');
+            ->addColumn('tanggal_kematian', fn ($pendudukMeninggal) => $pendudukMeninggal->tanggal_kematian->format('d-m-Y'))
+            ->addColumn('jam_kematian', fn ($pendudukMeninggal) => $pendudukMeninggal->jam_kematian->format('H:i'))
+            ->addColumn('action', 'penduduk-meninggal.action');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\PendudukMeninggal $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $user)
+    public function query(PendudukMeninggal $pendudukMeninggal)
     {
-        $user = $user->newQuery()->with('rt');
-        $user->when(request()->has('role'), function ($q) {
-            return $q->whereHas('roles', function ($q) {
-                $q->where('name', request()->get('role'));
+        $user = auth()->user();
+        $pendudukMeninggal = $pendudukMeninggal->newQuery();
+
+        if ($user->hasRole('rt')) {
+            $pendudukMeninggal->where('rt_id', $user->rt->id);
+        }
+
+        if ($user->hasRole('rw')) {
+            $pendudukMeninggal->when(request()->has('rt'), function ($q) {
+                return $q->where('rt_id', request()->get('rt'));
             });
-        });
-        return $user;
+        }
+
+        return $pendudukMeninggal;
     }
 
     /**
@@ -55,7 +58,7 @@ class UsersDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('tabelPengguna')
+            ->setTableId('tabelPendudukMeninggal')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(1)
@@ -76,12 +79,14 @@ class UsersDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
-            Column::make('name')->title('Nama'),
-            Column::make('username'),
-            Column::make('email'),
-            Column::make('no_hp')->title('No. Hp/WhatsApp')->orderable(false),
-            Column::computed('role')->orderable(false)->searchable(false),
-            Column::computed('rt')->title('RT')->orderable(false)->searchable(false),
+            Column::make('nik')->title('NIK'),
+            Column::make('nama'),
+            Column::computed('tanggal_kematian'),
+            Column::computed('jam_kematian'),
+            Column::make('tempat_kematian'),
+            Column::make('sebab_kematian'),
+            Column::make('tempat_pemakaman'),
+
         ];
     }
 
@@ -92,6 +97,6 @@ class UsersDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Users_' . date('YmdHis');
+        return 'PendudukMeninggal_' . date('YmdHis');
     }
 }

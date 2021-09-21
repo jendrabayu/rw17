@@ -20,7 +20,7 @@
       <div class="col-12">
         <div class="card card-primary">
           <div class="card-header">
-            <h4>Detail Penduduk</h4>
+            <h4>{{ $penduduk->nama }}</h4>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -122,8 +122,8 @@
                 </tr>
               </table>
             </div>
-            <p class="text-muted text-right mt-3">Last updated on
-              {{ $penduduk->updated_at->isoFormat('dddd, MMMM D, YYYY h:mm A') }}
+            <p class="text-muted text-right mt-3 mb-0">Terakhir diupdate pada
+              {{ $penduduk->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A') }}
             </p>
           </div>
         </div>

@@ -2,14 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\User;
+use App\Models\Rumah;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class UsersDataTable extends DataTable
+class RumahDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -21,30 +21,37 @@ class UsersDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('role', function ($user) {
-                return strtoupper($user->role);
+            ->addColumn('no_kartu_keluarga', function ($rumah) {
+                return $rumah->keluarga->map(function ($keluarga) {
+                    return "<a href=\"route('keluarga.show', $keluarga->id)\">$keluarga->nomor</a>";
+                })->join('');
             })
-            ->addColumn('rt', function ($user) {
-                return ltrim($user->rt->nomor, '0');
-            })
-            ->addColumn('action', 'users.action');
+            ->addColumn('action', 'rumah.action')
+            ->rawColumns(['action', 'no_kartu_keluarga']);
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\Rumah $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $user)
+    public function query(Rumah $rumah)
     {
-        $user = $user->newQuery()->with('rt');
-        $user->when(request()->has('role'), function ($q) {
-            return $q->whereHas('roles', function ($q) {
-                $q->where('name', request()->get('role'));
+        $user = auth()->user();
+        $rumah = $rumah->newQuery()->with('keluarga');
+
+        if ($user->hasRole('rt')) {
+            $rumah->whereRtId($user->rt_id);
+        }
+
+        if ($user->hasRole('rw')) {
+            $rumah->when(request()->has('rt'), function ($q) {
+                $q->whereRtId(request()->rt);
             });
-        });
-        return $user;
+        }
+
+        return $rumah;
     }
 
     /**
@@ -55,7 +62,7 @@ class UsersDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('tabelPengguna')
+            ->setTableId('tabelRumah')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(1)
@@ -76,12 +83,12 @@ class UsersDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
-            Column::make('name')->title('Nama'),
-            Column::make('username'),
-            Column::make('email'),
-            Column::make('no_hp')->title('No. Hp/WhatsApp')->orderable(false),
-            Column::computed('role')->orderable(false)->searchable(false),
-            Column::computed('rt')->title('RT')->orderable(false)->searchable(false),
+            Column::make('alamat'),
+            Column::make('nomor')->title('No. Rumah'),
+            Column::computed('no_kartu_keluarga')->title('No. Kartu Keluarga'),
+            Column::make('tipe_bangunan'),
+            Column::make('penggunaan_bangunan'),
+            Column::make('kontruksi_bangunan'),
         ];
     }
 
@@ -92,6 +99,6 @@ class UsersDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Users_' . date('YmdHis');
+        return 'Rumah_' . date('YmdHis');
     }
 }

@@ -47,6 +47,8 @@ class PendudukDomisili extends Model
 
     public const FILE_TYPES = ['xlsx', 'xls', 'csv'];
 
+    public $appends = ['jenis_kelamin_text', 'usia'];
+
 
     public function rt()
     {

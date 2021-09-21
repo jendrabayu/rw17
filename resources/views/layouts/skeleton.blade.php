@@ -7,6 +7,13 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title') &mdash; {{ config('app.name') }} </title>
   <meta name="base-url" content="{{ url('') }}">
+  <meta name="description"
+    content="Sistem informasi kependudukan RW 17 Kelurahan Sumbersari, Kecamatan Sumbersari, Kabupaten Jember">
+  <meta name="keywords" name="RW 17, Kelurahan Sumbersari, Kecamatan Sumbersari, Kabupaten Jember">
+  <meta name="author" content="Jendra Bayu Nugraha">
+  <link rel="icon" type="image/png" href="{{ asset('assets/img/lambang_kab_jember.ico') }}" />
+  <link rel="apple-touch-icon" href="{{ asset('assets/img/lambang_kab_jember.ico') }}">
+
 
   <!-- General CSS Files -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"

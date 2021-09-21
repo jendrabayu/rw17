@@ -32,8 +32,6 @@
               </h1>
               <h5 class="font-weight-normal text-muted-transparent">Jember, Indonesia</h5>
             </div>
-            Photo by <a class="text-light bb" target="_blank" href="https://www.instagram.com/jendrabn/"> Jendra BN
-            </a>
           </div>
         </div>
       </div>
