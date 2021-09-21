@@ -4,7 +4,7 @@ $(document).ready(function () {
   if (params.has('rt')) {
     endPoint += '?rt=' + params.get('rt');
   }
-  console.log(endPoint);
+
   $.getJSON(endPoint, function (response) {
     $(".loading").hide();
     let pie = {
