@@ -1,4 +1,10 @@
-require('./bootstrap');
+try {
+  window.Popper = require('popper.js').default;
+  window.$ = require('jquery');
+  window.jQuery = require('jquery');
+
+  require('bootstrap');
+} catch (e) { }
 
 window.Swal = require('sweetalert2');
 window.Toast = Swal.mixin({
