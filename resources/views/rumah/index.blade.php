@@ -107,7 +107,7 @@
                 Toast.fire({
                   icon: 'error',
                   title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
-                })
+                });
               }
             });
           }

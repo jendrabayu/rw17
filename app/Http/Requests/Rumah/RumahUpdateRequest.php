@@ -36,10 +36,12 @@ class RumahUpdateRequest extends FormRequest
             'penggunaan_bangunan' => ['nullable', 'string',  'max:255'],
             'kontruksi_bangunan' => ['nullable', 'string',  'max:255'],
             'keterangan' => ['nullable', 'string',  'max:255'],
-            'keluarga_id' => ['required', 'array'],
+            'keluarga_id' => ['nullable', 'array'],
             'keluarga_id.*' => ['numeric', 'exists:keluarga,id', Rule::unique('rumah_keluarga', 'keluarga_id')->where(function ($q) use ($keluarga_ids) {
                 return $q->whereNotIn('keluarga_id', $keluarga_ids);
             })],
+            'penduduk_domisili_id' => ['nullable', 'array'],
+            'penduduk_domisili_id.*' => ['numeric', 'exists:penduduk_domisili,id'],
         ];
     }
 

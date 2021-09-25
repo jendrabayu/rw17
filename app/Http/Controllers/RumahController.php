@@ -6,9 +6,12 @@ use App\DataTables\RumahDataTable;
 use App\Exports\RumahExport;
 use App\Http\Requests\Rumah\RumahStoreRequest;
 use App\Http\Requests\Rumah\RumahUpdateRequest;
+use App\Models\PendudukDomisili;
 use App\Models\Rt;
 use App\Models\Rumah;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class RumahController extends Controller
@@ -47,15 +50,22 @@ class RumahController extends Controller
 
         if ($user->hasRole('rt')) {
             $rt = $user->rt;
-            $keluarga = $user->rt->keluarga->pluck('nomor', 'id');
+            $keluarga = $user->rt->keluarga()->doesntHave('rumah')->pluck('nomor', 'id');
+            $pendudukDomisili = $user->rt->pendudukDomisili()->whereNull('rumah_id')->get()
+                ->map(function ($pendudukDomisili) {
+                    $pendudukDomisili->nama = "{$pendudukDomisili->nik} | {$pendudukDomisili->nama}";
+                    return $pendudukDomisili;
+                })
+                ->pluck('nama', 'id');
         }
 
         if ($user->hasRole('rw')) {
             $rt =  $user->rt->rw->rt->pluck('nomor', 'id');
             $keluarga = [];
+            $pendudukDomisili = [];
         }
 
-        return view('rumah.create', compact('rt', 'keluarga'));
+        return view('rumah.create', compact('rt', 'keluarga', 'pendudukDomisili'));
     }
 
     /**
@@ -68,8 +78,26 @@ class RumahController extends Controller
     {
         $validated = $request->validated();
 
-        $rumah = Rumah::create($validated);
-        $rumah->keluarga()->attach($request->keluarga_id);
+        try {
+            DB::beginTransaction();
+            $rumah = Rumah::create($validated);
+
+            if ($request->filled('keluarga_id')) {
+                $rumah->keluarga()->attach($request->keluarga_id);
+            }
+
+            if ($request->filled('penduduk_domisili_id')) {
+                foreach ($request->penduduk_domisili_id as $id) {
+                    $pendudukDomisili = PendudukDomisili::find($id);
+                    $pendudukDomisili->rumah_id = $rumah->id;
+                    $pendudukDomisili->save();
+                }
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->withErrors($e->getMessage())->withInput();
+        }
 
         return back()->withSuccess('Berhasil menambahkan rumah');
     }
@@ -126,8 +154,28 @@ class RumahController extends Controller
     public function update(RumahUpdateRequest $request, Rumah $rumah)
     {
         $validated = $request->validated();
-        $rumah->update($validated);
-        $rumah->keluarga()->sync($request->get('keluarga_id'));
+        try {
+            DB::beginTransaction();
+            $rumah->update($validated);
+            $rumah->keluarga()->sync($request->get('keluarga_id'));
+
+            foreach ($rumah->pendudukDomisili as $pendudukDomisili) {
+                $pendudukDomisili->rumah_id = null;
+                $pendudukDomisili->save();
+            }
+
+            foreach ($request->penduduk_domisili_id as $id) {
+                $pendudukDomisili = PendudukDomisili::find($id);
+                $pendudukDomisili->rumah_id = $rumah->id;
+                $pendudukDomisili->save();
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->withErrors($e->getMessage())->withInput();
+        }
+
 
         return back()->withSuccess('Rumah berhasil diupdate');
     }
@@ -140,6 +188,10 @@ class RumahController extends Controller
      */
     public function destroy(Rumah $rumah)
     {
+        foreach ($rumah->pendudukDomisili as $pendudukDomisili) {
+            $pendudukDomisili->rumah_id = null;
+            $pendudukDomisili->save();
+        }
         $rumah->delete();
         return response()->json(['success' => true], 204);
     }

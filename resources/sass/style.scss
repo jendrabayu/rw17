@@ -157,3 +157,7 @@ table tr th {
         line-height: 1.5;
     }
 }
+
+.dataTables_length select {
+    min-width: 70px;
+}

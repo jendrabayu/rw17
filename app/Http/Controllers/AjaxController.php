@@ -40,4 +40,19 @@ class AjaxController extends Controller
 
         return response()->json($penduduk);
     }
+
+    public function getPendudukDomisili($rt_id)
+    {
+        $rt = Rt::findOrFail($rt_id);
+
+        $pendudukDomisili = $rt->pendudukDomisili()->whereNull('rumah_id')->get()
+            ->map(function ($pendudukDomisili) {
+                return [
+                    'id' => $pendudukDomisili->id,
+                    'nama' => "{$pendudukDomisili->nik} | {$pendudukDomisili->nama}"
+                ];
+            });
+
+        return response()->json($pendudukDomisili);
+    }
 }

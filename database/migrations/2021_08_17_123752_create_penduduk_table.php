@@ -22,7 +22,7 @@ class CreatePendudukTable extends Migration
             $table->foreignId('status_perkawinan_id')->nullable()->constrained('status_perkawinan')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('pendidikan_id')->nullable()->constrained('pendidikan')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('status_hubungan_dalam_keluarga_id')->nullable()->constrained('status_hubungan_dalam_keluarga')->onUpdate('cascade')->onDelete('cascade');
-            $table->enum('kewarganegaraan', [1, 2, 3])->comment('1 => WNI, 2 => WNA, 3 => Dua Kewarganegaraan');
+            $table->enum('kewarganegaraan', [1, 2, 3])->default(1)->comment('1 => WNI, 2 => WNA, 3 => Dua Kewarganegaraan');
             $table->string('nik', 16);
             $table->string('nama');
             $table->string('tempat_lahir')->nullable();
@@ -34,7 +34,7 @@ class CreatePendudukTable extends Migration
             $table->string('nama_ibu')->nullable();
             $table->string('foto_ktp')->nullable();
             $table->string('no_hp')->nullable();
-            $table->string('email')->nullable();
+            $table->string('email')->nullable();    
             $table->timestamps();
         });
     }

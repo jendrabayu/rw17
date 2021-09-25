@@ -76,6 +76,7 @@ class UsersDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
+            Column::make('id')->hidden(),
             Column::make('name')->title('Nama'),
             Column::make('username'),
             Column::make('email'),

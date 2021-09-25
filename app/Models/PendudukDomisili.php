@@ -29,6 +29,7 @@ class PendudukDomisili extends Model
         'pekerjaan_id',
         'status_perkawinan_id',
         'pendidikan_id',
+        'rumah_id',
         'kewarganegaraan',
         'nik',
         'nama',
@@ -78,6 +79,11 @@ class PendudukDomisili extends Model
     public function pendidikan()
     {
         return $this->belongsTo(Pendidikan::class)->withDefault();
+    }
+
+    public function rumah()
+    {
+        return $this->belongsTo(Rumah::class)->withDefault();
     }
 
     public function getJenisKelaminTextAttribute()

@@ -87,7 +87,7 @@ class PendudukDomisiliController extends Controller
     {
         $validated = $request->validated();
         if ($request->file('foto_ktp')) {
-            $validated['foto_ktp'] = $request->file('foto_ktp')->store('public/ktp');
+            $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
         }
 
         PendudukDomisili::create($validated);
@@ -163,7 +163,7 @@ class PendudukDomisiliController extends Controller
     {
         $validated = $request->validated();
         if ($request->file('foto_ktp')) {
-            $validated['foto_ktp'] = $request->file('foto_ktp')->store('public/ktp');
+            $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
             Storage::disk('public')->delete($pendudukDomisili->foto_ktp);
         }
 

@@ -38,4 +38,8 @@ class Rumah extends Model
     {
         return $this->belongsTo(Rt::class, 'rt_id');
     }
+
+    public function pendudukDomisili(){
+        return $this->hasMany(PendudukDomisili::class);
+    }
 }

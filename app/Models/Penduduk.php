@@ -49,6 +49,8 @@ class Penduduk extends Model
         'tanggal_lahir' => 'date'
     ];
 
+    protected $appends = ['jenis_kelamin_text', 'usia'];
+
     public const FILE_TYPES = ['xlsx', 'xls', 'csv'];
 
     public function keluarga()
@@ -109,5 +111,70 @@ class Penduduk extends Model
     public function getUsiaAttribute()
     {
         return Carbon::parse($this->tanggal_lahir)->age;
+    }
+
+    public  function scopeFilter($query)
+    {
+        $penduduk = $query->with([
+            'keluarga.rt.rw',
+            'agama',
+            'pekerjaan',
+            'pendidikan',
+            'statusPerkawinan',
+            'statusHubunganDalamKeluarga',
+            'darah',
+        ]);
+
+        $penduduk->when(request()->has('agama'), function ($q) {
+            return $q->whereHas('agama', function ($q) {
+                $q->where('id', request()->get('agama'));
+            });
+        });
+
+        $penduduk->when(request()->has('pekerjaan'), function ($q) {
+            return $q->whereHas('pekerjaan', function ($q) {
+                $q->where('id', request()->get('pekerjaan'));
+            });
+        });
+
+        $penduduk->when(request()->has('darah'), function ($q) {
+            return $q->whereHas('darah', function ($q) {
+                $q->where('id', request()->get('darah'));
+            });
+        });
+
+        $penduduk->when(request()->has('pendidikan'), function ($q) {
+            return $q->whereHas('pendidikan', function ($q) {
+                $q->where('id', request()->get('pendidikan'));
+            });
+        });
+
+        $penduduk->when(request()->has('status_perkawinan'), function ($q) {
+            return $q->whereHas('statusPerkawinan', function ($q) {
+                $q->where('id', request()->get('status_perkawinan'));
+            });
+        });
+
+        $penduduk->when(request()->has('status_hubungan_dalam_keluarga'), function ($q) {
+            return $q->whereHas('statusHubunganDalamKeluarga', function ($q) {
+                $q->where('id', request()->get('status_hubungan_dalam_keluarga'));
+            });
+        });
+
+        $penduduk->when(request()->has('jenis_kelamin'), function ($q) {
+            return $q->where('jenis_kelamin', request()->get('jenis_kelamin'));
+        });
+
+        $penduduk->when(request()->has('age_min') &&  request()->has('age_max'), function ($q) {
+            $age_min =  request()->get('age_min');
+            $age_max =  request()->get('age_max');
+            if ($age_min && $age_max && $age_min <= $age_max) {
+                $age_min = Carbon::now()->subYears($age_min)->format('Y-m-d');
+                $age_max = Carbon::now()->subYears($age_max)->format('Y-m-d');
+                return $q->whereBetween('tanggal_lahir', [$age_max, $age_min]);
+            }
+        });
+
+        return $penduduk;
     }
 }

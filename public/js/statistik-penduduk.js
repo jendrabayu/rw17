@@ -12,7 +12,7 @@ $(document).ready(function () {
         type: 'pie'
       },
       subtitle: {
-        text: "Total Penduduk: " + response.totalPenduduk
+        text: response.totalPenduduk + ' Orang'
       },
       plotOptions: {
         series: {
@@ -49,7 +49,7 @@ $(document).ready(function () {
         type: 'bar',
       },
       subtitle: {
-        text: "Total Penduduk: " + response.totalPenduduk
+        text: response.totalPenduduk + ' Orang'
       },
       xAxis: {
         type: 'category',
@@ -94,7 +94,7 @@ $(document).ready(function () {
         type: 'column'
       },
       subtitle: {
-        text: 'Total Penduduk : ' + response.totalPenduduk
+        text: response.totalPenduduk + ' Orang'
       },
       xAxis: {
         type: 'category'

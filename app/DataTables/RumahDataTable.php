@@ -21,13 +21,14 @@ class RumahDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('no_kartu_keluarga', function ($rumah) {
-                return $rumah->keluarga->map(function ($keluarga) {
-                    return "<a href=\"route('keluarga.show', $keluarga->id)\">$keluarga->nomor</a>";
-                })->join('');
+            ->addColumn('keluarga', function ($rumah) {
+                return $rumah->keluarga->map(fn ($item) => "<a href=\"route('keluarga.show', $item->id)\">$item->nomor</a><br>")->join('');
+            })
+            ->addColumn('warga_domisili', function ($rumah) {
+                return $rumah->pendudukDomisili->map(fn ($item) => "<a href=\"route('penduduk-domisili.show', $item->id)\">$item->nik</a><br>")->join('');
             })
             ->addColumn('action', 'rumah.action')
-            ->rawColumns(['action', 'no_kartu_keluarga']);
+            ->rawColumns(['action', 'keluarga', 'warga_domisili']);
     }
 
     /**
@@ -39,7 +40,7 @@ class RumahDataTable extends DataTable
     public function query(Rumah $rumah)
     {
         $user = auth()->user();
-        $rumah = $rumah->newQuery()->with('keluarga');
+        $rumah = $rumah->newQuery()->with(['keluarga', 'pendudukDomisili']);
 
         if ($user->hasRole('rt')) {
             $rumah->whereRtId($user->rt_id);
@@ -83,11 +84,13 @@ class RumahDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
+            Column::make('id')->hidden(),
             Column::make('alamat'),
             Column::make('nomor')->title('No. Rumah'),
-            Column::computed('no_kartu_keluarga')->title('No. Kartu Keluarga'),
-            Column::make('tipe_bangunan'),
+            Column::computed('keluarga'),
+            Column::computed('warga_domisili'),
             Column::make('penggunaan_bangunan'),
+            Column::make('tipe_bangunan'),
             Column::make('kontruksi_bangunan'),
         ];
     }

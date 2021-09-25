@@ -85,6 +85,7 @@ class PendudukDomisiliDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
+            Column::make('id')->hidden(),
             Column::make('nik')->title('NIK'),
             Column::make('nama'),
             Column::make('jenis_kelamin_text')->title('Jenis Kelamin')->orderable(false)->searchable(false),

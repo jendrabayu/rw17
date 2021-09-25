@@ -49,7 +49,7 @@
                   @endrole
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="keluarga">Nomor Kartu Keluarga <code>*</code></label>
+                  <label for="keluarga">Nomor Kartu Keluarga</label>
                   <select name="keluarga_id[]" id="keluarga" class="form-control select2" @role('rw') disabled @endrole
                     multiple>
                     @role('rt')
@@ -64,37 +64,51 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
+                  <label for="penduduk_domisili">Penduduk Domisili</label>
+                  <select name="penduduk_domisili_id[]" id="penduduk_domisili" class="form-control select2" @role('rw')
+                    disabled @endrole multiple>
+                    @role('rt')
+                    @foreach ($pendudukDomisili as $id => $nama)
+                      <option value="{{ $id }}">{{ $nama }}</option>
+                    @endforeach
+                    @endrole
+                  </select>
+                </div>
+
+                <div class="form-group col-md-6">
                   <label for="alamat">Alamat <code>*</code></label>
                   <textarea class="form-control" id="alamat" name="alamat"> {{ old('alamat') }}</textarea>
                 </div>
 
+              </div>
+
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="nomor">Nomor Rumah <code>*</code></label>
                   <input type="text" class="form-control" id="nomor" name="nomor" value="{{ old('nomor') }}">
                 </div>
-              </div>
-
-              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="tipe_bangunan">Tipe Bangunan</label>
                   <input type="text" class="form-control" id="tipe_bangunan" name="tipe_bangunan"
                     value="{{ old('tipe_bangunan') }}">
                 </div>
+              </div>
 
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="penggunaan_bangunan">Penggunaan Bangunan</label>
                   <input type="text" class="form-control" id="penggunaan_bangunan" name="penggunaan_bangunan"
                     value="{{ old('penggunaan_bangunan') }}">
                 </div>
-              </div>
 
-              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="kontruksi_bangunan">Kontruksi Bangunan</label>
                   <input type="text" class="form-control" id="kontruksi_bangunan" name="kontruksi_bangunan"
                     value="{{ old('kontruksi_bangunan') }}">
                 </div>
+              </div>
 
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="keterangan">Keterangan</label>
                   <input type="text" class="form-control" id="keterangan" name="keterangan"
@@ -129,9 +143,30 @@
           $('#keluarga').removeAttr('disabled');
         },
         error: function(error) {
-          console.log(error)
+          Toast.fire({
+            icon: 'error',
+            title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+          });
         }
-      })
+      });
+
+      $.ajax({
+        url: '/ajax/penduduk-domisili/' + rtId,
+        type: 'get',
+        success: function(data) {
+          $('#penduduk_domisili').empty();
+          $.each(data, function(i, v) {
+            $('#penduduk_domisili').append(`<option value="${v.id}">${v.nama}</option>`);
+          });
+          $('#penduduk_domisili').removeAttr('disabled');
+        },
+        error: function(error) {
+          Toast.fire({
+            icon: 'error',
+            title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+          });
+        }
+      });
 
     });
   </script>

@@ -52,7 +52,7 @@
                   @endrole
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="keluarga">Nomor Kartu Keluarga <code>*</code></label>
+                  <label for="keluarga">Nomor Kartu Keluarga</label>
                   <select name="keluarga_id[]" id="keluarga" class="form-control select2" multiple>
                     @php
                       $keluarga_ids = $rumah->keluarga
@@ -72,37 +72,50 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
+                  <label for="penduduk_domisili">Penduduk Domisili</label>
+                  <select name="penduduk_domisili_id[]" id="penduduk_domisili" class="form-control select2" multiple>
+                    @php
+                      $penduduk_domisili_ids = $rumah->pendudukDomisili->map(fn($item) => $item->id)->toArray();
+                    @endphp
+                    @foreach ($rumah->rt->pendudukDomisili as $item)
+                      <option {{ in_array($item->id, $penduduk_domisili_ids) ? 'selected' : '' }}
+                        value="{{ $item->id }}">
+                        {{ "{$item->nik} | {$item->nama}" }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
                   <label for="alamat">Alamat <code>*</code></label>
                   <textarea class="form-control" id="alamat" name="alamat">{{ $rumah->alamat }}</textarea>
-                </div>
-
-                <div class="form-group col-md-6">
-                  <label for="nomor">Nomor Rumah <code>*</code></label>
-                  <input type="text" class="form-control" id="nomor" name="nomor" value="{{ $rumah->nomor }}">
                 </div>
               </div>
 
               <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="nomor">Nomor Rumah <code>*</code></label>
+                  <input type="text" class="form-control" id="nomor" name="nomor" value="{{ $rumah->nomor }}">
+                </div>
                 <div class="form-group col-md-6">
                   <label for="tipe_bangunan">Tipe Bangunan</label>
                   <input type="text" class="form-control" id="tipe_bangunan" name="tipe_bangunan"
                     value="{{ $rumah->tipe_bangunan }}">
                 </div>
+              </div>
 
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="penggunaan_bangunan">Penggunaan Bangunan</label>
                   <input type="text" class="form-control" id="penggunaan_bangunan" name="penggunaan_bangunan"
                     value="{{ $rumah->penggunaan_bangunan }}">
                 </div>
-              </div>
-
-              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="kontruksi_bangunan">Kontruksi Bangunan</label>
                   <input type="text" class="form-control" id="kontruksi_bangunan" name="kontruksi_bangunan"
                     value="{{ $rumah->kontruksi_bangunan }}">
                 </div>
+              </div>
 
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="keterangan">Keterangan</label>
                   <input type="text" class="form-control" id="keterangan" name="keterangan"
@@ -137,9 +150,30 @@
           $('#keluarga').removeAttr('disabled');
         },
         error: function(error) {
-          console.log(error)
+          Toast.fire({
+            icon: 'error',
+            title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+          });
         }
-      })
+      });
+
+      $.ajax({
+        url: '/ajax/penduduk-domisili/' + rtId,
+        type: 'get',
+        success: function(data) {
+          $('#penduduk_domisili').empty();
+          $.each(data, function(i, v) {
+            $('#penduduk_domisili').append(`<option value="${v.id}">${v.nama}</option>`);
+          });
+          $('#penduduk_domisili').removeAttr('disabled');
+        },
+        error: function(error) {
+          Toast.fire({
+            icon: 'error',
+            title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+          });
+        }
+      });
 
     });
   </script>

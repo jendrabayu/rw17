@@ -21,7 +21,7 @@ class CreatePendudukMeninggalTable extends Migration
             $table->foreignId('pekerjaan_id')->nullable()->constrained('pekerjaan')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('status_perkawinan_id')->nullable()->constrained('status_perkawinan')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('pendidikan_id')->nullable()->constrained('pendidikan')->onUpdate('cascade')->onDelete('cascade');
-            $table->enum('kewarganegaraan', [1, 2, 3])->comment('1 => WNI, 2 => WNA, 3 => Dua Kewarganegaraan');
+            $table->enum('kewarganegaraan', [1, 2, 3])->default(1)->comment('1 => WNI, 2 => WNA, 3 => Dua Kewarganegaraan');
             $table->string('nik', 16);
             $table->string('nama');
             $table->string('tempat_lahir')->nullable();

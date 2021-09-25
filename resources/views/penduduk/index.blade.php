@@ -70,64 +70,13 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-striped table-hover table-borderless" id="tabelPenduduk">
-                <thead>
-                  <tr>
-                    <th class="text-center">#</th>
-                    <th>No. Kartu Keluarga</th>
-                    <th>NIK</th>
-                    <th>Nama</th>
-                    <th>Jenis Kelamin</th>
-                    <th>Tempat Lahir</th>
-                    <th>Tanggal Lahir</th>
-                    <th>Usia</th>
-                    <th>Agama</th>
-                    <th>Pekerjaan</th>
-                    <th>Status Perkawinan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($penduduk as $penduduk)
-                    <tr>
-                      <td class="text-center">
-                        <div class="btn-group btn-group-sm">
-                          <a href="{{ route('penduduk.edit', $penduduk->id) }}" class="btn btn-warning btn-icon">
-                            <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <a href="{{ route('penduduk.show', $penduduk->id) }}" class="btn btn-info btn-icon">
-                            <i class="far fa-eye"></i>
-                          </a>
-                          <button data-url="{{ route('penduduk.destroy', $penduduk->id) }}" type="button"
-                            class="btn btn-danger btn-icon btn-delete">
-                            <i class="fas fa-trash-alt"></i>
-                          </button>
-                        </div>
-                      </td>
-                      <td>
-                        <a
-                          href="{{ route('keluarga.show', $penduduk->keluarga->id) }}">{{ $penduduk->keluarga->nomor }}</a>
-                      </td>
-                      <td>{{ $penduduk->nik }}</td>
-                      <td>{{ $penduduk->nama }}</td>
-                      <td>{{ $penduduk->jenis_kelamin_text }}</td>
-                      <td>{{ $penduduk->tempat_lahir }}</td>
-                      <td>{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
-                      <td>{{ $penduduk->usia }}</td>
-                      <td>{{ $penduduk->agama->nama }}</td>
-                      <td>{{ $penduduk->pekerjaan->nama }}</td>
-                      <td>{{ $penduduk->statusPerkawinan->nama }}</td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+              {{ $dataTable->table(['class' => 'table table-striped table-hover table-borderless w-100']) }}
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <form action="" id="form-delete" hidden method="POST">@csrf @method('DELETE')</form>
 @endsection
 
 @section('modals')
@@ -170,28 +119,44 @@
 @endsection
 
 @push('scripts')
+  {{ $dataTable->scripts() }}
   <script>
-    $('#tabelPenduduk').DataTable({
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Indonesian.json'
-      }
-    });
-
-    $('#tabelPenduduk').on('click', '.btn-delete', function() {
-      const form = $('#form-delete');
-      form.prop('action', $(this).data('url'));
-      Swal.fire({
-        title: 'Hapus Penduduk?',
-        text: 'Penduduk yang sudah dihapus tidak dapat dikembalikan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          form.trigger('submit');
-        }
+    $(function() {
+      const tabelPenduduk = window.LaravelDataTables['tabelPenduduk'];
+      $('#tabelPenduduk').on('click', '.btn-delete', function() {
+        const url = $(this).data('url');
+        Swal.fire({
+          title: 'Hapus Penduduk?',
+          text: 'Penduduk yang sudah dihapus tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Hapus',
+          cancelButtonText: 'Batal',
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url,
+              type: 'DELETE',
+              data: {
+                _token: '{{ csrf_token() }}'
+              },
+              success: function() {
+                Toast.fire({
+                  icon: 'success',
+                  title: '<b class="text-success">Success!</b> Penduduk berhasil dihapus',
+                })
+                tabelPenduduk.ajax.reload();
+              },
+              error: function(error) {
+                Toast.fire({
+                  icon: 'error',
+                  title: `<b class="text-danger">Gagal!</b> [${error.status}] ${error.statusText}`
+                })
+              }
+            });
+          }
+        });
       });
     });
   </script>

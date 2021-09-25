@@ -79,6 +79,7 @@ class PendudukMeninggalDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
+            Column::make('id')->hidden(),
             Column::make('nik')->title('NIK'),
             Column::make('nama'),
             Column::computed('tanggal_kematian'),

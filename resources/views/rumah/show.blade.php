@@ -87,6 +87,27 @@
                   @endforeach
                 </tbody>
               </table>
+
+              <table class="table table-bordered table-striped table-sm table-hover mt-5">
+                <thead>
+                  <tr>
+                    <th>NIK</th>
+                    <th>Nama</th>
+                    <th>Status Perkawinan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($rumah->pendudukDomisili as $pendudukDomisili)
+                    <tr>
+                      <td><a
+                          href="{{ route('penduduk.show', $pendudukDomisili->id) }}">{{ $pendudukDomisili->nik }}</a>
+                      </td>
+                      <td>{{ $pendudukDomisili->nama }}</td>
+                      <td>{{ $pendudukDomisili->statusPerkawinan->nama }}</td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
             </div>
 
             <p class="text-muted text-right mt-3">Terakhir diupdate pada

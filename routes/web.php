@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/ajax/keluarga/{id}', [\App\Http\Controllers\AjaxController::class, 'getKeluarga']);
     Route::get('/ajax/penduduk/{id}', [\App\Http\Controllers\AjaxController::class, 'getPenduduk']);
+    Route::get('/ajax/penduduk-domisili/{id}', [\App\Http\Controllers\AjaxController::class, 'getPendudukDomisili']);
 
     Route::get('/statistik-penduduk/show', [\App\Http\Controllers\GrafikController::class, 'show']);
 

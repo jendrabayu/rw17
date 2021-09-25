@@ -143,7 +143,7 @@ class PendudukMeninggalController extends Controller
     {
         $validated = $request->validated();
         if ($request->hasFile('foto_ktp')) {
-            $validated['foto_ktp'] = $request->file('foto_ktp')->store('public/ktp');
+            $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
             Storage::disk('public')->delete($pendudukMeninggal->foto_ktp);
         }
 

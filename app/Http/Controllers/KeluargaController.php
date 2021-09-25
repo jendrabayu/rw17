@@ -66,7 +66,7 @@ class KeluargaController extends Controller
     {
         $validated = $request->validated();
         if ($request->hasFile('foto_kk')) {
-            $validated['foto_kk'] = $request->file('foto_kk')->store('public/kartu_keluarga');
+            $validated['foto_kk'] = $request->file('foto_kk')->store('kartu_keluarga', 'public');
         }
 
         Keluarga::create($validated);
@@ -141,7 +141,7 @@ class KeluargaController extends Controller
     {
         $validated = $request->validated();
         if ($request->hasFile('foto_kk')) {
-            $validated['foto_kk'] = $request->file('foto_kk')->store('public/kartu_keluarga');
+            $validated['foto_kk'] = $request->file('foto_kk')->store('kartu_keluarga', 'public');
             Storage::disk('public')->delete($keluarga->foto_ktp);
         }
 

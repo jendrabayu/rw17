@@ -2,14 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\Keluarga;
+use App\Models\Penduduk;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class KeluargaDataTable extends DataTable
+class PendudukDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -21,40 +21,39 @@ class KeluargaDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'keluarga.action')
-            ->addColumn('kepala_keluarga', function ($keluarga) {
-                $kepala_keluarga = $keluarga
-                    ->penduduk->where('statusHubunganDalamKeluarga.nama', 'KEPALA KELUARGA')
-                    ->first();
-                return $kepala_keluarga ? $kepala_keluarga->nama : '';
-            })
-            ->addColumn('jumlah_orang', function ($keluarga) {
-                return $keluarga->penduduk->count();
-            });
+            ->addColumn('tanggal_lahir', fn ($penduduk) => $penduduk->tanggal_lahir->format('d-m-Y'))
+            ->addColumn('action', 'penduduk.action');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Keluarga $model
+     * @param \App\Models\Penduduk $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Keluarga $keluarga)
+    public function query(Penduduk $penduduk)
     {
         $user = auth()->user();
-        $keluarga = $keluarga->newQuery()->with('penduduk.statusHubunganDalamKeluarga');
+        $penduduk = $penduduk->newQuery()->filter();
 
         if ($user->hasRole('rt')) {
-            $keluarga->whereRtId($user->rt_id);
-        }
-
-        if ($user->hasRole('rw')) {
-            $keluarga->when(request()->has('rt'), function ($q) {
-                return $q->whereRtId(request()->get('rt'));
+            $penduduk = $penduduk->whereHas('keluarga', function ($q) use ($user) {
+                $q->whereRtId($user->rt_id);
             });
         }
 
-        return $keluarga;
+        if ($user->hasRole('rw')) {
+            $penduduk = $penduduk->whereHas('keluarga.rt', function ($q) use ($user) {
+                $q->whereRwId($user->rt->rw_id);
+            })
+                ->when(request()->has('rt'), function ($q) {
+                    $q->whereHas('keluarga.rt', function ($q) {
+                        $q->where('id', request()->get('rt'));
+                    });
+                });
+        }
+
+        return $penduduk;
     }
 
     /**
@@ -65,7 +64,7 @@ class KeluargaDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('tabelKeluarga')
+            ->setTableId('tabelPenduduk')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->orderBy(1)
@@ -87,10 +86,16 @@ class KeluargaDataTable extends DataTable
                 ->width(60)
                 ->addClass('text-center'),
             Column::make('id')->hidden(),
-            Column::make('nomor')->title('No. Kartu Keluarga'),
-            Column::computed('kepala_keluarga'),
-            Column::computed('jumlah_orang'),
-            Column::make('alamat'),
+            Column::make('keluarga.nomor')->title('No. Kartu Keluarga'),
+            Column::make('nik')->title('NIK'),
+            Column::make('nama'),
+            Column::make('jenis_kelamin_text')->title('Jenis Kelamin')->orderable(false)->searchable(false),
+            Column::make('tempat_lahir'),
+            Column::computed('tanggal_lahir'),
+            Column::make('usia')->searchable(false)->orderable(false),
+            Column::make('agama.nama'),
+            Column::make('pekerjaan.nama'),
+            Column::make('status_perkawinan.nama', 'statusPerkawinan.nama')->title('Status Perkawinan'),
         ];
     }
 
@@ -101,6 +106,6 @@ class KeluargaDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Keluarga_' . date('YmdHis');
+        return 'Penduduk_' . date('YmdHis');
     }
 }

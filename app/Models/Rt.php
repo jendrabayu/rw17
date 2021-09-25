@@ -52,7 +52,7 @@ class Rt extends Model
         return $this->hasMany(Rumah::class, 'rt_id');
     }
 
-    public function c()
+    public function pendudukDomisili()
     {
         return $this->hasMany(PendudukDomisili::class);
     }
