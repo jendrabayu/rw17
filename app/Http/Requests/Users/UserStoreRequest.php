@@ -13,7 +13,7 @@ class UserStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->hasRole('rw');
+        return auth()->user()->hasRole(['admin', 'rw']);
     }
 
     /**
@@ -41,7 +41,7 @@ class UserStoreRequest extends FormRequest
         return [
             'rt_id' => 'RT',
             'name' => 'nama',
-              'no_hp' => 'No. Hp/WhatsApp'
+            'no_hp' => 'No. Hp/WhatsApp'
         ];
     }
 }

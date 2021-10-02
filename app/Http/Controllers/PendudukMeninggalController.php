@@ -15,6 +15,7 @@ use App\Models\PendudukMeninggal;
 use App\Models\Rt;
 use App\Models\StatusHubunganDalamKeluarga;
 use App\Models\StatusPerkawinan;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -30,19 +31,10 @@ class PendudukMeninggalController extends Controller
     public function index(Request $request, PendudukMeninggalDataTable $pendudukMeninggalDataTable)
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt')) {
-            $penduduk = Penduduk::whereHas('keluarga', function ($q) use ($user) {
-                return $q->where('rt_id', $user->rt->id);
-            })->get();
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-            $penduduk = null;
-        }
-
+        $penduduk = Penduduk::whereHas('keluarga', function ($q) use ($user) {
+            return $q->where('rt_id', $user->rt->id);
+        })->get();
+        $rt = $user->rt;
         $fileTypes = PendudukMeninggal::FILE_TYPES;
 
         return $pendudukMeninggalDataTable->render('penduduk-meninggal.index', compact('rt', 'penduduk', 'fileTypes'));
@@ -66,7 +58,7 @@ class PendudukMeninggalController extends Controller
             PendudukMeninggal::create($data);
             $penduduk->delete();
             DB::commit();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
             return back()->withErrors($exception->getMessage())->withInput();
         }
@@ -83,7 +75,6 @@ class PendudukMeninggalController extends Controller
     public function show(PendudukMeninggal $pendudukMeninggal)
     {
         $user = auth()->user();
-
         if ($user->hasRole('rt') && $user->rt_id !== $pendudukMeninggal->rt_id) {
             abort(404);
         }
@@ -105,14 +96,7 @@ class PendudukMeninggalController extends Controller
             abort(404);
         }
 
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
+        $rt = $user->rt;
         $agama = Agama::all()->pluck('nama', 'id');
         $darah = Darah::all()->pluck('nama', 'id');
         $pekerjaan = Pekerjaan::all()->pluck('nama', 'id');
@@ -187,7 +171,7 @@ class PendudukMeninggalController extends Controller
             $filename = 'Penduduk_Meninggal_RT_' . $user->rt->nomor;
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $pendudukMeninggal
                 ->whereHas('rt', function ($q) use ($user) {
                     return $q->whereRwId($user->rt->rw_id);

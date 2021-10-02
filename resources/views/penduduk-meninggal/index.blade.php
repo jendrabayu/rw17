@@ -36,11 +36,9 @@
       </div>
     </div>
     @endrole
-    <div class="row">
-      <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
+
+    @include('partials.alerts')
+
     <div class="row">
       <div class="col-12">
         <div class="card">
@@ -58,8 +56,10 @@
                   @endforeach
                 </div>
               </div>
+              @role('rt')
               <button class="btn btn-primary btn-icon icon-left" data-toggle="modal" data-target="#modalTambah"><i
                   class="fas fa-plus-circle"></i> Tambah</button>
+              @endrole
             </div>
           </div>
           <div class="card-body">
@@ -92,7 +92,7 @@
               <div class="form-group col-md-6">
                 @role('rt')
                 <label for="rt">RT <code>*</code></label>
-                <input type="text" class="form-control" id="rt" name="rt" value="RT {{ $rt->nomor }}" disabled>
+                <input type="text" readonly class="form-control" id="rt" name="rt" value="{{ $rt->nomor }}">
                 <input type="text" hidden name="rt_id" value="{{ $rt->id }}">
                 @endrole
 

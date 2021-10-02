@@ -22,7 +22,7 @@ Auth::routes([
 ]);
 
 Route::middleware(['auth'])->group(function () {
-    Route::resource('users', \App\Http\Controllers\UserController::class)->except('show')->middleware('role:rw');
+    Route::resource('users', \App\Http\Controllers\UserController::class)->except('show')->middleware('role:admin');
 
     Route::get('/', \App\Http\Controllers\DashboardController::class)->name('home');
     Route::get('/home', \App\Http\Controllers\DashboardController::class)->name('home');
@@ -39,11 +39,23 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/statistik-penduduk/show', [\App\Http\Controllers\GrafikController::class, 'show']);
 
-    Route::resource('keluarga', \App\Http\Controllers\KeluargaController::class);
-    Route::resource('penduduk', \App\Http\Controllers\PendudukController::class);
+    Route::resource('rumah', \App\Http\Controllers\RumahController::class)
+        ->except('index', 'show')
+        ->middleware('role:rt');
+    Route::resource('rumah', \App\Http\Controllers\RumahController::class)
+        ->only('index', 'show');
+    Route::resource('keluarga', \App\Http\Controllers\KeluargaController::class)
+        ->except('index', 'show')
+        ->middleware('role:rt');
+    Route::resource('keluarga', \App\Http\Controllers\KeluargaController::class)
+        ->only('index', 'show');
+    Route::resource('penduduk', \App\Http\Controllers\PendudukController::class)
+        ->except('index', 'show')
+        ->middleware('role:rt');
+    Route::resource('penduduk', \App\Http\Controllers\PendudukController::class)
+        ->only('index', 'show');
     Route::resource('penduduk-domisili', \App\Http\Controllers\PendudukDomisiliController::class);
     Route::resource('penduduk-meninggal', \App\Http\Controllers\PendudukMeninggalController::class)->except('create');
-    Route::resource('rumah', \App\Http\Controllers\RumahController::class);
 
     Route::post('/import-penduduk', [\App\Http\Controllers\PendudukController::class, 'import'])->name('import_penduduk');
 

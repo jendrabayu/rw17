@@ -10,35 +10,7 @@
   </div>
 
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <ul class="nav nav-pills">
-              <li class="nav-item">
-                <a class="nav-link {{ !request()->get('role') ? 'active' : '' }}"
-                  href="{{ route('users.index') }}">Semua
-                  Pengguna</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {{ request()->get('role') == 'rw' ? 'active' : '' }}"
-                  href="{{ route('users.index', ['role' => 'rw']) }}">Pengguna RW</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link {{ request()->get('role') == 'rt' ? 'active' : '' }}"
-                  href="{{ route('users.index', ['role' => 'rt']) }}">Pengguna RT</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
+    @include('partials.alerts')
 
     <div class="row">
       <div class="col-12">

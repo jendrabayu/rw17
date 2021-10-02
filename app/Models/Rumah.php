@@ -21,7 +21,7 @@ class Rumah extends Model
      *
      * @var array
      */
-    protected $fillable = ['rt_id', 'alamat',  'nomor', 'tipe_bangunan', 'penggunaan_bangunan', 'kontruksi_bangunan', 'keterangan'];
+    protected $fillable = ['rt_id', 'alamat',  'nomor',  'penggunaan_bangunan_id', 'kontruksi_bangunan', 'keterangan'];
 
 
     public const FILE_TYPES = ['xlsx', 'xls', 'csv'];
@@ -39,7 +39,13 @@ class Rumah extends Model
         return $this->belongsTo(Rt::class, 'rt_id');
     }
 
-    public function pendudukDomisili(){
+    public function pendudukDomisili()
+    {
         return $this->hasMany(PendudukDomisili::class);
+    }
+
+    public function penggunaanBangunan()
+    {
+        return $this->belongsTo(PenggunaanBangunan::class);
     }
 }

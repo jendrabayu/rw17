@@ -60,12 +60,15 @@
                   @endforeach
                 </div>
               </div>
+
+              @role('rt')
               <button type="button" class="btn btn-success btn-icon icon-left" data-toggle="modal"
                 data-target="#modalImport">
                 <i class="fas fa-file-import"></i> Import
               </button>
               <a href="{{ route('penduduk.create') }}" class="btn btn-primary btn-icon icon-left"><i
                   class="fas fa-plus-circle"></i> Tambah</a>
+              @endrole
             </div>
           </div>
           <div class="card-body">

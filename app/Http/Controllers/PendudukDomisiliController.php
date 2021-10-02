@@ -25,21 +25,12 @@ class PendudukDomisiliController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, PendudukDomisiliDataTable $pendudukDomisiliDataTable)
+    public function index(PendudukDomisiliDataTable $pendudukDomisiliDataTable)
     {
-        $user = auth()->user();
-
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
-        $fileTypes = PendudukDomisili::FILE_TYPES;
-
-        return $pendudukDomisiliDataTable->render('penduduk-domisili.index', compact('rt', 'fileTypes'));
+        return $pendudukDomisiliDataTable->render('penduduk-domisili.index', [
+            'rt' =>  auth()->user()->rt->rw->rt->pluck('nomor', 'id'),
+            'fileTypes' => PendudukDomisili::FILE_TYPES
+        ]);
     }
 
     /**
@@ -49,16 +40,7 @@ class PendudukDomisiliController extends Controller
      */
     public function create()
     {
-        $user = auth()->user();
-
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
+        $rt = auth()->user()->rt;
         $agama = Agama::all()->pluck('nama', 'id');
         $darah = Darah::all()->pluck('nama', 'id');
         $pekerjaan = Pekerjaan::all()->pluck('nama', 'id');
@@ -125,14 +107,7 @@ class PendudukDomisiliController extends Controller
             abort(404);
         }
 
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
+        $rt = $user->rt;
         $agama = Agama::all()->pluck('nama', 'id');
         $darah = Darah::all()->pluck('nama', 'id');
         $pekerjaan = Pekerjaan::all()->pluck('nama', 'id');
@@ -207,7 +182,7 @@ class PendudukDomisiliController extends Controller
             $filename = 'Penduduk_Domisili_RT_' . $user->rt->nomor;
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $pendudukDomisili
                 ->whereHas('rt', function ($q) use ($user) {
                     return $q->whereRwId($user->rt->rw_id);

@@ -37,11 +37,7 @@
     </div>
     @endrole
 
-    <div class="row">
-      <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
+    @include('partials.alerts')
 
     <div class="row">
       <div class="col-12">
@@ -60,8 +56,10 @@
                   @endforeach
                 </div>
               </div>
+              @role('rt')
               <a href="{{ route('penduduk-domisili.create') }}" class="btn btn-primary btn-icon icon-left"><i
                   class="fas fa-plus-circle"></i> Tambah</a>
+              @endrole
             </div>
           </div>
           <div class="card-body">

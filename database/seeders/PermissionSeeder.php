@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class PermissionSeeder extends Seeder
@@ -14,7 +15,8 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $rw = Role::create(['name' => 'rw']);
-        $rt = Role::create(['name' => 'rt']);
+        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'rw']);
+        Role::create(['name' => 'rt']);
     }
 }

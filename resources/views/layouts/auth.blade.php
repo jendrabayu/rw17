@@ -16,19 +16,7 @@
           <div class="text-light p-5 pb-2">
             <div class="mb-5 pb-3">
               <h1 class="mb-2 display-4 font-weight-bold">
-                @php
-                  $time = date('H');
-                  $timezone = date('e');
-                  if ($time < '12') {
-                      echo 'Selamat Pagi';
-                  } elseif ($time >= '12' && $time < '17') {
-                      echo 'Selamat Siang';
-                  } elseif ($time >= '17' && $time < '19') {
-                      echo 'Selamat Sore';
-                  } elseif ($time >= '19') {
-                      echo 'Selamat Malam';
-                  }
-                @endphp
+                {{ greeting() }}
               </h1>
               <h5 class="font-weight-normal text-muted-transparent">Jember, Indonesia</h5>
             </div>

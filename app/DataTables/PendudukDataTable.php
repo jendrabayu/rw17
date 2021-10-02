@@ -42,7 +42,7 @@ class PendudukDataTable extends DataTable
             });
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $penduduk = $penduduk->whereHas('keluarga.rt', function ($q) use ($user) {
                 $q->whereRwId($user->rt->rw_id);
             })

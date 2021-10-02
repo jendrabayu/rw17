@@ -40,13 +40,13 @@ class RumahDataTable extends DataTable
     public function query(Rumah $rumah)
     {
         $user = auth()->user();
-        $rumah = $rumah->newQuery()->with(['keluarga', 'pendudukDomisili']);
+        $rumah = $rumah->newQuery()->with(['keluarga', 'pendudukDomisili', 'penggunaanBangunan']);
 
         if ($user->hasRole('rt')) {
             $rumah->whereRtId($user->rt_id);
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $rumah->when(request()->has('rt'), function ($q) {
                 $q->whereRtId(request()->rt);
             });
@@ -85,13 +85,11 @@ class RumahDataTable extends DataTable
                 ->width(60)
                 ->addClass('text-center'),
             Column::make('id')->hidden(),
-            Column::make('alamat'),
             Column::make('nomor')->title('No. Rumah'),
+            Column::make('alamat'),
             Column::computed('keluarga'),
             Column::computed('warga_domisili'),
-            Column::make('penggunaan_bangunan'),
-            Column::make('tipe_bangunan'),
-            Column::make('kontruksi_bangunan'),
+            Column::make('penggunaan_bangunan.nama', 'penggunaanBangunan.nama')->title('Penggunaan Bangunan'),
         ];
     }
 

@@ -59,9 +59,11 @@
                   @endforeach
                 </div>
               </div>
+              @role('rt')
               <a href="{{ route('keluarga.create') }}" class="btn btn-primary btn-icon icon-left">
                 <i class="fas fa-plus-circle"></i> Tambah
               </a>
+              @endrole('rt')
             </div>
           </div>
           <div class="card-body">

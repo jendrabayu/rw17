@@ -17,7 +17,6 @@ use App\Models\StatusHubunganDalamKeluarga;
 use App\Models\StatusPerkawinan;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -34,16 +33,7 @@ class PendudukController extends Controller
      */
     public function index(Request $request, PendudukDataTable $pendudukDataTable)
     {
-        $user = auth()->user();
-
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
+        $rt = auth()->user()->rt->rw->rt->pluck('nomor', 'id');
         $agama = Agama::all()->pluck('nama', 'id');
         $darah = Darah::all()->pluck('nama', 'id');
         $pekerjaan = Pekerjaan::all()->pluck('nama', 'id');
@@ -53,7 +43,6 @@ class PendudukController extends Controller
         $fileTypes = Penduduk::FILE_TYPES;
 
         return $pendudukDataTable->render('penduduk.index', compact(
-            'user',
             'rt',
             'agama',
             'darah',
@@ -73,19 +62,8 @@ class PendudukController extends Controller
     public function create()
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt')) {
-            $keluarga = Keluarga::whereRtId($user->rt_id)->get()->pluck('nomor', 'id');
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $keluarga = Keluarga::whereHas('rt', function ($q) use ($user) {
-                $q->whereRwId($user->rt->rw_id);
-            })->get()->pluck('nomor', 'id');
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
+        $rt = $user->rt;
+        $keluarga = Keluarga::whereRtId($user->rt_id)->get()->pluck('nomor', 'id');
         $agama = Agama::all()->pluck('nama', 'id');
         $darah = Darah::all()->pluck('nama', 'id');
         $pekerjaan = Pekerjaan::all()->pluck('nama', 'id');
@@ -153,18 +131,8 @@ class PendudukController extends Controller
             abort(404);
         }
 
-        if ($user->hasRole('rt')) {
-            $keluarga = Keluarga::whereRtId($user->rt_id)->get()->pluck('nomor', 'id');
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $keluarga = Keluarga::whereHas('rt', function ($q) use ($user) {
-                $q->whereRwId($user->rt->rw_id);
-            })->get()->pluck('nomor', 'id');
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
+        $rt = $user->rt;
+        $keluarga = Keluarga::whereRtId($user->rt_id)->get()->pluck('nomor', 'id');
         $agama = Agama::all()->pluck('nama', 'id');
         $darah = Darah::all()->pluck('nama', 'id');
         $pekerjaan = Pekerjaan::all()->pluck('nama', 'id');
@@ -235,7 +203,7 @@ class PendudukController extends Controller
             $filename = 'Penduduk_RT_' . $user->rt->nomor;
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $penduduk
                 ->whereHas('keluarga.rt', function ($q) use ($user) {
                     $q->whereRwId($user->rt->rw_id);
@@ -265,7 +233,6 @@ class PendudukController extends Controller
         $request->validate([
             'file_penduduk' => ['file', 'mimes:xlsx,csv,xls', 'required', 'max:1024']
         ]);
-
 
         $format = $request->file('file_penduduk')->getClientOriginalExtension();
 

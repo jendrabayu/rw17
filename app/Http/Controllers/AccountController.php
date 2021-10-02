@@ -24,12 +24,12 @@ class AccountController extends Controller
         $user = auth()->user();
 
         $validated = $this->validate($request, [
-            'name' => ['required', 'string',  'max:32'],
-            'username' =>  ['required', 'alpha_dash',  'max:64', 'unique:users,username,' . $user->id],
-            'email' => ['required', 'email',  'max:64', 'unique:users,email,' . $user->id],
-            'no_hp' =>  ['nullable', 'string',  'max:15', 'starts_with:+62,62,08'],
-            'alamat' => ['nullable', 'string',  'max:255'],
-            'avatar' => ['nullable', 'mimes:jpg,jpeg,png',  'max:1024'],
+            'name' => 'required|string|max:32',
+            'username' =>  'required|alpha_dash|max:64|unique:users,username,' . $user->id,
+            'email' => 'required|email|max:64|unique:users,email,' . $user->id,
+            'no_hp' =>  'nullable|string|max:15|starts_with:+62,62,08',
+            'alamat' => 'nullable|string|max:255',
+            'avatar' => 'nullable|mimes:jpg,jpeg,png|max:1024',
         ], [], [
             'name' => 'nama'
         ]);
@@ -41,8 +41,8 @@ class AccountController extends Controller
     public function updatePassword(Request $request)
     {
         $this->validate($request, [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['string', 'required', 'min:3', 'max:12', 'confirmed'],
+            'current_password' => 'required|current_password',
+            'password' => 'string|required|min:3|max:12|confirmed',
         ], [], [
             'current_password' => 'password sekarang',
             'password' => 'password baru'

@@ -18,9 +18,10 @@ class CreateRumahTable extends Migration
             $table->foreignId('rt_id')->constrained('rt')->onDelete('cascade')->onUpdate('cascade');
             $table->string('alamat');
             $table->string('nomor');
-            $table->string('tipe_bangunan')->nullable();
-            $table->string('penggunaan_bangunan')->nullable();
-            $table->string('kontruksi_bangunan')->nullable();
+            $table->foreignId('penggunaan_bangunan_id')
+                ->constrained('penggunaan_bangunan')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->tinyText('keterangan')->nullable();
             $table->timestamps();
         });

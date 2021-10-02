@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PekerjaanSeeder::class,
             StatusPerkawinanSeeder::class,
             StatusHubunganDalamKeluargaSeeder::class,
+            PenggunaanBangunanSeeder::class
         ]);
     }
 }

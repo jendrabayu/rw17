@@ -26,7 +26,7 @@ class GrafikController extends Controller
             $totalPenduduk = Penduduk::whereHas('keluarga', function ($q) use ($user) {
                 $q->where('rt_id', $user->rt->id);
             })->count();
-        } elseif ($user->hasRole('rw')) {
+        } elseif ($user->hasRole(['admin', 'rw'])) {
             $totalPenduduk = Penduduk::when($request->has('rt'), function ($q) use ($user, $request) {
                 return $q->whereHas('keluarga.rt', function ($q) use ($user, $request) {
                     $q->where('id', $request->get('rt'))->where('rw_id', $user->rt->rw->id);
@@ -65,7 +65,7 @@ class GrafikController extends Controller
             }
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             foreach ($agama as $item) {
                 $data[] = [
                     'name' => $item->nama,
@@ -100,7 +100,7 @@ class GrafikController extends Controller
             }
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             foreach ($darah as $item) {
                 $data[] = [
                     'name' => $item->nama,
@@ -134,7 +134,7 @@ class GrafikController extends Controller
             }
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             foreach ($pekerjaan as $item) {
                 $data[] = [
                     'name' => $item->nama,
@@ -168,7 +168,7 @@ class GrafikController extends Controller
             }
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             foreach ($perkawinan as $item) {
                 $data[] = [
                     'name' => $item->nama,
@@ -202,7 +202,7 @@ class GrafikController extends Controller
             }
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             foreach ($hubunganDalamKeluarga as $item) {
                 $data[] = [
                     'name' => $item->nama,
@@ -236,7 +236,7 @@ class GrafikController extends Controller
             }
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             foreach ($pendidikan as $item) {
                 $data[] = [
                     'name' => $item->nama,
@@ -274,7 +274,7 @@ class GrafikController extends Controller
             ];
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $data = [
                 [
                     'name' => 'Laki-Laki',
@@ -315,7 +315,7 @@ class GrafikController extends Controller
             })->where('jenis_kelamin', 'p')->get();
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $pendudukLakiLaki =  Penduduk::whereHas('keluarga.rt', function ($q) use ($user) {
                 $q->where('rw_id', $user->rt->rw->id);
             })->when($request->has('rt'), function ($q) use ($user, $request) {

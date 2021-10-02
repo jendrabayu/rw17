@@ -7,6 +7,7 @@ use App\Exports\RumahExport;
 use App\Http\Requests\Rumah\RumahStoreRequest;
 use App\Http\Requests\Rumah\RumahUpdateRequest;
 use App\Models\PendudukDomisili;
+use App\Models\PenggunaanBangunan;
 use App\Models\Rt;
 use App\Models\Rumah;
 use Exception;
@@ -22,21 +23,12 @@ class RumahController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, RumahDataTable $rumahDataTable)
+    public function index(RumahDataTable $rumahDataTable)
     {
-        $user = auth()->user();
-
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
-        $fileTypes = Rumah::FILE_TYPES;
-
-        return $rumahDataTable->render('rumah.index', compact('rt', 'fileTypes'));
+        return $rumahDataTable->render('rumah.index', [
+            'fileTypes' => Rumah::FILE_TYPES,
+            'rt' => auth()->user()->rt->rw->rt->pluck('nomor', 'id'),
+        ]);
     }
 
     /**
@@ -47,25 +39,20 @@ class RumahController extends Controller
     public function create()
     {
         $user = auth()->user();
+        $rt = $user->rt;
+        $keluarga = $user->rt->keluarga()->doesntHave('rumah')->pluck('nomor', 'id');
+        $pendudukDomisili = $user->rt
+            ->pendudukDomisili()
+            ->whereNull('rumah_id')
+            ->get()
+            ->map(function ($item) {
+                $item->nama = "{$item->nik} | {$item->nama}";
+                return $item;
+            })
+            ->pluck('nama', 'id');
+        $penggunaanBangunan = PenggunaanBangunan::all()->pluck('nama', 'id');
 
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-            $keluarga = $user->rt->keluarga()->doesntHave('rumah')->pluck('nomor', 'id');
-            $pendudukDomisili = $user->rt->pendudukDomisili()->whereNull('rumah_id')->get()
-                ->map(function ($pendudukDomisili) {
-                    $pendudukDomisili->nama = "{$pendudukDomisili->nik} | {$pendudukDomisili->nama}";
-                    return $pendudukDomisili;
-                })
-                ->pluck('nama', 'id');
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt =  $user->rt->rw->rt->pluck('nomor', 'id');
-            $keluarga = [];
-            $pendudukDomisili = [];
-        }
-
-        return view('rumah.create', compact('rt', 'keluarga', 'pendudukDomisili'));
+        return view('rumah.create', compact('rt', 'keluarga', 'pendudukDomisili', 'penggunaanBangunan'));
     }
 
     /**
@@ -93,9 +80,11 @@ class RumahController extends Controller
                     $pendudukDomisili->save();
                 }
             }
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
+
             return back()->withErrors($e->getMessage())->withInput();
         }
 
@@ -111,9 +100,8 @@ class RumahController extends Controller
     public function show(Rumah $rumah)
     {
         $user = auth()->user();
-
         if ($user->hasRole('rt') && $rumah->rt_id !== $user->rt_id) {
-            abort(404);
+            abort(403);
         }
 
         return view('rumah.show', compact('rumah'));
@@ -133,15 +121,25 @@ class RumahController extends Controller
             abort(404);
         }
 
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
+        $rt = $user->rt;
+        $keluarga = $user->rt->keluarga()
+            ->doesntHave('rumah')
+            ->get()
+            ->merge($rumah->keluarga)
+            ->pluck('nomor', 'id');
+        $penggunaanBangunan = PenggunaanBangunan::all()->pluck('nama', 'id');
+        $pendudukDomisili = $user->rt
+            ->pendudukDomisili()
+            ->whereNull('rumah_id')
+            ->get()
+            ->merge($rumah->pendudukDomisili)
+            ->map(function ($item) {
+                $item->nama = "$item->nik | $item->nama";
+                return $item;
+            })
+            ->pluck('nama', 'id');
 
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
-        return view('rumah.edit', compact('rumah', 'rt', 'user'));
+        return view('rumah.edit', compact('rumah', 'rt', 'keluarga', 'penggunaanBangunan', 'pendudukDomisili'));
     }
 
     /**
@@ -154,6 +152,7 @@ class RumahController extends Controller
     public function update(RumahUpdateRequest $request, Rumah $rumah)
     {
         $validated = $request->validated();
+
         try {
             DB::beginTransaction();
             $rumah->update($validated);
@@ -175,7 +174,6 @@ class RumahController extends Controller
             DB::rollBack();
             return back()->withErrors($e->getMessage())->withInput();
         }
-
 
         return back()->withSuccess('Rumah berhasil diupdate');
     }
@@ -212,7 +210,7 @@ class RumahController extends Controller
             $filename = 'Rumah_RT_' . $user->rt->nomor;
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $rumah->when($request->has('rt'), function ($q) use ($request) {
                 $q->whereRtId($request->rt);
             });

@@ -33,63 +33,42 @@
               @method('PUT')
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="rt">RT <code>*</code></label>
-                  @role('rt')
-                  <input type="text" class="form-control" value="RT {{ ltrim($rt->nomor, '0') }}" id="rt" disabled>
+                  <label for="rt"><code>*</code> RT</label>
+                  <input type="text" readonly class="form-control" value="{{ $rt->nomo }}" id="rt">
                   <input type="text" name="rt_id" value="{{ $rt->id }}" hidden>
-                  @endrole
-                  @role('rw')
-                  <select name="rt_id" id="rt" class="custom-select">
-                    <option selected disabled hidden>--Pilih RT--</option>
-                    @foreach ($rt as $id => $nomor)
-                      <option {{ $penduduk->keluarga->rt->id === $id ? 'selected' : '' }} value="{{ $id }}">
-                        RT {{ ltrim($nomor, '0') }}
-                      </option>
-                    @endforeach
-                  </select>
-                  @endrole
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="keluarga">Nomor Kartu Keluarga <code>*</code></label>
+                  <label for="keluarga"><code>*</code> Nomor Kartu Keluarga</label>
                   <select name="keluarga_id" id="keluarga" class="form-control select2">
-                    @role('rw')
-                    @foreach ($penduduk->keluarga->rt->keluarga->pluck('nomor', 'id') as $id => $nomor)
-                      <option {{ $penduduk->keluarga->id === $id ? 'selected' : '' }} value="{{ $id }}">
-                        {{ $nomor }}
-                      </option>
-                    @endforeach
-                    @endrole
-                    @role('rt')
                     @foreach ($keluarga as $id => $nomor)
                       <option {{ $penduduk->keluarga->id == $id ? 'selected' : '' }} value="{{ $id }}">
                         {{ $nomor }}
                       </option>
                     @endforeach
-                    @endrole
                   </select>
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="nik">NIK <code>*</code></label>
+                  <label for="nik"><code>*</code> NIK</label>
                   <input type="text" class="form-control" id="nik" name="nik" maxlength="16"
                     value="{{ $penduduk->nik }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="nama">Nama Lengkap <code>*</code></label>
+                  <label for="nama"><code>*</code> Nama Lengkap</label>
                   <input type="text" class="form-control" id="nama" name="nama" value="{{ $penduduk->nama }}">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="tempat_lahir">Tempat Lahir <code>*</code></label>
+                  <label for="tempat_lahir"><code>*</code> Tempat Lahir</label>
                   <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
                     value="{{ $penduduk->tempat_lahir }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="tanggal_lahir">Tanggal Lahir <code>*</code></label>
+                  <label for="tanggal_lahir"><code>*</code> Tanggal Lahir</label>
                   <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
                     value="{{ $penduduk->tanggal_lahir->format('Y-m-d') }}">
                 </div>
@@ -97,7 +76,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="status_perkawinan">Status Perkawinan <code>*</code></label>
+                  <label for="status_perkawinan"><code>*</code> Status Perkawinan</label>
                   <select name="status_perkawinan_id" id="status_perkawinan" class="custom-select">
                     <option selected disabled hidden>--Pilih Status Perkawinan--</option>
                     @foreach ($statusPerkawinan as $id => $nama)
@@ -109,7 +88,7 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="pekerjaan">Pekerjaan <code>*</code></label>
+                  <label for="pekerjaan"><code>*</code> Pekerjaan</label>
                   <select name="pekerjaan_id" id="pekerjaan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Pekerjaan--</option>
                     @foreach ($pekerjaan as $id => $nama)
@@ -123,7 +102,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="jenis_kelamin">Jenis Kelamin <code>*</code></label>
+                  <label for="jenis_kelamin"><code>*</code> Jenis Kelamin</label>
                   <select name="jenis_kelamin" id="jenis_kelamin" class="custom-select">
                     <option selected disabled hidden>--Pilih Jenis Kelamin--</option>
                     <option {{ $penduduk->jenis_kelamin === 'l' ? 'selected' : '' }} value="l">Laki-Laki</option>
@@ -131,7 +110,7 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="agama">Agama <code>*</code></label>
+                  <label for="agama"><code>*</code> Agama</label>
                   <select name="agama_id" id="agama" class="form-control select2">
                     <option selected disabled hidden>--Pilih Agama--</option>
                     @foreach ($agama as $id => $nama)
@@ -145,7 +124,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="kewarganegaraan">Kewarganegaraan <code>*</code></label>
+                  <label for="kewarganegaraan"><code>*</code> Kewarganegaraan</label>
                   <select name="kewarganegaraan" id="kewarganegaraan" class="custom-select">
                     <option selected value="1">Warga Negara Indonesia</option>
                     <option value="2">Warga Negara Asing</option>
@@ -153,7 +132,7 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="status_hubungan_dalam_keluarga">Status Hubungan Dalam Keluarga <code>*</code></label>
+                  <label for="status_hubungan_dalam_keluarga"><code>*</code> Status Hubungan Dalam Keluarga</label>
                   <select name="status_hubungan_dalam_keluarga_id" id="status_hubungan_dalam_keluarga"
                     class="form-control select2">
                     <option selected disabled hidden>--Pilih Status Hubungan Dalam Keluarga--</option>
@@ -168,7 +147,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="pendidikan">Pendidikan <code>*</code></label>
+                  <label for="pendidikan"><code>*</code> Pendidikan</label>
                   <select name="pendidikan_id" id="pendidikan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Pendidikan--</option>
                     @foreach ($pendidikan as $id => $nama)
@@ -276,26 +255,6 @@
         reader.readAsDataURL(file);
         $('.img__ktp__preview').removeClass('d-none');
       }
-    });
-
-    $('#rt').on('change', function(e) {
-      const rtId = e.target.value;
-      $.ajax({
-        url: '/ajax/keluarga/' + rtId,
-        type: 'get',
-        success: function(data) {
-          $('#keluarga').empty();
-          $('#keluarga').append('<option selected disabled hidden>--Pilih No. Kartu Keluarga--</option>');
-          $.each(data, function(i, v) {
-            $('#keluarga').append(`<option value="${v.id}">${v.nomor}</option>`);
-          });
-          $('#keluarga').removeAttr('disabled');
-        },
-        error: function(error) {
-          console.log(error)
-        }
-      })
-
     });
   </script>
 @endpush

@@ -17,11 +17,7 @@
   </div>
 
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
+    @include('partials.alerts')
 
     <div class="row">
       <div class="col-12">
@@ -36,24 +32,12 @@
               @method('PUT')
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="rt">RT <code>*</code></label>
-                  @role('rt')
-                  <input type="text" readonly value="RT {{ $rt->nomor }}" class="form-control">
-                  <input type="text" hidden value="{{ $rt->id }}" name="rt_id">
-                  @endrole
-                  @role('rw')
-                  <select name="rt_id" id="rt" class="custom-select">
-                    <option selected hidden value="" disabled>--Pilih RT--</option>
-                    @foreach ($rt as $id => $rt)
-                      <option {{ $keluarga->rt->id == $id ? 'selected' : '' }} value="{{ $id }}"
-                        class="form-control">RT {{ ltrim($rt, '0') }}
-                      </option>
-                    @endforeach
-                  </select>
-                  @endrole
+                  <label for="rt"><code>*</code> RT</label>
+                  <input type="text" readonly value="{{ $rt->nomor }}" class="form-control" id="rt">
+                  <input type="hidden" value="{{ $rt->id }}" name="rt_id">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="nomor">Nomor Kartu Keluarga <code>*</code></label>
+                  <label for="nomor"><code>*</code> Nomor Kartu Keluarga</label>
                   <input type="text" class="form-control" id="nomor" name="nomor" value="{{ $keluarga->nomor }}"
                     maxlength="16">
                 </div>
@@ -61,7 +45,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="alamat">Alamat <code>*</code></label>
+                  <label for="alamat"><code>*</code> Alamat</label>
                   <textarea class="form-control" id="alamat" name="alamat">{{ $keluarga->alamat }}</textarea>
                 </div>
 

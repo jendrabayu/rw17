@@ -48,7 +48,7 @@ class KeluargaDataTable extends DataTable
             $keluarga->whereRtId($user->rt_id);
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $keluarga->when(request()->has('rt'), function ($q) {
                 return $q->whereRtId(request()->get('rt'));
             });

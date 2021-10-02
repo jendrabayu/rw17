@@ -16,11 +16,8 @@
     </div>
   </div>
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
+    @include('partials.alerts')
+
     <div class="row">
       <div class="col-12">
         <div class="card card-primary">
@@ -34,25 +31,13 @@
               @method('PUT')
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="rt">RT <code>*</code></label>
-                  @role('rt')
-                  <input type="text" class="form-control" value="RT {{ $rt->nomor }}" id="rt" disabled>
-                  <input type="text" name="rt_id" value="{{ $rt->id }}" hidden>
-                  @endrole
-                  @role('rw')
-                  <select name="rt_id" id="rt" class="custom-select">
-                    <option selected disabled hidden>--Pilih RT--</option>
-                    @foreach ($rt as $id => $nomor)
-                      <option {{ $pendudukDomisili->rt_id === $id ? 'selected' : '' }} value="{{ $id }}">
-                        RT {{ ltrim($nomor, '0') }}
-                      </option>
-                    @endforeach
-                  </select>
-                  @endrole
+                  <label for="rt"><code>*</code> RT</label>
+                  <input type="text" readonly class="form-control" value="RT {{ $rt->nomor }}" id="rt">
+                  <input type="hidden" name="rt_id" value="{{ $rt->id }}">
                 </div>
 
                 <div class="form-group col-md-6">
-                  <label for="nik">NIK <code>*</code></label>
+                  <label for="nik"><code>*</code> NIK</label>
                   <input type="text" class="form-control" id="nik" name="nik" maxlength="16"
                     value="{{ $pendudukDomisili->nik }}">
                 </div>
@@ -60,12 +45,12 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="nama">Nama Lengkap <code>*</code></label>
+                  <label for="nama"><code>*</code> Nama Lengkap</label>
                   <input type="text" class="form-control" id="nama" name="nama" maxlength="100"
                     value="{{ $pendudukDomisili->nama }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="tempat_lahir">Tempat Lahir <code>*</code></label>
+                  <label for="tempat_lahir"><code>*</code> Tempat Lahir</label>
                   <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
                     value="{{ $pendudukDomisili->tempat_lahir }}">
                 </div>
@@ -73,12 +58,12 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="tanggal_lahir">Tanggal Lahir <code>*</code></label>
+                  <label for="tanggal_lahir"><code>*</code> Tanggal Lahir</label>
                   <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir"
                     value="{{ $pendudukDomisili->tanggal_lahir->format('Y-m-d') }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="jenis_kelamin">Jenis Kelamin <code>*</code></label>
+                  <label for="jenis_kelamin"><code>*</code> Jenis Kelamin</label>
                   <select name="jenis_kelamin" id="jenis_kelamin" class="custom-select">
                     <option selected disabled hidden>--Pilih Jenis Kelamin--</option>
                     <option {{ $pendudukDomisili->jenis_kelamin === 'l' ? 'selected' : '' }} value="l">Laki-Laki
@@ -91,7 +76,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="agama">Agama <code>*</code></label>
+                  <label for="agama"><code>*</code> Agama</label>
                   <select name="agama_id" id="agama" class="form-control select2">
                     <option selected disabled hidden>--Pilih Agama--</option>
                     @foreach ($agama as $id => $nama)
@@ -103,7 +88,7 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="status_perkawinan">Status Perkawinan <code>*</code></label>
+                  <label for="status_perkawinan"><code>*</code> Status Perkawinan</label>
                   <select name="status_perkawinan_id" id="status_perkawinan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Status Perkawinan--</option>
                     @foreach ($statusPerkawinan as $id => $nama)
@@ -118,7 +103,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="pekerjaan">Pekerjaan <code>*</code></label>
+                  <label for="pekerjaan"><code>*</code> Pekerjaan</label>
                   <select name="pekerjaan_id" id="pekerjaan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Pekerjaan--</option>
                     @foreach ($pekerjaan as $id => $nama)
@@ -130,7 +115,7 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="kewarganegaraan">Kewarganegaraan</label>
+                  <label for="kewarganegaraan"><code>*</code> Kewarganegaraan</label>
                   <select name="kewarganegaraan" id="kewarganegaraan" class="form-control">
                     <option {{ old('kewarganegaraan') === '1' ? 'selected' : '' }} value="1">Warga Negara Indonesia
                     </option>
@@ -242,26 +227,6 @@
         reader.readAsDataURL(file);
         $('.img__ktp__preview').removeClass('d-none');
       }
-    });
-
-    $('#rt').on('change', function(e) {
-      const rtId = e.target.value;
-      $.ajax({
-        url: '/ajax/keluarga/' + rtId,
-        type: 'get',
-        success: function(data) {
-          $('#keluarga').empty();
-          $('#keluarga').append('<option selected disabled hidden>--Pilih No. Kartu Keluarga--</option>');
-          $.each(data, function(i, v) {
-            $('#keluarga').append(`<option value="${v.id}">${v.nomor}</option>`);
-          });
-          $('#keluarga').removeAttr('disabled');
-        },
-        error: function(error) {
-          console.log(error)
-        }
-      })
-
     });
   </script>
 @endpush

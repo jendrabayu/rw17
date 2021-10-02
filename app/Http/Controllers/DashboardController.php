@@ -36,7 +36,7 @@ class DashboardController extends Controller
             ];
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['rw', 'admin'])) {
             $data = [
                 'total_pengguna' => User::count(),
                 'total_penduduk' => Penduduk::count(),

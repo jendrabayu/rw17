@@ -41,7 +41,7 @@ class PendudukMeninggalDataTable extends DataTable
             $pendudukMeninggal->where('rt_id', $user->rt->id);
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $pendudukMeninggal->when(request()->has('rt'), function ($q) {
                 return $q->where('rt_id', request()->get('rt'));
             });

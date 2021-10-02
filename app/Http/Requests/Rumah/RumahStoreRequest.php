@@ -24,17 +24,15 @@ class RumahStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'rt_id' => ['required', 'numeric',  'exists:rt,id'],
-            'alamat' => ['required', 'string',  'max:255'],
-            'nomor' => ['required', 'string',  'max:20'],
-            'tipe_bangunan' => ['nullable', 'string', 'max:20'],
-            'penggunaan_bangunan' => ['nullable', 'string', 'max:255'],
-            'kontruksi_bangunan' => ['nullable', 'string', 'max:255'],
-            'keterangan' => ['nullable', 'string', 'max:255'],
-            'keluarga_id' => ['nullable', 'array'],
-            'keluarga_id.*' => ['numeric', 'exists:keluarga,id', 'unique:rumah_keluarga,keluarga_id'],
-            'penduduk_domisili_id' => ['nullable', 'array'],
-            'penduduk_domisili_id.*' => ['numeric', 'exists:penduduk_domisili,id'],
+            'rt_id' => 'required|numeric|exists:rt,id',
+            'alamat' => 'required|string|max:255',
+            'nomor' => 'required|string|max:20',
+            'penggunaan_bangunan_id' => 'required|numeric|exists:penggunaan_bangunan,id',
+            'keterangan' => 'nullable|string|max:255',
+            'keluarga_id' => 'nullable|array',
+            'keluarga_id.*' => 'numeric|exists:keluarga,id|unique:rumah_keluarga,keluarga_id',
+            'penduduk_domisili_id' => 'nullable|array',
+            'penduduk_domisili_id.*' => 'numeric|exists:penduduk_domisili,id',
         ];
     }
 
@@ -45,7 +43,8 @@ class RumahStoreRequest extends FormRequest
             'nomor' => 'nomor rumah',
             'keluarga_id' => 'keluarga',
             'keluarga_id.*' => 'keluarga',
-            'penduduk_domisili_id' => 'Penduduk Domisili'
+            'penduduk_domisili_id' => 'Penduduk Domisili',
+            'penggunaan_bangunan_id' => 'Penggunaan Bangunan'
         ];
     }
 }

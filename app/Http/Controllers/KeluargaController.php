@@ -19,21 +19,12 @@ class KeluargaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, KeluargaDataTable $keluargaDataTable)
+    public function index(KeluargaDataTable $keluargaDataTable)
     {
-        $user = auth()->user();
-
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
-        $fileTypes = Keluarga::FILE_TYPES;
-
-        return $keluargaDataTable->render('keluarga.index', compact('rt', 'fileTypes'));
+        return $keluargaDataTable->render('keluarga.index', [
+            'fileTypes' => Keluarga::FILE_TYPES,
+            'rt' => auth()->user()->rt->rw->rt->pluck('nomor', 'id'),
+        ]);
     }
 
     /**
@@ -43,17 +34,9 @@ class KeluargaController extends Controller
      */
     public function create()
     {
-        $user = auth()->user();
-
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
-        return view('keluarga.create', compact('rt'));
+        return view('keluarga.create', [
+            'rt' => auth()->user()->rt
+        ]);
     }
 
     /**
@@ -119,15 +102,10 @@ class KeluargaController extends Controller
             abort(404);
         }
 
-        if ($user->hasRole('rt')) {
-            $rt = $user->rt;
-        }
-
-        if ($user->hasRole('rw')) {
-            $rt = $user->rt->rw->rt->pluck('nomor', 'id');
-        }
-
-        return view('keluarga.edit', compact('keluarga', 'rt'));
+        return view('keluarga.edit', [
+            'keluarga' => $keluarga,
+            'rt' => $user->rt
+        ]);
     }
 
     /**
@@ -178,7 +156,7 @@ class KeluargaController extends Controller
             $filename = 'Keluarga_RT_' . $user->rt->nomor;
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $keluarga->when($request->has('rt'), function ($q) {
                 return $q->whereRtId(request()->get('rt'));
             });

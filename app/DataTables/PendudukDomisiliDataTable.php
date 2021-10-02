@@ -47,7 +47,7 @@ class PendudukDomisiliDataTable extends DataTable
             $pendudukDomisili->whereRtId($user->rt_id)->get();
         }
 
-        if ($user->hasRole('rw')) {
+        if ($user->hasRole(['admin', 'rw'])) {
             $pendudukDomisili->when(request()->has('rt'), function ($q) {
                 return $q->whereRtId(request()->get('rt'));
             });

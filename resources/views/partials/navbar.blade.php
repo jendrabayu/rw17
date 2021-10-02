@@ -12,7 +12,8 @@ $user = auth()->user();
   <li class="dropdown"><a href="#" data-toggle="dropdown"
       class="nav-link dropdown-toggle nav-link-lg nav-link-user">
       <img alt="image" src="{{ $user->avatar_url }}" class="rounded-circle mr-1 user__avatar">
-      <div class="d-sm-none d-lg-inline-block"> {{ Str::words($user->name, 2, '') }} [{{ Str::upper($user->role) }}]
+      <div class="d-sm-none d-lg-inline-block"> {{ greeting(Str::words($user->name, 2, '')) }}
+        [{{ Str::upper($user->role) }}]
       </div>
     </a>
     <div class="dropdown-menu dropdown-menu-right">

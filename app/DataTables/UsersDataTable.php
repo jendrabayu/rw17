@@ -38,13 +38,7 @@ class UsersDataTable extends DataTable
      */
     public function query(User $user)
     {
-        $user = $user->newQuery()->with('rt');
-        $user->when(request()->has('role'), function ($q) {
-            return $q->whereHas('roles', function ($q) {
-                $q->where('name', request()->get('role'));
-            });
-        });
-        return $user;
+        return $user->newQuery()->with('rt');
     }
 
     /**
