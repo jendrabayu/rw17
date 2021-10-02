@@ -27,9 +27,7 @@
               <table class="table table-sm table-striped table-bordered" id="detail-penduduk-table">
                 <tr>
                   <th>Nomor Kartu Keluarga</th>
-                  <td><a
-                      href="{{ route('keluarga.show', $penduduk->keluarga->id) }}">{{ $penduduk->keluarga->nomor }}</a>
-                  </td>
+                  <td>{{ $penduduk->keluarga->nomor }}</td>
                 </tr>
                 <tr>
                   <th>NIK</th>
@@ -122,7 +120,7 @@
                 </tr>
               </table>
             </div>
-            <p class="text-muted text-right mt-3 mb-0">Terakhir diupdate pada
+            <p class="text-muted text-right mt-3 mb-0">Terakhir diubah pada
               {{ $penduduk->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A') }}
             </p>
           </div>

@@ -19,12 +19,6 @@
   <div class="section-body">
     <div class="row">
       <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
         <div class="card card-primary">
           <div class="card-header">
             <h4> {{ $keluarga->kepala_keluarga ? 'Keluarga ' . $keluarga->kepala_keluarga->nama : 'Detail Keluarga' }}
@@ -32,7 +26,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-bordered table-sm table-striped">
+              <table class="table table-bordered table-striped table-sm">
                 <tr>
                   <th>Kepala Keluarga</th>
                   <td>
@@ -80,9 +74,8 @@
                 </tr>
               </table>
             </div>
-
-            <div class="table-responsive mt-3">
-              <table class="table table-sm table-striped table-bordered">
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
                     <th>NIK</th>
@@ -108,7 +101,7 @@
                 <tbody>
                   @foreach ($keluarga->penduduk as $penduduk)
                     <tr>
-                      <td><a href="{{ route('penduduk.show', $penduduk->id) }}">{{ $penduduk->nik }}</a></td>
+                      <td>{{ $penduduk->nik }}</td>
                       <td>{{ $penduduk->nama }}</td>
                       <td>{{ $penduduk->tempat_lahir }}</td>
                       <td>{{ $penduduk->tanggal_lahir }}</td>
@@ -131,7 +124,7 @@
                 </tbody>
               </table>
             </div>
-            <p class="text-muted text-right mt-3 mb-0">Terakhir diupdate pada
+            <p class="text-muted text-right mt-3 mb-0">Terakhir diubah pada
               {{ $keluarga->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A') }}
             </p>
           </div>

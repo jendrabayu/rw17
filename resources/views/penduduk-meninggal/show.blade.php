@@ -24,7 +24,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table table-sm table-striped table-bordered" id="detail-penduduk-table">
+              <table class="table table-bordered table-striped table-sm" id="detail-penduduk-table">
                 <tr>
                   <th>NIK</th>
                   <td>{{ $pendudukMeninggal->nik }}</td>
@@ -127,7 +127,7 @@
                 </tr>
               </table>
             </div>
-            <p class="text-muted text-right mt-3">Terakhir diupdate pada
+            <p class="text-muted text-right mt-3">Terakhir diubah pada
               {{ $pendudukMeninggal->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A') }}
             </p>
           </div>
