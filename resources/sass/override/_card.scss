@@ -50,7 +50,7 @@
             padding: 2px 15px;
 
             &:not(.note-btn) {
-                border-radius: 30px;
+                // border-radius: 30px;
             }
 
             &:hover {
@@ -80,9 +80,9 @@
                 margin-left: auto;
 
                 .btn {
-                    margin: 2.5px;
+                    margin: 0.15rem;
                     font-size: 12px;
-                    border-radius: 30px !important;
+                    // border-radius: 30px !important;
                     padding-left: 13px !important;
                     padding-right: 13px !important;
 

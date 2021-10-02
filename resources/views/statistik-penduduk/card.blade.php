@@ -49,7 +49,8 @@
           <div class="text-center loading">Loading ...</div>
           <div id="chart-jenis-kelamin"></div>
         </div>
-        <div class="tab-pane fade" id="tabs-jenis-kelamin-2" role="tabpanel" aria-labelledby="tabs-jenis-kelamin-2-tab">
+        <div class="tab-pane fade" id="tabs-jenis-kelamin-2" role="tabpanel"
+          aria-labelledby="tabs-jenis-kelamin-2-tab">
           <div class="text-center loading">Loading ...</div>
           <div id="chart-jenis-kelamin-bar"></div>
         </div>

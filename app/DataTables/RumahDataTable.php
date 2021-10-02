@@ -22,10 +22,14 @@ class RumahDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('keluarga', function ($rumah) {
-                return $rumah->keluarga->map(fn ($item) => "<a href=\"route('keluarga.show', $item->id)\">$item->nomor</a><br>")->join('');
+                return $rumah->keluarga->map(function ($item) {
+                    return '<a href="' . route('keluarga.show', $item->id) . '">' . $item->nomor . '</a><br>';
+                })->join('');
             })
             ->addColumn('warga_domisili', function ($rumah) {
-                return $rumah->pendudukDomisili->map(fn ($item) => "<a href=\"route('penduduk-domisili.show', $item->id)\">$item->nik</a><br>")->join('');
+                return $rumah->pendudukDomisili->map(function ($item) {
+                    return '<a href="' . route('penduduk-domisili.show', $item->id) . '">' . $item->nik . '</a><br>';
+                })->join('');
             })
             ->addColumn('action', 'rumah.action')
             ->rawColumns(['action', 'keluarga', 'warga_domisili']);

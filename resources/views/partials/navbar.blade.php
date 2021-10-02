@@ -13,7 +13,6 @@ $user = auth()->user();
       class="nav-link dropdown-toggle nav-link-lg nav-link-user">
       <img alt="image" src="{{ $user->avatar_url }}" class="rounded-circle mr-1 user__avatar">
       <div class="d-sm-none d-lg-inline-block"> {{ greeting(Str::words($user->name, 2, '')) }}
-        [{{ Str::upper($user->role) }}]
       </div>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
@@ -23,8 +22,7 @@ $user = auth()->user();
       <a href="{{ route('password') }}" class="dropdown-item has-icon">
         <i class="fas fa-key"></i> Ubah Password
       </a>
-      <div class="dropdown-divider"></div>
-      <a href="javascript;" class="dropdown-item has-icon text-danger" id="btn-logout">
+      <a href="#" class="dropdown-item has-icon text-danger btn-logout">
         <i class="fas fa-sign-out-alt"></i> Logout
         <form action="{{ route('logout') }}" method="POST" id="form-logout">@csrf</form>
       </a>

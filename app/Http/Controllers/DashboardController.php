@@ -22,6 +22,7 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         $userRt = $user->rt;
+        
 
         if ($user->hasRole('rt')) {
             $data = [

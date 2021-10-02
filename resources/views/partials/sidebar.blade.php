@@ -22,34 +22,45 @@
   @endrole
   <li class="{{ request()->routeIs('rumah.index') || request()->is('rumah/*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('rumah.index') }}" data-toggle="tooltip" data-placement="right"
-      title="Kelola Rumah"><i class="fas fa-tasks"></i>
-      <span>Kelola Rumah</span>
+    title="@role('rt') Kelola Rumah @else Rumah @endrole">
+      <i class="fas fa-tasks"></i>
+    <span>@role('rt') Kelola Rumah @else Rumah @endrole</span>
     </a>
   </li>
   <li class="{{ request()->routeIs('keluarga.index') || request()->is('keluarga/*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('keluarga.index') }}" data-toggle="tooltip" data-placement="right"
-      title="Kelola Keluarga"><i class="fas fa-tasks"></i></i>
-      <span>Kelola Keluarga</span>
+    title="@role('rt') Kelola Keluarga @else Keluarga @endrole">
+      <i class="fas fa-tasks"></i></i>
+    <span>@role('rt') Kelola Keluarga @else Keluarga @endrole </span>
     </a>
   </li>
   <li class="{{ request()->routeIs('penduduk.index') || request()->is('penduduk/*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('penduduk.index') }}" data-toggle="tooltip" data-placement="right"
-      title="Kelola Penduduk"><i class="fas fa-tasks"></i>
-      <span>Kelola Penduduk</span>
+    title="@role('rt') Kelola Penduduk @else Penduduk @endrole">
+      <i class="fas fa-tasks"></i>
+    <span>@role('rt') Kelola Penduduk @else Penduduk @endrole </span>
     </a>
   </li>
   <li
     class="{{ request()->routeIs('penduduk-domisili.index') || request()->is('penduduk-domisili/*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('penduduk-domisili.index') }}" data-toggle="tooltip"
-      data-placement="right" title="Kelola Penduduk Domisili"><i class="fas fa-tasks"></i>
-      <span>Kelola Pend. Domisili</span>
+    data-placement="right" title="@role('rt') Kelola Penduduk Domisili @else Penduduk Domisili @endrole">
+      <i class="fas fa-tasks"></i>
+    <span>@role('rt') Kelola Pend. Domisili @else Penduduk Domisili @endrole</span>
     </a>
   </li>
   <li
     class="{{ request()->routeIs('penduduk-meninggal.index') || request()->is('penduduk-meninggal/*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('penduduk-meninggal.index') }}" data-toggle="tooltip"
-      data-placement="right" title="Kelola Penduduk Meninggal"><i class="fas fa-tasks"></i>
-      <span>Kelola Pend. Meninggal</span>
+    data-placement="right" title="@role('rt') Kelola Penduduk Meninggal @else Penduduk Meninggal @endrole">
+      <i class="fas fa-tasks"></i>
+    <span>@role('rt') Kelola Pend. Meninggal @else Penduduk Meninggal @endrole</span>
     </a>
   </li>
+  <div class="mt-3 mb-3 p-3 hide-sidebar-mini">
+    <a href="javascript:;" class="btn btn-outline-danger btn-lg btn-block btn-icon-split btn-logout"
+      data-toggle="tooltip" data-placement="right" title="Logout Akun">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
 </ul>

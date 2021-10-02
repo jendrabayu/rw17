@@ -17,9 +17,9 @@
           <div class="card-body">
             <ul class="nav nav-pills">
               <li class="nav-item">
-                <a class="nav-link {{ !request()->get('rt') ? 'active' : '' }}"
-                  href="{{ route('keluarga.index') }}">Semua
-                  RT</a>
+                <a class="nav-link {{ !request()->get('rt') ? 'active' : '' }}" href="{{ route('keluarga.index') }}">
+                  Semua RT
+                </a>
               </li>
               @foreach ($rt as $id => $nomor)
                 <li class="nav-item">
@@ -35,11 +35,7 @@
     </div>
     @endrole
 
-    <div class="row">
-      <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
+    @include('partials.alerts')
 
     <div class="row">
       <div class="col-12">
@@ -47,18 +43,12 @@
           <div class="card-header">
             <h4>Keluarga</h4>
             <div class=" card-header-action">
-              <div class="d-inline mx-1">
-                <button class="btn btn-success btn-icon icon-left" type="button" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  <i class="fas fa-file-export"></i> Exports
-                </button>
-                <div class="dropdown-menu">
-                  @foreach ($fileTypes as $type)
-                    <a class="dropdown-item"
-                      href="{{ route('exports.keluarga', array_merge(['file_type' => $type], request()->all())) }}">{{ Str::upper($type) }}</a>
-                  @endforeach
-                </div>
-              </div>
+              <x-export-button>
+                @foreach ($fileTypes as $type)
+                  <a class="dropdown-item"
+                    href="{{ route('exports.keluarga', array_merge(['file_type' => $type], request()->all())) }}">{{ Str::upper($type) }}</a>
+                @endforeach
+              </x-export-button>
               @role('rt')
               <a href="{{ route('keluarga.create') }}" class="btn btn-primary btn-icon icon-left">
                 <i class="fas fa-plus-circle"></i> Tambah

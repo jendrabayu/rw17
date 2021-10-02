@@ -7,7 +7,7 @@
 @section('content')
   <div class="section-header">
     <div class="section-header-back">
-      <a href="{{ route('penduduk-domisili.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+      <a href="{{ url()->previous() }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
     <h1>Detail Penduduk Domisili</h1>
     <div class="section-header-breadcrumb">
@@ -20,7 +20,7 @@
       <div class="col-12">
         <div class="card card-primary">
           <div class="card-header">
-            <h4>Detail Penduduk Domisili</h4>
+            <h4>{{ $pendudukDomisili->nama }}</h4>
           </div>
           <div class="card-body">
             <div class="table-responsive">

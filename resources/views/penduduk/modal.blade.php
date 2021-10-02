@@ -123,6 +123,42 @@
   </div>
 </div>
 
+<div class="modal fade" id="modalImport" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Impor Penduduk</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-light" role="alert">
+          Lihat persyaratan struktur data <strong><a target="_blank"
+              href="https://docs.google.com/spreadsheets/d/1vuwvKnicy-WzHWznI6B_hQrk08D-6NeNE88UGCYbl8I/edit?usp=sharing">disini.</a></strong>
+        </div>
+        <form action="{{ route('import_penduduk') }}" method="POST" enctype="multipart/form-data">
+          @csrf
+          <div class="form-group">
+            <label for="file_penduduk">File Penduduk</label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="file_penduduk" name="file_penduduk"
+                accept=".xlsx, .scv, .xls">
+              <label class="custom-file-label" for="file_penduduk">Choose file</label>
+            </div>
+            <small class="form-text text-muted">Ukuran maksimal 3MB, format: XLSX, CSV dan XLS</small>
+          </div>
+
+          <div class="form-group text-right mb-0">
+            <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 @push('scripts')
   <script>
     $('input#age_min').on('input', function(e) {

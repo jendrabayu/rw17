@@ -45,17 +45,12 @@
           <div class="card-header">
             <h4>Penduduk Domisili</h4>
             <div class="card-header-action">
-              <div class="d-inline mx-1">
-                <button class="btn btn-success btn-icon icon-left" type="button" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false"><i class="fas fa-file-export"></i>
-                  Exports</button>
-                <div class="dropdown-menu">
-                  @foreach ($fileTypes as $type)
-                    <a class="dropdown-item"
-                      href="{{ route('exports.penduduk_domisili', array_merge(['file_type' => $type], request()->all())) }}">{{ Str::upper($type) }}</a>
-                  @endforeach
-                </div>
-              </div>
+              <x-export-button>
+                @foreach ($fileTypes as $type)
+                  <a class="dropdown-item"
+                    href="{{ route('exports.penduduk_domisili', array_merge(['file_type' => $type], request()->all())) }}">{{ Str::upper($type) }}</a>
+                @endforeach
+              </x-export-button>
               @role('rt')
               <a href="{{ route('penduduk-domisili.create') }}" class="btn btn-primary btn-icon icon-left"><i
                   class="fas fa-plus-circle"></i> Tambah</a>
@@ -71,8 +66,6 @@
       </div>
     </div>
   </div>
-
-  <form action="" id="form-delete" hidden method="POST">@csrf @method('DELETE')</form>
 @endsection
 
 

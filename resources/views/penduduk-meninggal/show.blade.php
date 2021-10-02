@@ -20,7 +20,7 @@
       <div class="col-12">
         <div class="card card-primary">
           <div class="card-header">
-            <h4>Detail Penduduk Meninggal</h4>
+            <h4>{{ $pendudukMeninggal->nama }}</h4>
           </div>
           <div class="card-body">
             <div class="table-responsive">

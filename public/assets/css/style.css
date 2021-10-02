@@ -1274,9 +1274,6 @@ select.form-control:not([size]):not([multiple]) {
   margin-top: 1px;
   padding: 2px 15px;
 }
-.card .card-header .btn:not(.note-btn) {
-  border-radius: 30px;
-}
 .card .card-header .btn:hover {
   box-shadow: none;
 }
@@ -1301,9 +1298,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 .card .card-header h4 + .card-header-action .btn,
 .card .card-header h4 + .card-header-form .btn {
-  margin: 2.5px;
+  margin: 0.15rem;
   font-size: 12px;
-  border-radius: 30px !important;
   padding-left: 13px !important;
   padding-right: 13px !important;
 }

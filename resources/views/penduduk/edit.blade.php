@@ -34,7 +34,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="rt"><code>*</code> RT</label>
-                  <input type="text" readonly class="form-control" value="{{ $rt->nomo }}" id="rt">
+                  <input type="text" readonly class="form-control" value="{{ $rt->nomor }}" id="rt">
                   <input type="text" name="rt_id" value="{{ $rt->id }}" hidden>
                 </div>
                 <div class="form-group col-md-6">
