@@ -12,6 +12,7 @@ use App\Models\Pekerjaan;
 use App\Models\Pendidikan;
 use App\Models\PendudukDomisili;
 use App\Models\Rt;
+use App\Models\Rumah;
 use App\Models\StatusHubunganDalamKeluarga;
 use App\Models\StatusPerkawinan;
 use Illuminate\Http\Request;
@@ -47,6 +48,7 @@ class PendudukDomisiliController extends Controller
         $statusPerkawinan = StatusPerkawinan::all()->pluck('nama', 'id');
         $pendidikan = Pendidikan::all()->pluck('nama', 'id');
         $statusHubunganDalamKeluarga = StatusHubunganDalamKeluarga::all()->pluck('nama', 'id');
+        $rumah = $rt->rumah->pluck('alamat', 'id');
 
         return view('penduduk-domisili.create', compact(
             'rt',
@@ -55,7 +57,8 @@ class PendudukDomisiliController extends Controller
             'pekerjaan',
             'statusPerkawinan',
             'pendidikan',
-            'statusHubunganDalamKeluarga'
+            'statusHubunganDalamKeluarga',
+            'rumah'
         ));
     }
 
@@ -114,6 +117,7 @@ class PendudukDomisiliController extends Controller
         $statusPerkawinan = StatusPerkawinan::all()->pluck('nama', 'id');
         $pendidikan = Pendidikan::all()->pluck('nama', 'id');
         $statusHubunganDalamKeluarga = StatusHubunganDalamKeluarga::all()->pluck('nama', 'id');
+        $rumah = $rt->rumah->pluck('alamat', 'id');
 
         return view('penduduk-domisili.edit', compact(
             'rt',
@@ -123,7 +127,8 @@ class PendudukDomisiliController extends Controller
             'statusPerkawinan',
             'pendidikan',
             'statusHubunganDalamKeluarga',
-            'pendudukDomisili'
+            'pendudukDomisili',
+            'rumah'
         ));
     }
 

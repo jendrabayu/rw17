@@ -129,6 +129,25 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
+                  <label for="alamat">Alamat <code>*</code></label>
+                  <textarea name="alamat" id="alamat" class="form-control">{{ $pendudukDomisili->alamat }}</textarea>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="rumah">Rumah</label>
+                  <select name="rumah_id" id="rumah" class="form-control select2">
+                    <option selected disabled hidden>--Pilih Alamat Rumah--</option>
+                    @foreach ($rumah as $id => $alamat)
+                      <option
+                        {{ !is_null($pendudukDomisili->rumah) && $pendudukDomisili->rumah->id === $id ? 'selected' : '' }}
+                        value="{{ $id }}">
+                        {{ $alamat }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-6">
                   <label for="pendidikan">Pendidikan</label>
                   <select name="pendidikan_id" id="pendidikan" class="form-control select2">
                     <option selected disabled hidden>--Pilih Pendidikan--</option>
@@ -155,20 +174,12 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="alamat">Alamat <code>*</code></label>
-                  <textarea name="alamat" id="alamat" class="form-control">{{ $pendudukDomisili->alamat }}</textarea>
-                </div>
-
-                <div class="form-group col-md-6">
                   <label for="alamat_asal">Alamat Asal</label>
                   <textarea name="alamat_asal" id="alamat_asal"
                     class="form-control">{{ $pendudukDomisili->alamat_asal }}</textarea>
                 </div>
-              </div>
-
-              <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="no_hp">No. Hp / WhatsApp</label>
+                  <label for="no_hp">No. Hp/WhatsApp</label>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <div class="input-group-text">+62</div>
@@ -177,20 +188,22 @@
                       value="{{ $pendudukDomisili->no_hp }}" maxlength="13">
                   </div>
                 </div>
+              </div>
+
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="email">Email</label>
                   <input type="email" name="email" id="email" class="form-control"
                     value="{{ $pendudukDomisili->email }}">
                 </div>
-              </div>
-
-              <div class="form-group">
-                <label for="foto_ktp">Foto KTP</label>
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png">
-                  <label class="custom-file-label" for="foto_ktp">Choose file</label>
+                <div class="form-group col-md-6">
+                  <label for="foto_ktp">Foto KTP</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="foto_ktp" accept=".jpg, .jpeg, .png">
+                    <label class="custom-file-label" for="foto_ktp">Choose file</label>
+                  </div>
+                  <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG atau PNG</small>
                 </div>
-                <small class="form-text text-muted">Ukuran maksimal 1MB, format: JPG,JPEG atau PNG</small>
               </div>
 
               @if ($pendudukDomisili->foto_ktp)

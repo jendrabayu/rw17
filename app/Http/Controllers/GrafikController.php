@@ -7,7 +7,6 @@ use App\Models\Darah;
 use App\Models\Pekerjaan;
 use App\Models\Pendidikan;
 use App\Models\Penduduk;
-use App\Models\Rt;
 use App\Models\StatusHubunganDalamKeluarga;
 use App\Models\StatusPerkawinan;
 use Illuminate\Http\Request;
@@ -15,10 +14,6 @@ use Illuminate\Support\Carbon;
 
 class GrafikController extends Controller
 {
-    public function index()
-    {
-    }
-
     public function show(Request $request)
     {
         $user = auth()->user();
@@ -111,7 +106,7 @@ class GrafikController extends Controller
                             $q->where('id', $request->get('rt'))->where('rw_id', $user->rt->rw->id);
                         });
                     })->whereDarahId($item->id)->count()
-                ];
+                ];              
             }
         }
 
@@ -156,7 +151,7 @@ class GrafikController extends Controller
     {
         $data = [];
         $perkawinan = StatusPerkawinan::all();
-
+                                    
         if ($user->hasRole('rt')) {
             foreach ($perkawinan as $item) {
                 $data[] = [
@@ -235,6 +230,8 @@ class GrafikController extends Controller
                 ];
             }
         }
+
+        
 
         if ($user->hasRole(['admin', 'rw'])) {
             foreach ($pendidikan as $item) {

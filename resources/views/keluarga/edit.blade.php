@@ -48,7 +48,23 @@
                   <label for="alamat"><code>*</code> Alamat</label>
                   <textarea class="form-control" id="alamat" name="alamat">{{ $keluarga->alamat }}</textarea>
                 </div>
+                <div class="form-group col-md-6">
+                  <label for="rumah">Rumah</label>
+                  <select name="rumah_id" id="rumah" class="form-control select2">
+                    @php
+                      $myHouse = $keluarga->rumah->first();
+                    @endphp
+                    <option selected disabled hidden>--Pilih Rumah--</option>
+                    @foreach ($rumah as $id => $alamat)
+                      <option {{ !is_null($myHouse) && $myHouse->id === $id ? 'selected' : '' }}
+                        value="{{ $id }}">{{ $alamat }}
+                      </option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
 
+              <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="foto_kk">Foto Kartu Keluarga</label>
                   <div class="custom-file">

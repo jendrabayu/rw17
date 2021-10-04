@@ -8,7 +8,10 @@ use App\Http\Requests\Keluarga\KeluargaStoreRequest;
 use App\Http\Requests\Keluarga\KeluargaUpdateRequest;
 use App\Models\Keluarga;
 use App\Models\Rt;
+use App\Models\Rumah;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -35,7 +38,8 @@ class KeluargaController extends Controller
     public function create()
     {
         return view('keluarga.create', [
-            'rt' => auth()->user()->rt
+            'rt' => auth()->user()->rt,
+            'rumah' => auth()->user()->rt->rumah->pluck('alamat', 'id')
         ]);
     }
 
@@ -48,11 +52,12 @@ class KeluargaController extends Controller
     public function store(KeluargaStoreRequest $request)
     {
         $validated = $request->validated();
+
         if ($request->hasFile('foto_kk')) {
             $validated['foto_kk'] = $request->file('foto_kk')->store('kartu_keluarga', 'public');
         }
-
-        Keluarga::create($validated);
+        $keluarga = Keluarga::create($validated);
+        $keluarga->rumah()->attach($request->rumah_id);
 
         return back()->withSuccess('Berhasil menambahkan keluarga');
     }
@@ -104,7 +109,8 @@ class KeluargaController extends Controller
 
         return view('keluarga.edit', [
             'keluarga' => $keluarga,
-            'rt' => $user->rt
+            'rt' => $user->rt,
+            'rumah' => $user->rt->rumah->pluck('alamat', 'id')
         ]);
     }
 
@@ -124,6 +130,7 @@ class KeluargaController extends Controller
         }
 
         $keluarga->update($validated);
+        $keluarga->rumah()->sync($request->rumah_id);
 
         return back()->withSuccess('Keluarga berhasil diupdate');
     }

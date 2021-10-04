@@ -14,7 +14,6 @@
   <link rel="icon" type="image/png" href="{{ asset('assets/img/lambang_kab_jember.ico') }}" />
   <link rel="apple-touch-icon" href="{{ asset('assets/img/lambang_kab_jember.ico') }}">
 
-
   <!-- General CSS Files -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
     integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
@@ -30,7 +29,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
     integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">

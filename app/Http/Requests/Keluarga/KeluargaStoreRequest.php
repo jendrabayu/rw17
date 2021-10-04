@@ -27,7 +27,8 @@ class KeluargaStoreRequest extends FormRequest
             'rt_id' => ['required', 'numeric', 'exists:rt,id'],
             'nomor' => ['required', 'numeric',  'digits:16', 'starts_with:3509', 'unique:keluarga,nomor'],
             'alamat' => ['required', 'string',  'max:255'],
-            'foto_kk' => ['nullable', 'mimes:jpg,jpeg,png',  'max:1024']
+            'foto_kk' => ['nullable', 'mimes:jpg,jpeg,png',  'max:1024'],
+            'rumah_id' => ['nullable', 'numeric', 'exists:rumah,id']
         ];
     }
 
@@ -36,7 +37,8 @@ class KeluargaStoreRequest extends FormRequest
         return [
             'rt_id' => 'RT',
             'nomor' => 'nomor kartu keluarga',
-            'foto_kk' => 'foto kartu keluarga'
+            'foto_kk' => 'foto kartu keluarga',
+            'rumah_id' => 'rumah'
         ];
     }
 }

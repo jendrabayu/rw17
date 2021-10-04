@@ -10,11 +10,7 @@
   </div>
 
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
+    @include('partials.alerts')
 
     <div class="row">
       <div class="col-12">
@@ -27,22 +23,22 @@
               @csrf
               @method('PUT')
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="current_password">Password Sekarang <code>*</code></label>
+                <label class="col-sm-3 col-form-label" for="current_password"><code>*</code> Password Sekarang</label>
                 <div class="col-sm-9">
                   <input type="password" class="form-control" id="current_password" name="current_password">
                 </div>
               </div>
 
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="password">Password Baru <code>*</code></label>
+                <label class="col-sm-3 col-form-label" for="password"><code>*</code> Password Baru</label>
                 <div class="col-sm-9">
                   <input type="password" class="form-control" id="password" name="password">
                 </div>
               </div>
 
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" for="password_confirmation">Kondirmasi Password Baru
-                  <code>*</code></label>
+                <label class="col-sm-3 col-form-label" for="password_confirmation"><code>*</code> Konfirmasi Password Baru
+                </label>
                 <div class="col-sm-9">
                   <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
                 </div>

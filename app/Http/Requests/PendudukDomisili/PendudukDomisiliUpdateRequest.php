@@ -40,7 +40,8 @@ class PendudukDomisiliUpdateRequest extends FormRequest
             'alamat_asal' => ['nullable', 'string', 'max:255'],
             'foto_ktp' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'no_hp'  => ['nullable', 'string',  'max:15', 'starts_with:+62,62,08'],
-            'email' =>  ['nullable', 'email', 'max:100']
+            'email' =>  ['nullable', 'email', 'max:100'],
+            'rumah_id' => ['nullable', 'numeric', 'exists:rumah,id']
         ];
     }
 
@@ -54,7 +55,8 @@ class PendudukDomisiliUpdateRequest extends FormRequest
             'status_perkawinan_id' => 'status perkawinan',
             'pendidikan_id' => 'pendidikan',
             'nik' => 'NIK',
-            'no_hp'  => 'No. Hp / WhatsApp',
+            'no_hp'  => 'No. Hp/WhatsApp',
+            'rumah_id' => 'Rumah'
         ];
     }
 }

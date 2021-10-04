@@ -16,11 +16,7 @@
     </div>
   </div>
   <div class="section-body">
-    <div class="row">
-      <div class="col-12">
-        @include('partials.alerts')
-      </div>
-    </div>
+    @include('partials.alerts')
 
     <div class="row">
       <div class="col-12">
@@ -33,22 +29,22 @@
               @csrf
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="name">Nama <code>*</code></label>
+                  <label for="name"><code>*</code> Nama</label>
                   <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="username">Username <code>*</code></label>
+                  <label for="username"><code>*</code> Username</label>
                   <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="email">Email <code>*</code></label>
+                  <label for="email"><code>*</code> Email</label>
                   <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="role">Role <code>*</code></label>
+                  <label for="role"><code>*</code> Role</label>
                   <select class="custom-select" name="role" id="role">
                     <option selected disabled hidden>--Pilih Role--</option>
                     @foreach ($roles as $id => $role)
@@ -61,7 +57,7 @@
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="rt">RT <code>*</code></label>
+                  <label for="rt"><code>*</code> RT</label>
                   <select class="form-control select2" name="rt_id" id="rt">
                     <option selected disabled hidden>--Pilih RT--</option>
                     @foreach ($rt as $id => $rt)
@@ -71,14 +67,14 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="password">Password <code>*</code></label>
+                  <label for="password"><code>*</code> Password</label>
                   <input type="password" class="form-control" id="password" name="password">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="no_hp">No. Hp / WhatsApp</label>
+                  <label for="no_hp">No. Hp/WhatsApp</label>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <div class="input-group-text">+62</div>
