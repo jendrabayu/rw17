@@ -170,7 +170,7 @@ class Penduduk extends Model
             $age_max =  request()->get('age_max');
             if ($age_min && $age_max && $age_min <= $age_max) {
                 $age_min = Carbon::now()->subYears($age_min)->format('Y-m-d');
-                $age_max = Carbon::now()->subYears($age_max)->format('Y-m-d');
+                $age_max = Carbon::now()->subYears($age_max + 1)->format('Y-m-d');
                 return $q->whereBetween('tanggal_lahir', [$age_max, $age_min]);
             }
         });

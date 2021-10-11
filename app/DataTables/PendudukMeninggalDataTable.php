@@ -22,7 +22,8 @@ class PendudukMeninggalDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('tanggal_kematian', fn ($pendudukMeninggal) => $pendudukMeninggal->tanggal_kematian->format('d-m-Y'))
-            ->addColumn('jam_kematian', fn ($pendudukMeninggal) => $pendudukMeninggal->jam_kematian->format('H:i'))
+            ->addColumn('jam_kematian', fn ($pendudukMeninggal) =>  $pendudukMeninggal->jam_kematian
+                ? $pendudukMeninggal->jam_kematian->format('H:i') : '')
             ->addColumn('action', 'penduduk-meninggal.action');
     }
 
@@ -38,7 +39,7 @@ class PendudukMeninggalDataTable extends DataTable
         $pendudukMeninggal = $pendudukMeninggal->newQuery();
 
         if ($user->hasRole('rt')) {
-            $pendudukMeninggal->where('rt_id', $user->rt->id);
+            $pendudukMeninggal->where('rt_id', $user->rt_id);
         }
 
         if ($user->hasRole(['admin', 'rw'])) {

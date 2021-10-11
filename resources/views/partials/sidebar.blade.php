@@ -13,6 +13,13 @@
     </a>
   </li>
   <li class="menu-header">Menu Utama</li>
+  <li class="{{ request()->routeIs('user_logs') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('user_logs') }}" data-toggle="tooltip" data-placement="right"
+      title="Log Aktivitas Pengguna">
+      <i class="fas fa-history"></i>
+      <span>Activity Log</span>
+    </a>
+  </li>
   @role('admin')
   <li class="{{ request()->routeIs('users.index') || request()->is('users/*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('users.index') }}" data-toggle="tooltip" data-placement="right"

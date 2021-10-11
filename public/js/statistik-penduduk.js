@@ -1,6 +1,6 @@
 $(document).ready(function () {
   const params = new URLSearchParams(window.location.search);
-  let endPoint = baseURL + '/statistik-penduduk/show';
+  let endPoint = baseURL + '/graphics';
   if (params.has('rt')) {
     endPoint += '?rt=' + params.get('rt');
   }
@@ -12,7 +12,7 @@ $(document).ready(function () {
         type: 'pie'
       },
       subtitle: {
-        text: 'Jumlah Penduduk: '+response.totalPenduduk
+        text: 'Total Penduduk: ' + response.totalPenduduk
       },
       plotOptions: {
         series: {
@@ -49,7 +49,7 @@ $(document).ready(function () {
         type: 'bar',
       },
       subtitle: {
-        text: 'Jumlah Penduduk: '+response.totalPenduduk
+        text: 'Total Penduduk: ' + response.totalPenduduk
       },
       xAxis: {
         type: 'category',
@@ -66,7 +66,7 @@ $(document).ready(function () {
       yAxis: {
         min: 0,
         title: {
-          text: 'Jumlah Penduduk',
+          text: 'Total Penduduk',
           align: 'high'
         }
       },
@@ -94,7 +94,7 @@ $(document).ready(function () {
         type: 'column'
       },
       subtitle: {
-        text: 'Jumlah Penduduk: '+response.totalPenduduk
+        text: 'Total Penduduk: ' + response.totalPenduduk
       },
       xAxis: {
         type: 'category'
@@ -105,7 +105,7 @@ $(document).ready(function () {
       yAxis: {
         min: 0,
         title: {
-          text: 'Jumlah Penduduk'
+          text: 'Total Penduduk'
         }
       },
       tooltip: {
@@ -197,6 +197,6 @@ $(document).ready(function () {
     let chart_pekerjaan = Highcharts.chart('chart-pekerjaan', bar);
     chart_pekerjaan.title.textSetter("Grafik Pekerjaan");
     chart_pekerjaan.series[0].setData(response.pekerjaan);
-    chart_pekerjaan.series[0].setName('Jumlah Penduduk');
+    chart_pekerjaan.series[0].setName('Total Penduduk');
   });
 });

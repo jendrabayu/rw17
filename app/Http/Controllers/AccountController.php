@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LogUserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -35,6 +36,8 @@ class AccountController extends Controller
         ]);
 
         $user->update($validated);
+        event(new LogUserActivity("Update Profil $user->name", __CLASS__));
+
         return back()->withSuccess('Profil Anda berhasil diupdate');
     }
 
@@ -48,7 +51,9 @@ class AccountController extends Controller
             'password' => 'password baru'
         ]);
 
-        auth()->user()->update(['password' => Hash::make($request->get('password'))]);
+        $user = auth()->user()->update(['password' => Hash::make($request->get('password'))]);
+
+        event(new LogUserActivity("Update Password $user->name", __CLASS__));
 
         return back()->withSuccess('Password Anda berhasil diubah');
     }
@@ -70,6 +75,8 @@ class AccountController extends Controller
         $user = auth()->user();
         Storage::disk('public')->delete($user->avatar);
         $user->update(['avatar' => $request->file('avatar')->store('avatar', 'public')]);
+
+        event(new LogUserActivity("Update Avatar $user->name", __CLASS__));
 
         return response()->json([
             'success' => true,

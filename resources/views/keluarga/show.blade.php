@@ -101,10 +101,12 @@
                 <tbody>
                   @foreach ($keluarga->penduduk as $penduduk)
                     <tr>
-                      <td>{{ $penduduk->nik }}</td>
+                      <td>
+                        <a href="{{ route('penduduk.show', $penduduk->id) }}">{{ $penduduk->nik }}</a>
+                      </td>
                       <td>{{ $penduduk->nama }}</td>
                       <td>{{ $penduduk->tempat_lahir }}</td>
-                      <td>{{ $penduduk->tanggal_lahir }}</td>
+                      <td>{{ $penduduk->tanggal_lahir->format('d-m-Y') }}</td>
                       <td>{{ $penduduk->jenis_kelamin_text }}</td>
                       <td>{{ $penduduk->darah->nama }}</td>
                       <td>{{ $penduduk->agama->nama }}</td>
@@ -124,9 +126,7 @@
                 </tbody>
               </table>
             </div>
-            <p class="text-muted text-right mt-3 mb-0">Terakhir diubah pada
-              {{ $keluarga->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A') }}
-            </p>
+            <p class="text-muted text-right mt-3 mb-0">{{ time_format_last_updated($penduduk) }}</p>
           </div>
         </div>
       </div>

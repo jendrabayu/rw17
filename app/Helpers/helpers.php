@@ -20,3 +20,19 @@ if (!function_exists('greeting')) {
     }
   }
 }
+
+if (!function_exists('time_format_last_updated')) {
+  function time_format_last_updated($model)
+  {
+    return  'Terakhir diubah pada ' . $model->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A');
+  }
+}
+
+
+if (!function_exists('get_classname')) {
+  function get_classname($class, $with_extension = true)
+  {
+    $name = substr(strrchr($class, '\\'), 1);
+    return $with_extension ? $name . '.php' : $name;
+  }
+}

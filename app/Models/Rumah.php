@@ -21,7 +21,7 @@ class Rumah extends Model
      *
      * @var array
      */
-    protected $fillable = ['rt_id', 'alamat',  'nomor',  'penggunaan_bangunan_id', 'kontruksi_bangunan', 'keterangan'];
+    protected $fillable = ['rt_id', 'alamat',  'nomor',  'penggunaan_bangunan_id',  'keterangan'];
 
 
     public const FILE_TYPES = ['xlsx', 'xls', 'csv'];

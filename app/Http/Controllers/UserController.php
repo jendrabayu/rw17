@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\UsersDataTable;
+use App\Events\LogUserActivity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserStoreRequest;
 use App\Http\Requests\Users\UserUpdateRequest;
@@ -54,6 +55,7 @@ class UserController extends Controller
 
         $user = User::create($validated);
         $user->assignRole($request->role);
+        event(new LogUserActivity("Tambah Pengguna $user->name [$user->role]", __CLASS__));
 
         return redirect()->route('users.index')->withSuccess('Berhasil menambahkan pengguna');
     }
@@ -93,6 +95,7 @@ class UserController extends Controller
 
         $user->update($validated);
         $user->syncRoles($request->role);
+        event(new LogUserActivity("Update Pengguna $user->name [$user->role]", __CLASS__));
 
         return back()->withSuccess('Pengguna berhasil diupdate');
     }
@@ -105,6 +108,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        event(new LogUserActivity("Hapus Pengguna $user->name [$user->role]", __CLASS__));
         $user->delete();
         return response()->json(['status' => true], 204);
     }

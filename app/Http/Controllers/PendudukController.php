@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\PendudukDataTable;
+use App\Events\LogUserActivity;
 use App\Exports\PendudukExport;
 use App\Http\Requests\Penduduk\PendudukStoreRequest;
 use App\Http\Requests\Penduduk\PendudukUpdateRequest;
@@ -92,11 +93,12 @@ class PendudukController extends Controller
     public function store(PendudukStoreRequest $request)
     {
         $validated = $request->validated();
-        if ($request->file('foto_ktp')) {
+        if ($request->hasFile('foto_ktp')) {
             $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
         }
 
-        Penduduk::create($validated);
+        $penduduk = Penduduk::create($validated);
+        event(new LogUserActivity("Tambah Penduduk $penduduk->nama [$penduduk->nik]", __CLASS__));
 
         return back()->withSuccess('Berhasil menambahkan penduduk');
     }
@@ -110,9 +112,8 @@ class PendudukController extends Controller
     public function show(Penduduk $penduduk)
     {
         $user = auth()->user();
-        if ($user->hasRole('rt') && $penduduk->keluarga->rt_id !== $user->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $penduduk->keluarga->rt_id !== $user->rt_id, 404);
+        event(new LogUserActivity("Lihat Detail Penduduk $penduduk->nama [$penduduk->nik]", __CLASS__));
 
         return view('penduduk.show', compact('penduduk'));
     }
@@ -126,10 +127,7 @@ class PendudukController extends Controller
     public function edit(Penduduk $penduduk)
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt') && $penduduk->keluarga->rt_id !== $user->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $penduduk->keluarga->rt_id !== $user->rt_id, 404);
 
         $rt = $user->rt;
         $keluarga = Keluarga::whereRtId($user->rt_id)->get()->pluck('nomor', 'id');
@@ -163,12 +161,13 @@ class PendudukController extends Controller
     public function update(PendudukUpdateRequest $request, Penduduk $penduduk)
     {
         $validated = $request->validated();
-        if ($request->file('foto_ktp')) {
+        if ($request->hasFile('foto_ktp')) {
             $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
             Storage::disk('public')->delete($penduduk->foto_ktp);
         }
 
         $penduduk->update($validated);
+        event(new LogUserActivity("Update Penduduk $penduduk->nama [$penduduk->nik]", __CLASS__));
 
         return back()->withSuccess('Penduduk berhasil diupdate');
     }
@@ -182,6 +181,7 @@ class PendudukController extends Controller
     public function destroy(Penduduk $penduduk)
     {
         Storage::disk('public')->delete($penduduk->foto_ktp);
+        event(new LogUserActivity("Hapus Penduduk $penduduk->nama [$penduduk->nik]", __CLASS__));
         $penduduk->delete();
 
         return response()->json(['success' => true], 204);
@@ -224,6 +224,7 @@ class PendudukController extends Controller
 
         $penduduk = $penduduk->orderBy('keluarga_id')->get();
         $filename = "{$filename}.{$request->file_type}";
+        event(new LogUserActivity("Export Penduduk $filename", __CLASS__));
 
         return Excel::download(new PendudukExport($penduduk),  $filename);
     }
@@ -325,6 +326,7 @@ class PendudukController extends Controller
                 }
             });
             DB::commit();
+            event(new LogUserActivity("Import Penduduk", __CLASS__));
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors($e->getMessage())->withInput();

@@ -21,7 +21,7 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="card">
+        <div class="card card-primary">
           <div class="card-header">
             <h4>Detail Rumah</h4>
           </div>
@@ -41,13 +41,20 @@
                   <td>{{ $rumah->nomor }}</td>
                 </tr>
                 <tr>
+                  <th>Penggunaan Bangunan</th>
+                  <td>{{ $rumah->penggunaanBangunan->nama }}</td>
+                </tr>
+                <tr>
                   <th>Keterangan</th>
                   <td>{{ $rumah->keterangan }}</td>
                 </tr>
               </table>
             </div>
+            <p class="text-muted text-right">
+              Penduduk Tetap
+            </p>
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-sm">
+              <table class="table table-bordered table-sm">
                 <thead>
                   <tr>
                     <th>No. Kartu Keluarga</th>
@@ -60,12 +67,16 @@
                 <tbody>
                   @foreach ($rumah->keluarga as $keluarga)
                     <tr>
-                      <td>{{ $keluarga->nomor }}</td>
-                      <td colspan="4"></td>
+                      <td rowspan="{{ $keluarga->penduduk->count() + 1 }}">
+                        <a href="{{ route('keluarga.show', $keluarga->id) }}">{{ $keluarga->nomor }}</a>
+                      </td>
                       @foreach ($keluarga->penduduk as $penduduk)
                     <tr>
-                      <td></td>
-                      <td>{{ $penduduk->nik }}</td>
+                      <td>
+                        <a href="{{ route('penduduk.show', $penduduk->id) }}">
+                          {{ $penduduk->nik }}
+                        </a>
+                      </td>
                       <td>{{ $penduduk->nama }}</td>
                       <td>{{ $penduduk->statusHubunganDalamKeluarga->nama }}</td>
                       <td>{{ $penduduk->statusPerkawinan->nama }}</td>
@@ -76,8 +87,11 @@
                 </tbody>
               </table>
             </div>
+            <p class="text-muted text-right">
+              Penduduk Domisili
+            </p>
             <div class="table-responsive">
-              <table class="table table-bordered table-striped table-sm">
+              <table class="table table-bordered table-sm">
                 <thead>
                   <tr>
                     <th>NIK</th>
@@ -88,7 +102,11 @@
                 <tbody>
                   @foreach ($rumah->pendudukDomisili as $pendudukDomisili)
                     <tr>
-                      <td>{{ $pendudukDomisili->nik }}</td>
+                      <td>
+                        <a href="{{ route('penduduk-domisili.show', $pendudukDomisili->id) }}">
+                          {{ $pendudukDomisili->nik }}
+                        </a>
+                      </td>
                       <td>{{ $pendudukDomisili->nama }}</td>
                       <td>{{ $pendudukDomisili->statusPerkawinan->nama }}</td>
                     </tr>
@@ -96,8 +114,8 @@
                 </tbody>
               </table>
             </div>
-            <p class="text-muted text-right mt-3">Terakhir diubah pada
-              {{ $rumah->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A') }}
+            <p class="text-muted text-right mt-3">
+              {{ time_format_last_updated($rumah) }}
             </p>
           </div>
         </div>

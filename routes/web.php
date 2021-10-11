@@ -33,11 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/ubah-password', [\App\Http\Controllers\AccountController::class, 'updatePassword'])->name('update_password');
     Route::put('/change-avatar', [\App\Http\Controllers\AccountController::class, 'updateAvatar'])->name('update_avatar');
 
-    Route::get('/ajax/keluarga/{id}', [\App\Http\Controllers\AjaxController::class, 'getKeluarga']);
-    Route::get('/ajax/penduduk/{id}', [\App\Http\Controllers\AjaxController::class, 'getPenduduk']);
-    Route::get('/ajax/penduduk-domisili/{id}', [\App\Http\Controllers\AjaxController::class, 'getPendudukDomisili']);
-
-    Route::get('/statistik-penduduk/show', [\App\Http\Controllers\GrafikController::class, 'show']);
+    Route::get('/graphics', [\App\Http\Controllers\AjaxController::class, 'graphics']);
+    Route::get('/user-logs', [\App\Http\Controllers\ActivityLogController::class, 'index'])->name('user_logs');
 
     Route::resource('rumah', \App\Http\Controllers\RumahController::class)
         ->except('index', 'show')

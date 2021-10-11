@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\PendudukDomisiliDataTable;
+use App\Events\LogUserActivity;
 use App\Exports\PendudukDomisiliExport;
 use App\Http\Requests\PendudukDomisili\PendudukDomisiliStoreRequest;
 use App\Http\Requests\PendudukDomisili\PendudukDomisiliUpdateRequest;
@@ -71,11 +72,12 @@ class PendudukDomisiliController extends Controller
     public function store(PendudukDomisiliStoreRequest $request)
     {
         $validated = $request->validated();
-        if ($request->file('foto_ktp')) {
+        if ($request->hasFile('foto_ktp')) {
             $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
         }
 
-        PendudukDomisili::create($validated);
+        $pendudukDomisili = PendudukDomisili::create($validated);
+        event(new LogUserActivity("Tambah Penduduk Domisili $pendudukDomisili->nama [$pendudukDomisili->nik]", __CLASS__));
 
         return back()->withSuccess('Berhasil menambahkan penduduk domisili');
     }
@@ -89,9 +91,8 @@ class PendudukDomisiliController extends Controller
     public function show(PendudukDomisili $pendudukDomisili)
     {
         $user = auth()->user();
-        if ($user->hasRole('rt') && $pendudukDomisili->rt_id !== $user->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $pendudukDomisili->rt_id !== $user->rt_id, 404);
+        event(new LogUserActivity("Lihat Detail Penduduk Domisili $pendudukDomisili->nama [$pendudukDomisili->nik]", __CLASS__));
 
         return view('penduduk-domisili.show', compact('pendudukDomisili'));
     }
@@ -105,10 +106,7 @@ class PendudukDomisiliController extends Controller
     public function edit(PendudukDomisili $pendudukDomisili)
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt') && $pendudukDomisili->rt_id !== $user->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $pendudukDomisili->rt_id !== $user->rt_id, 404);
 
         $rt = $user->rt;
         $agama = Agama::all()->pluck('nama', 'id');
@@ -142,12 +140,14 @@ class PendudukDomisiliController extends Controller
     public function update(PendudukDomisiliUpdateRequest $request, PendudukDomisili $pendudukDomisili)
     {
         $validated = $request->validated();
-        if ($request->file('foto_ktp')) {
+        if ($request->hasFile('foto_ktp')) {
             $validated['foto_ktp'] = $request->file('foto_ktp')->store('ktp', 'public');
             Storage::disk('public')->delete($pendudukDomisili->foto_ktp);
         }
 
         $pendudukDomisili->update($validated);
+        event(new LogUserActivity("Update Penduduk Domisili $pendudukDomisili->nama [$pendudukDomisili->nik]", __CLASS__));
+
 
         return back()->withSuccess('Penduduk domisili berhasil diupdate');
     }
@@ -161,6 +161,7 @@ class PendudukDomisiliController extends Controller
     public function destroy(PendudukDomisili $pendudukDomisili)
     {
         Storage::disk('public')->delete($pendudukDomisili->foto_ktp);
+        event(new LogUserActivity("Hapus Penduduk Domisili $pendudukDomisili->nama [$pendudukDomisili->nik]", __CLASS__));
         $pendudukDomisili->delete();
 
         return response()->json(['success' => true], 204);
@@ -206,6 +207,7 @@ class PendudukDomisiliController extends Controller
 
         $pendudukDomisili = $pendudukDomisili->latest()->get();
         $filename = "{$filename}.{$request->file_type}";
+        event(new LogUserActivity("Export Penduduk Domisili $filename", __CLASS__));
 
         return Excel::download(new PendudukDomisiliExport($pendudukDomisili), $filename);
     }

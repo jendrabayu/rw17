@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\PendudukMeninggalDataTable;
+use App\Events\LogUserActivity;
 use App\Exports\PendudukMeninggalExport;
 use App\Http\Requests\PendudukMeninggal\PendudukMeninggalStoreRequest;
 use App\Http\Requests\PendudukMeninggal\PendudukMeninggalUpdateRequest;
@@ -55,9 +56,10 @@ class PendudukMeninggalController extends Controller
             DB::beginTransaction();
             $penduduk = Penduduk::findOrFail($request->penduduk_id);
             $data = array_merge($request->all(), $penduduk->toArray(), ['alamat' => $penduduk->keluarga->alamat]);
-            PendudukMeninggal::create($data);
+            $pendudukMeninggal = PendudukMeninggal::create($data);
             $penduduk->delete();
             DB::commit();
+            event(new LogUserActivity("Tambah Penduduk Meninggal $pendudukMeninggal->nama [$pendudukMeninggal->nik]", __CLASS__));
         } catch (Exception $exception) {
             DB::rollBack();
             return back()->withErrors($exception->getMessage())->withInput();
@@ -75,9 +77,8 @@ class PendudukMeninggalController extends Controller
     public function show(PendudukMeninggal $pendudukMeninggal)
     {
         $user = auth()->user();
-        if ($user->hasRole('rt') && $user->rt_id !== $pendudukMeninggal->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $user->rt_id !== $pendudukMeninggal->rt_id, 404);
+        event(new LogUserActivity("Lihat Detail Penduduk Meninggal $pendudukMeninggal->nama [$pendudukMeninggal->nik]", __CLASS__));
 
         return view('penduduk-meninggal.show', compact('pendudukMeninggal'));
     }
@@ -91,10 +92,7 @@ class PendudukMeninggalController extends Controller
     public function edit(PendudukMeninggal $pendudukMeninggal)
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt') && $user->rt_id !== $pendudukMeninggal->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $user->rt_id !== $pendudukMeninggal->rt_id, 404);
 
         $rt = $user->rt;
         $agama = Agama::all()->pluck('nama', 'id');
@@ -132,6 +130,7 @@ class PendudukMeninggalController extends Controller
         }
 
         $pendudukMeninggal->update($validated);
+        event(new LogUserActivity("Update Penduduk Meninggal $pendudukMeninggal->nama [$pendudukMeninggal->nik]", __CLASS__));
 
         return back()->withSuccess('Penduduk meninggal berhasil diupdate');
     }
@@ -145,6 +144,7 @@ class PendudukMeninggalController extends Controller
     public function destroy(PendudukMeninggal $pendudukMeninggal)
     {
         Storage::disk('public')->delete($pendudukMeninggal->foto_ktp);
+        event(new LogUserActivity("Hapus Penduduk Meninggal $pendudukMeninggal->nama [$pendudukMeninggal->nik]", __CLASS__));
         $pendudukMeninggal->delete();
 
         return response()->json(['success' => true], 204);
@@ -190,7 +190,7 @@ class PendudukMeninggalController extends Controller
 
         $pendudukMeninggal = $pendudukMeninggal->latest()->get();
         $filename = "{$filename}.{$request->file_type}";
-
+        event(new LogUserActivity("Export Penduduk Meninggal $filename", __CLASS__));
 
         return Excel::download(new PendudukMeninggalExport($pendudukMeninggal), $filename);
     }

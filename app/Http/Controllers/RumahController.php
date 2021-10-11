@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\RumahDataTable;
+use App\Events\LogUserActivity;
 use App\Exports\RumahExport;
 use App\Http\Requests\Rumah\RumahStoreRequest;
 use App\Http\Requests\Rumah\RumahUpdateRequest;
@@ -17,7 +18,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class RumahController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -82,6 +82,7 @@ class RumahController extends Controller
             }
 
             DB::commit();
+            event(new LogUserActivity("Tambah Rumah $rumah->alamat [$rumah->nomor]", __CLASS__));
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -100,9 +101,8 @@ class RumahController extends Controller
     public function show(Rumah $rumah)
     {
         $user = auth()->user();
-        if ($user->hasRole('rt') && $rumah->rt_id !== $user->rt_id) {
-            abort(403);
-        }
+        abort_if($user->hasRole('rt') && $rumah->rt_id !== $user->rt_id, 404);
+        event(new LogUserActivity("Lihat Detail Rumah $rumah->alamat [$rumah->nomor]", __CLASS__));
 
         return view('rumah.show', compact('rumah'));
     }
@@ -116,10 +116,7 @@ class RumahController extends Controller
     public function edit(Rumah $rumah)
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt') && $rumah->rt_id !== $user->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $rumah->rt_id !== $user->rt_id, 404);
 
         $rt = $user->rt;
         $keluarga = $user->rt->keluarga()
@@ -158,22 +155,28 @@ class RumahController extends Controller
             $rumah->update($validated);
             $rumah->keluarga()->sync($request->get('keluarga_id'));
 
-            foreach ($rumah->pendudukDomisili as $pendudukDomisili) {
-                $pendudukDomisili->rumah_id = null;
-                $pendudukDomisili->save();
+            if ($rumah->pendudukDomisili->count()) {
+                foreach ($rumah->pendudukDomisili as $pendudukDomisili) {
+                    $pendudukDomisili->rumah_id = null;
+                    $pendudukDomisili->save();
+                }
             }
 
-            foreach ($request->penduduk_domisili_id as $id) {
-                $pendudukDomisili = PendudukDomisili::find($id);
-                $pendudukDomisili->rumah_id = $rumah->id;
-                $pendudukDomisili->save();
+            if ($request->penduduk_domisili_id) {
+                foreach ($request->penduduk_domisili_id as $id) {
+                    $pendudukDomisili = PendudukDomisili::find($id);
+                    $pendudukDomisili->rumah_id = $rumah->id;
+                    $pendudukDomisili->save();
+                }
             }
 
             DB::commit();
+            event(new LogUserActivity("Update Rumah $rumah->alamat [$rumah->nomor]", __CLASS__));
         } catch (Exception $e) {
             DB::rollBack();
             return back()->withErrors($e->getMessage())->withInput();
         }
+
 
         return back()->withSuccess('Rumah berhasil diupdate');
     }
@@ -190,6 +193,7 @@ class RumahController extends Controller
             $pendudukDomisili->rumah_id = null;
             $pendudukDomisili->save();
         }
+        event(new LogUserActivity("Hapus Rumah $rumah->alamat [$rumah->nomor]", __CLASS__));
         $rumah->delete();
         return response()->json(['success' => true], 204);
     }
@@ -225,6 +229,7 @@ class RumahController extends Controller
 
         $rumah = $rumah->orderBy('nomor')->get();
         $filename = "{$filename}.{$request->file_type}";
+        event(new LogUserActivity("Export Rumah $filename", __CLASS__));
 
         return Excel::download(new RumahExport($rumah), $filename);
     }

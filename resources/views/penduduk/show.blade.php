@@ -120,9 +120,7 @@
                 </tr>
               </table>
             </div>
-            <p class="text-muted text-right mt-3 mb-0">Terakhir diubah pada
-              {{ $penduduk->updated_at->isoFormat('dddd, D MMMM YYYY h:mm A') }}
-            </p>
+            <p class="text-muted text-right mt-3 mb-0">{{ time_format_last_updated($penduduk) }}</p>
           </div>
         </div>
       </div>

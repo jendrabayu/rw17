@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\KeluargaDataTable;
+use App\Events\LogUserActivity;
 use App\Exports\KeluargaExport;
 use App\Http\Requests\Keluarga\KeluargaStoreRequest;
 use App\Http\Requests\Keluarga\KeluargaUpdateRequest;
@@ -58,6 +59,7 @@ class KeluargaController extends Controller
         }
         $keluarga = Keluarga::create($validated);
         $keluarga->rumah()->attach($request->rumah_id);
+        event(new LogUserActivity("Tambah Keluarga $keluarga->nomor", __CLASS__));
 
         return back()->withSuccess('Berhasil menambahkan keluarga');
     }
@@ -71,10 +73,7 @@ class KeluargaController extends Controller
     public function show(Keluarga $keluarga)
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt') && $keluarga->rt_id !== $user->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $keluarga->rt_id !== $user->rt_id, 404);
 
         $keluarga->load([
             'penduduk.statusHubunganDalamKeluarga',
@@ -89,6 +88,7 @@ class KeluargaController extends Controller
             ->penduduk
             ->where('statusHubunganDalamKeluarga.nama', 'KEPALA KELUARGA')
             ->first();
+        event(new LogUserActivity("Lihat Detail Keluarga $keluarga->nomor", __CLASS__));
 
         return view('keluarga.show', compact('keluarga'));
     }
@@ -102,10 +102,7 @@ class KeluargaController extends Controller
     public function edit(Keluarga $keluarga)
     {
         $user = auth()->user();
-
-        if ($user->hasRole('rt') && $keluarga->rt_id !== $user->rt_id) {
-            abort(404);
-        }
+        abort_if($user->hasRole('rt') && $keluarga->rt_id !== $user->rt_id, 404);
 
         return view('keluarga.edit', [
             'keluarga' => $keluarga,
@@ -131,6 +128,7 @@ class KeluargaController extends Controller
 
         $keluarga->update($validated);
         $keluarga->rumah()->sync($request->rumah_id);
+        event(new LogUserActivity("Update Keluarga $keluarga->nomor", __CLASS__));
 
         return back()->withSuccess('Keluarga berhasil diupdate');
     }
@@ -145,6 +143,7 @@ class KeluargaController extends Controller
     {
         Storage::disk('public')->delete($keluarga->foto_kk);
         $keluarga->delete();
+        event(new LogUserActivity("Hapus Keluarga $keluarga->nomor", __CLASS__));
 
         return response()->json(['success' => true], 204);
     }
@@ -185,6 +184,7 @@ class KeluargaController extends Controller
         });
 
         $filename = "{$filename}.{$request->file_type}";
+        event(new LogUserActivity("Export Keluarga $filename", __CLASS__));
 
         return Excel::download(new KeluargaExport($keluarga), $filename);
     }

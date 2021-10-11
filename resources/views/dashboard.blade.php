@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    @role('rw')
+    @hasanyrole('admin|rw')
     <div class="row">
       <div class="col-12">
         <div class="card">
@@ -124,7 +124,7 @@
         </div>
       </div>
     </div>
-    @endrole
+    @endhasanyrole
 
     <div class="row">
       @include('statistik-penduduk.card')
