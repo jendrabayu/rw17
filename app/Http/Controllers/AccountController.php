@@ -50,8 +50,8 @@ class AccountController extends Controller
             'current_password' => 'password sekarang',
             'password' => 'password baru'
         ]);
-
-        $user = auth()->user()->update(['password' => Hash::make($request->get('password'))]);
+        $user = auth()->user();
+        $user->update(['password' => Hash::make($request->get('password'))]);
 
         event(new LogUserActivity("Update Password $user->name", __CLASS__));
 

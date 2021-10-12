@@ -22,9 +22,8 @@ $user = auth()->user();
       <a href="{{ route('password') }}" class="dropdown-item has-icon">
         <i class="fas fa-key"></i> Ubah Password
       </a>
-      <a href="#" class="dropdown-item has-icon text-danger btn-logout">
+      <a href="javascript:;" class="dropdown-item has-icon text-danger btn-logout">
         <i class="fas fa-sign-out-alt"></i> Logout
-        <form action="{{ route('logout') }}" method="POST" id="form-logout">@csrf</form>
       </a>
     </div>
   </li>

@@ -22,5 +22,5 @@
       @include('partials.footer')
     </footer>
   </div>
+  <form hidden action="{{ route('logout') }}" method="POST" id="form-logout">@csrf</form>
 @endsection
-
